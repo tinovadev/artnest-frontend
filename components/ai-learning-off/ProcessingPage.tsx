@@ -30,13 +30,6 @@ export default function ProcessingPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6">
       {/* Artwork with scanning animation */}
       <div className="relative mb-12">
-        {/* Extended scanning line container - wider than the image */}
-        <div className="absolute inset-0 -inset-x-8 overflow-hidden">
-          <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan-pingpong">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-          </div>
-        </div>
-
         <div className="relative rounded-2xl overflow-hidden bg-muted w-80 h-80">
           <img 
             src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop"
@@ -58,6 +51,13 @@ export default function ProcessingPage() {
           {/* Processing overlay */}
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        {/* Scanning line positioned over the image but extending beyond */}
+        <div className="absolute inset-0 -inset-x-4 overflow-hidden pointer-events-none">
+          <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan-pingpong">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
           </div>
         </div>
       </div>
