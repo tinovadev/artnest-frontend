@@ -8,8 +8,15 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { testimonials } from '@/data/testimonials';
 import Header from '@/components/shared/Header';
 import Navbar from '@/components/shared/Navbar';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const handlePlusClick = () => {
+    router.push('/ai-learning-off');
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
       <ScrollArea className="h-screen">
@@ -31,6 +38,7 @@ export default function HomePage() {
                 </p>
                 <Button 
                   size="lg" 
+                  onClick={handlePlusClick}
                   className="bg-black hover:bg-secondary text-foreground rounded-full w-16 h-16 p-0 absolute bottom-8 right-8 border-0"
                 >
                   <Plus size={24} weight="bold" />
