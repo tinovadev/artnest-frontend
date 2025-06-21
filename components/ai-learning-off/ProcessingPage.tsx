@@ -13,9 +13,9 @@ export default function ProcessingPage() {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval);
-          // Navigate back or to success page after processing
+          // Navigate to completed page after processing
           setTimeout(() => {
-            router.back();
+            router.push('/completed');
           }, 1000);
           return 100;
         }
