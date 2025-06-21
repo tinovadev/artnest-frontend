@@ -1,28 +1,22 @@
 'use client';
 
-import { Plus, House, Broadcast, CreditCard, User } from 'phosphor-react';
+import { Plus } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { testimonials } from '@/data/testimonials';
+import Header from '@/components/shared/Header';
+import Navbar from '@/components/shared/Navbar';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
       <ScrollArea className="h-screen">
         <div className="pb-20">
-          {/* Header */}
-          <div className="px-6 py-8">
-            <div className="flex items-center gap-2 mb-8">
-              <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-                <div className="w-6 h-6 bg-foreground rounded-sm flex items-center justify-center">
-                  <div className="w-4 h-4 bg-primary rounded-sm"></div>
-                </div>
-              </div>
-              <span className="text-xl font-pixel font-bold tracking-wide">artnest</span>
-            </div>
-
+          <Header />
+          
+          <div className="px-6">
             {/* Main CTA Card */}
             <Card className="bg-primary border-0 rounded-3xl p-8 mb-12 relative overflow-hidden">
               <div className="relative z-10">
@@ -70,27 +64,7 @@ export default function HomePage() {
         </div>
       </ScrollArea>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border">
-        <div className="flex justify-around items-center py-3">
-          <div className="flex flex-col items-center gap-1">
-            <House size={24} weight="fill" className="text-primary" />
-            <span className="text-xs text-primary font-medium font-pixel">ArtNest</span>
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <Broadcast size={24} className="text-muted-foreground" />
-            <span className="text-xs text-muted-foreground"></span>
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <CreditCard size={24} className="text-muted-foreground" />
-            <span className="text-xs text-muted-foreground"></span>
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <User size={24} className="text-muted-foreground" />
-            <span className="text-xs text-muted-foreground"></span>
-          </div>
-        </div>
-      </div>
+      <Navbar />
     </div>
   );
 }
