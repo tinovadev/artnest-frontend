@@ -43,9 +43,8 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    // Implement checkout logic
-    console.log('Proceeding to checkout...');
-    // Could navigate to payment page or show payment modal
+    // Navigate to payment success page
+    router.push('/payment-success');
   };
 
   const total = cartItems.reduce((sum, item) => sum + item.price, 0);
