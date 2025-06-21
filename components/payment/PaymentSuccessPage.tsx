@@ -23,9 +23,9 @@ export default function PaymentSuccessPage() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
-        {/* Success Icon */}
-        <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mb-8">
-          <Check size={32} weight="bold" className="text-white" />
+        {/* Success Icon - Stroke Style */}
+        <div className="w-20 h-20 border-4 border-primary rounded-full flex items-center justify-center mb-8">
+          <Check size={32} weight="regular" className="text-primary" />
         </div>
 
         {/* Thank You Message */}
