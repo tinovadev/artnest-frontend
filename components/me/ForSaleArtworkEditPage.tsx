@@ -81,205 +81,210 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
       <ScrollArea className="h-screen">
         <div className="pb-32">
           {/* Header */}
-          <div className="flex items-center gap-4 px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-gray-200 max-w-7xl mx-auto lg:mt-20">
             <button onClick={handleBack} className="p-2 -ml-2">
               <ArrowLeft size={24} className="text-gray-900" />
             </button>
             <h1 className="text-lg font-semibold text-gray-900 truncate">{artwork.title}</h1>
           </div>
 
-          <div className="px-6 py-6 max-w-2xl mx-auto">
-            {/* Artwork Image */}
-            <div className="mb-8">
-              <div className="relative rounded-3xl overflow-hidden bg-gray-100 aspect-[4/5] w-full max-w-md mx-auto">
-                <img 
-                  src={artwork.image}
-                  alt={artwork.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Form */}
-            <div className="space-y-6">
-              {/* Title */}
-              <div className="space-y-2">
-                <Label htmlFor="title" className="text-base font-medium text-gray-900">
-                  Title
-                </Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
-                />
-              </div>
-
-              {/* Price */}
-              <div className="space-y-2">
-                <Label htmlFor="price" className="text-base font-medium text-gray-900">
-                  Price
-                </Label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-900 text-base">$</span>
-                  <Input
-                    id="price"
-                    type="number"
-                    value={formData.price}
-                    onChange={(e) => handleInputChange('price', parseInt(e.target.value) || 0)}
-                    className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base pl-8"
+          <div className="px-6 lg:px-12 py-6 max-w-7xl mx-auto">
+            {/* Responsive Layout */}
+            <div className="lg:flex lg:gap-12 lg:items-start">
+              {/* Artwork Image - Left Side on Desktop */}
+              <div className="lg:flex-shrink-0 mb-8 lg:mb-0">
+                <div className="relative rounded-3xl overflow-hidden bg-gray-100 aspect-[4/5] w-full max-w-md mx-auto lg:mx-0 lg:w-96 lg:h-[480px]">
+                  <img 
+                    src={artwork.image}
+                    alt={artwork.title}
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
 
-              {/* Year and Artist - Grid Layout */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="year" className="text-base font-medium text-gray-900">
-                    Year
-                  </Label>
-                  <Input
-                    id="year"
-                    value={formData.year}
-                    onChange={(e) => handleInputChange('year', e.target.value)}
-                    className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="artist" className="text-base font-medium text-gray-900">
-                    Artist
-                  </Label>
-                  <Input
-                    id="artist"
-                    value={formData.artist}
-                    onChange={(e) => handleInputChange('artist', e.target.value)}
-                    className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
-                  />
-                </div>
-              </div>
-
-              {/* Dimensions and Medium - Grid Layout */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="dimensions" className="text-base font-medium text-gray-900">
-                    Dimensions
-                  </Label>
-                  <Input
-                    id="dimensions"
-                    value={formData.dimensions}
-                    onChange={(e) => handleInputChange('dimensions', e.target.value)}
-                    className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="medium" className="text-base font-medium text-gray-900">
-                    Medium
-                  </Label>
-                  <Input
-                    id="medium"
-                    value={formData.medium}
-                    onChange={(e) => handleInputChange('medium', e.target.value)}
-                    className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
-                  />
-                </div>
-              </div>
-
-              {/* Edition */}
-              <div className="space-y-2">
-                <Label htmlFor="edition" className="text-base font-medium text-gray-900">
-                  Edition
-                </Label>
-                <Input
-                  id="edition"
-                  value={formData.edition}
-                  onChange={(e) => handleInputChange('edition', e.target.value)}
-                  className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
-                />
-              </div>
-
-              {/* Description */}
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-base font-medium text-gray-900">
-                  Description
-                </Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  className="border-gray-300 bg-white text-gray-900 rounded-xl min-h-[120px] resize-none text-base"
-                />
-              </div>
-
-              {/* About the Artist */}
-              <div className="space-y-2">
-                <Label htmlFor="artistBio" className="text-base font-medium text-gray-900">
-                  About the Artist
-                </Label>
-                <Textarea
-                  id="artistBio"
-                  value={formData.artistBio}
-                  onChange={(e) => handleInputChange('artistBio', e.target.value)}
-                  className="border-gray-300 bg-white text-gray-900 rounded-xl min-h-[80px] resize-none text-base"
-                />
-              </div>
-
-              {/* Royalty per Use */}
-              <div className="space-y-2">
-                <Label htmlFor="royaltyPerUse" className="text-base font-medium text-gray-900">
-                  Royalty per Use
-                </Label>
-                <Input
-                  id="royaltyPerUse"
-                  placeholder="How much royalty would you like to earn?"
-                  value={formData.royaltyPerUse}
-                  onChange={(e) => handleInputChange('royaltyPerUse', parseFloat(e.target.value) || 0)}
-                  className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-14 text-base"
-                />
-              </div>
-
-              {/* AI Usage License */}
-              <div className="space-y-4">
-                <Label className="text-base font-medium text-gray-900">
-                  AI Usage License
-                </Label>
-                
-                <div className="space-y-4 p-4 border border-gray-300 rounded-xl">
-                  <div className="flex items-center space-x-3">
-                    <Checkbox
-                      id="commercialTraining"
-                      checked={formData.permissions.commercialTraining}
-                      onCheckedChange={(checked) => handlePermissionChange('commercialTraining', checked as boolean)}
-                      className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                    />
-                    <Label htmlFor="commercialTraining" className="text-base text-gray-900 cursor-pointer">
-                      Commercial training allowed
+              {/* Form - Right Side on Desktop */}
+              <div className="lg:flex-1 lg:max-w-2xl">
+                <div className="space-y-6">
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <Label htmlFor="title" className="text-base font-medium text-gray-900">
+                      Title
                     </Label>
+                    <Input
+                      id="title"
+                      value={formData.title}
+                      onChange={(e) => handleInputChange('title', e.target.value)}
+                      className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                    />
                   </div>
 
-                  <div className="flex items-center space-x-3">
-                    <Checkbox
-                      id="resaleNotPermitted"
-                      checked={formData.permissions.resaleNotPermitted}
-                      onCheckedChange={(checked) => handlePermissionChange('resaleNotPermitted', checked as boolean)}
-                      className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                    />
-                    <Label htmlFor="resaleNotPermitted" className="text-base text-gray-900 cursor-pointer">
-                      Resale of image not permitted
+                  {/* Price */}
+                  <div className="space-y-2">
+                    <Label htmlFor="price" className="text-base font-medium text-gray-900">
+                      Price
                     </Label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-900 text-base">$</span>
+                      <Input
+                        id="price"
+                        type="number"
+                        value={formData.price}
+                        onChange={(e) => handleInputChange('price', parseInt(e.target.value) || 0)}
+                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base pl-8"
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex items-center space-x-3">
-                    <Checkbox
-                      id="derivativeGeneration"
-                      checked={formData.permissions.derivativeGeneration}
-                      onCheckedChange={(checked) => handlePermissionChange('derivativeGeneration', checked as boolean)}
-                      className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                    />
-                    <Label htmlFor="derivativeGeneration" className="text-base text-gray-900 cursor-pointer">
-                      Derivative generation permitted
+                  {/* Year and Artist - Grid Layout */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="year" className="text-base font-medium text-gray-900">
+                        Year
+                      </Label>
+                      <Input
+                        id="year"
+                        value={formData.year}
+                        onChange={(e) => handleInputChange('year', e.target.value)}
+                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="artist" className="text-base font-medium text-gray-900">
+                        Artist
+                      </Label>
+                      <Input
+                        id="artist"
+                        value={formData.artist}
+                        onChange={(e) => handleInputChange('artist', e.target.value)}
+                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Dimensions and Medium - Grid Layout */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="dimensions" className="text-base font-medium text-gray-900">
+                        Dimensions
+                      </Label>
+                      <Input
+                        id="dimensions"
+                        value={formData.dimensions}
+                        onChange={(e) => handleInputChange('dimensions', e.target.value)}
+                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="medium" className="text-base font-medium text-gray-900">
+                        Medium
+                      </Label>
+                      <Input
+                        id="medium"
+                        value={formData.medium}
+                        onChange={(e) => handleInputChange('medium', e.target.value)}
+                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Edition */}
+                  <div className="space-y-2">
+                    <Label htmlFor="edition" className="text-base font-medium text-gray-900">
+                      Edition
                     </Label>
+                    <Input
+                      id="edition"
+                      value={formData.edition}
+                      onChange={(e) => handleInputChange('edition', e.target.value)}
+                      className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="text-base font-medium text-gray-900">
+                      Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      className="border-gray-300 bg-white text-gray-900 rounded-xl min-h-[120px] resize-none text-base"
+                    />
+                  </div>
+
+                  {/* About the Artist */}
+                  <div className="space-y-2">
+                    <Label htmlFor="artistBio" className="text-base font-medium text-gray-900">
+                      About the Artist
+                    </Label>
+                    <Textarea
+                      id="artistBio"
+                      value={formData.artistBio}
+                      onChange={(e) => handleInputChange('artistBio', e.target.value)}
+                      className="border-gray-300 bg-white text-gray-900 rounded-xl min-h-[80px] resize-none text-base"
+                    />
+                  </div>
+
+                  {/* Royalty per Use */}
+                  <div className="space-y-2">
+                    <Label htmlFor="royaltyPerUse" className="text-base font-medium text-gray-900">
+                      Royalty per Use
+                    </Label>
+                    <Input
+                      id="royaltyPerUse"
+                      placeholder="How much royalty would you like to earn?"
+                      value={formData.royaltyPerUse}
+                      onChange={(e) => handleInputChange('royaltyPerUse', parseFloat(e.target.value) || 0)}
+                      className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-14 text-base"
+                    />
+                  </div>
+
+                  {/* AI Usage License */}
+                  <div className="space-y-4">
+                    <Label className="text-base font-medium text-gray-900">
+                      AI Usage License
+                    </Label>
+                    
+                    <div className="space-y-4 p-4 border border-gray-300 rounded-xl">
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="commercialTraining"
+                          checked={formData.permissions.commercialTraining}
+                          onCheckedChange={(checked) => handlePermissionChange('commercialTraining', checked as boolean)}
+                          className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        />
+                        <Label htmlFor="commercialTraining" className="text-base text-gray-900 cursor-pointer">
+                          Commercial training allowed
+                        </Label>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="resaleNotPermitted"
+                          checked={formData.permissions.resaleNotPermitted}
+                          onCheckedChange={(checked) => handlePermissionChange('resaleNotPermitted', checked as boolean)}
+                          className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        />
+                        <Label htmlFor="resaleNotPermitted" className="text-base text-gray-900 cursor-pointer">
+                          Resale of image not permitted
+                        </Label>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="derivativeGeneration"
+                          checked={formData.permissions.derivativeGeneration}
+                          onCheckedChange={(checked) => handlePermissionChange('derivativeGeneration', checked as boolean)}
+                          className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        />
+                        <Label htmlFor="derivativeGeneration" className="text-base text-gray-900 cursor-pointer">
+                          Derivative generation permitted
+                        </Label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -289,14 +294,16 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
       </ScrollArea>
 
       {/* Fixed Confirm Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200">
-        <div className="max-w-2xl mx-auto">
-          <Button 
-            onClick={handleConfirm}
-            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-xl text-lg"
-          >
-            Confirm
-          </Button>
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:relative lg:border-t-0 lg:bg-transparent lg:p-0">
+        <div className="max-w-7xl mx-auto lg:px-12">
+          <div className="lg:flex lg:justify-end lg:pt-6">
+            <Button 
+              onClick={handleConfirm}
+              className="w-full lg:w-auto lg:min-w-[200px] bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+            >
+              Confirm
+            </Button>
+          </div>
         </div>
       </div>
     </div>
