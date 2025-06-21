@@ -1,17 +1,19 @@
 'use client';
 
-import { ArrowLeft } from 'phosphor-react';
+import { ArrowLeft, X } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Dialog, DialogContent, DialogOverlay } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function CompletedPage() {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     artist: 'Aria Solen',
@@ -34,9 +36,17 @@ export default function CompletedPage() {
   };
 
   const handleConfirm = () => {
-    // Handle form submission
-    console.log('Form data:', formData);
+    setIsModalOpen(true);
+  };
+
+  const handleStartTracking = () => {
+    setIsModalOpen(false);
     // Navigate back to home or show success message
+    router.push('/');
+  };
+
+  const handleNotNow = () => {
+    setIsModalOpen(false);
     router.push('/');
   };
 
@@ -195,6 +205,48 @@ export default function CompletedPage() {
           Confirm
         </Button>
       </div>
+
+      {/* Tracking Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogOverlay className="bg-black/80" />
+        <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm mx-auto">
+          {/* Close Button */}
+          <button 
+            onClick={() => setIsModalOpen(false)}
+            className="absolute top-6 right-6 p-2 text-muted-foreground hover:text-foreground"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Modal Content */}
+          <div className="text-center space-y-6">
+            <h2 className="text-2xl font-bold text-foreground">
+              Start tracking now?
+            </h2>
+            <p className="text-muted-foreground text-base leading-relaxed">
+              We'll look out for any copycats<br />
+              and keep you posted.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="space-y-4 pt-4">
+              <Button 
+                onClick={handleStartTracking}
+                className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+              >
+                Let's start
+              </Button>
+              <Button 
+                onClick={handleNotNow}
+                variant="outline"
+                className="w-full bg-black hover:bg-black/80 text-white border-0 font-semibold py-4 rounded-2xl text-lg"
+              >
+                Not now
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
