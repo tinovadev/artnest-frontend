@@ -51,6 +51,13 @@ export default function ArtistVerificationPage() {
 
   const handleConfirm = () => {
     setIsSuccessModalOpen(false);
+    
+    // Set artist verification status
+    localStorage.setItem('artistVerified', 'true');
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('artistVerified'));
+    
     // Navigate back to Me page
     router.push('/me');
   };
