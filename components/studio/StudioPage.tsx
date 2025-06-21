@@ -5,16 +5,21 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Navbar from '@/components/shared/Navbar';
-import Header from '@/components/shared/Header';
 import { studioArtworks } from '@/data/studio-artworks';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function StudioPage() {
+  const router = useRouter();
   const [cart, setCart] = useState<string[]>([]);
 
   const handleAddToCart = (artworkId: string) => {
     setCart(prev => [...prev, artworkId]);
     // Add visual feedback or toast notification here
+  };
+
+  const handleArtworkClick = (artworkId: string) => {
+    router.push(`/studio/${artworkId}`);
   };
 
   return (
@@ -43,7 +48,8 @@ export default function StudioPage() {
               {studioArtworks.map((artwork) => (
                 <Card 
                   key={artwork.id} 
-                  className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200"
+                  className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                  onClick={() => handleArtworkClick(artwork.id)}
                 >
                   {/* Artwork Image */}
                   <div className="relative aspect-square overflow-hidden">
@@ -70,7 +76,10 @@ export default function StudioPage() {
                       </div>
                       
                       <Button
-                        onClick={() => handleAddToCart(artwork.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(artwork.id);
+                        }}
                         className="bg-primary hover:bg-primary/90 text-white rounded-full w-8 h-8 lg:w-10 lg:h-10 p-0 flex-shrink-0 ml-2"
                       >
                         <Plus size={16} weight="bold" />
