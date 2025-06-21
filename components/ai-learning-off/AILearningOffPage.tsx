@@ -61,8 +61,8 @@ export default function AILearningOffPage() {
   };
 
   const handleConfirm = () => {
-    // Handle confirmation logic here
-    console.log('Selected option:', selectedOption);
+    // Navigate to processing page
+    router.push('/processing');
   };
 
   return (
