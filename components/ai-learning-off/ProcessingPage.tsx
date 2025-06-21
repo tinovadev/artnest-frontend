@@ -48,15 +48,15 @@ export default function ProcessingPage() {
             </div>
           </div>
 
-          {/* Animated ping-pong scanning line */}
-          <div className="absolute inset-0 overflow-hidden">
+          {/* Animated ping-pong scanning line - positioned within the image */}
+          <div className="absolute inset-0 overflow-hidden rounded-2xl">
             <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan-pingpong">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
             </div>
           </div>
 
           {/* Processing overlay */}
-          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
