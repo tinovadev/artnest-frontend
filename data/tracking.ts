@@ -4,7 +4,6 @@ export interface TrackingArtwork {
   image: string;
   latestDate: string;
   status: 'tracking' | 'stopped';
-  canStop?: boolean;
 }
 
 export const trackingArtworks: TrackingArtwork[] = [
@@ -27,7 +26,6 @@ export const trackingArtworks: TrackingArtwork[] = [
     title: 'Canvas of Reme...',
     image: 'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400&h=400&fit=crop',
     latestDate: '2025.06.04',
-    status: 'tracking',
-    canStop: true
+    status: 'stopped'
   }
 ];

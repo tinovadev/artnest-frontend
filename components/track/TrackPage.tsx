@@ -1,10 +1,16 @@
 'use client';
 
-import { DotsThree, Info } from 'phosphor-react';
+import { DotsThree, Info, Trash, Stop } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import Navbar from '@/components/shared/Navbar';
 import { trackingArtworks } from '@/data/tracking';
 
@@ -14,9 +20,14 @@ export default function TrackPage() {
     // Implement tracking logic here
   };
 
-  const handleStopTracking = (artworkId: string) => {
-    console.log('Stopping tracking for:', artworkId);
-    // Implement stop tracking logic here
+  const handleDeleteAll = () => {
+    console.log('Deleting all artworks');
+    // Implement delete all logic here
+  };
+
+  const handleStopAll = () => {
+    console.log('Stopping all tracking');
+    // Implement stop all logic here
   };
 
   return (
@@ -28,9 +39,33 @@ export default function TrackPage() {
             <h1 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground">
               Track
             </h1>
-            <button className="p-2">
-              <DotsThree size={24} className="text-foreground" />
-            </button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-2 hover:bg-secondary rounded-lg transition-colors">
+                  <DotsThree size={24} className="text-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end" 
+                className="bg-secondary border-border rounded-xl p-2 min-w-[160px]"
+              >
+                <DropdownMenuItem 
+                  onClick={handleStopAll}
+                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                >
+                  <Stop size={16} className="text-muted-foreground" />
+                  Stop All
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={handleDeleteAll}
+                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                >
+                  <Trash size={16} className="text-muted-foreground" />
+                  Delete All
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="px-6 lg:px-12 max-w-7xl mx-auto">
@@ -71,13 +106,13 @@ export default function TrackPage() {
                         </h3>
                         <Badge 
                           variant="secondary"
-                          className={`flex-shrink-0 ${
+                          className={`flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full ${
                             artwork.status === 'tracking' 
                               ? 'bg-primary/20 text-primary border-primary/30' 
                               : 'bg-muted text-muted-foreground border-border'
                           }`}
                         >
-                          {artwork.status === 'tracking' ? 'Tracking' : 'Stopped'}
+                          {artwork.status === 'tracking' ? 'Tracking' : 'Stop'}
                         </Badge>
                       </div>
                       
@@ -85,35 +120,13 @@ export default function TrackPage() {
                         Latest Date  {artwork.latestDate}
                       </p>
 
-                      {/* Action Buttons */}
-                      <div className="flex items-center gap-3">
-                        {artwork.status === 'tracking' ? (
-                          <>
-                            <Button 
-                              onClick={() => handleTrackNow(artwork.id)}
-                              className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-xl text-sm"
-                            >
-                              Track Now
-                            </Button>
-                            {artwork.canStop && (
-                              <Button 
-                                onClick={() => handleStopTracking(artwork.id)}
-                                variant="secondary"
-                                className="bg-muted hover:bg-muted/80 text-foreground font-semibold px-6 py-2 rounded-xl text-sm border-0"
-                              >
-                                Stop
-                              </Button>
-                            )}
-                          </>
-                        ) : (
-                          <Button 
-                            onClick={() => handleTrackNow(artwork.id)}
-                            className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-xl text-sm"
-                          >
-                            Start Tracking
-                          </Button>
-                        )}
-                      </div>
+                      {/* Track Now Button */}
+                      <Button 
+                        onClick={() => handleTrackNow(artwork.id)}
+                        className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-xl text-sm"
+                      >
+                        Track Now
+                      </Button>
                     </div>
                   </div>
                 </Card>
