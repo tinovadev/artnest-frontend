@@ -13,3 +13,5 @@ Use stock photos from unsplash where appropriate, only valid URLs you know exist
 All designs should be responsive. Implement the design exactly as shown in the attached image.
 
 The page file should only import components; dummy data and page logic should be stored in separate files. Create a separate folder for each routed page, and place the Page and layout files inside it.
+
+Do not build status bar.
