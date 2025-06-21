@@ -46,6 +46,11 @@ export default function CompletedPage() {
     router.push('/track');
   };
 
+  const handleNotNow = () => {
+    setIsModalOpen(false);
+    router.push('/');
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <TopNavbar />
@@ -235,13 +240,20 @@ export default function CompletedPage() {
               and keep you posted.
             </p>
 
-            {/* Action Button */}
-            <div className="pt-4">
+            {/* Action Buttons */}
+            <div className="space-y-4 pt-4">
               <Button 
                 onClick={handleStartTracking}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
               >
                 Let's start
+              </Button>
+              <Button 
+                onClick={handleNotNow}
+                variant="outline"
+                className="w-full bg-black hover:bg-black/80 text-white border-0 font-semibold py-4 rounded-2xl text-lg"
+              >
+                Not now
               </Button>
             </div>
           </div>
