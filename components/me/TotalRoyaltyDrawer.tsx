@@ -74,22 +74,22 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerOverlay className="bg-black/80" />
-      <DrawerContent className="bg-background border-0 rounded-t-3xl max-h-[90vh]">
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border flex-shrink-0">
-            <DrawerTitle className="text-xl font-bold text-foreground">Total Royalty</DrawerTitle>
-            <button 
-              onClick={onClose}
-              className="p-2 hover:bg-muted rounded-lg transition-colors"
-            >
-              <X size={24} className="text-foreground" />
-            </button>
-          </div>
+      <DrawerContent className="bg-background border-0 rounded-t-3xl h-[90vh] flex flex-col">
+        {/* Header - Fixed */}
+        <div className="flex items-center justify-between p-6 border-b border-border flex-shrink-0">
+          <DrawerTitle className="text-xl font-bold text-foreground">Total Royalty</DrawerTitle>
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
+          >
+            <X size={24} className="text-foreground" />
+          </button>
+        </div>
 
-          {/* Scrollable Content */}
-          <ScrollArea className="flex-1">
-            <div className="p-6 pb-32 space-y-6">
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full">
+            <div className="p-6 space-y-6">
               {/* Artwork Info */}
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-muted flex-shrink-0">
@@ -176,27 +176,30 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
                   ))}
                 </div>
               </div>
+
+              {/* Extra space at bottom to ensure last item is visible */}
+              <div className="h-24"></div>
             </div>
           </ScrollArea>
+        </div>
 
-          {/* Fixed Withdraw Button */}
-          <div className="flex-shrink-0 p-6 bg-background border-t border-border">
-            <Button 
-              onClick={handleWithdraw}
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-              disabled={royaltyData.totalEarnings < 10} // Minimum withdrawal amount
-            >
-              {royaltyData.totalEarnings >= 10 
-                ? `Withdraw $${royaltyData.totalEarnings.toFixed(2)}`
-                : 'Minimum $10.00 to withdraw'
-              }
-            </Button>
-            {royaltyData.totalEarnings < 10 && (
-              <p className="text-xs text-muted-foreground text-center mt-2">
-                You need at least $10.00 to make a withdrawal
-              </p>
-            )}
-          </div>
+        {/* Fixed Withdraw Button */}
+        <div className="flex-shrink-0 p-6 bg-background border-t border-border">
+          <Button 
+            onClick={handleWithdraw}
+            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+            disabled={royaltyData.totalEarnings < 10} // Minimum withdrawal amount
+          >
+            {royaltyData.totalEarnings >= 10 
+              ? `Withdraw $${royaltyData.totalEarnings.toFixed(2)}`
+              : 'Minimum $10.00 to withdraw'
+            }
+          </Button>
+          {royaltyData.totalEarnings < 10 && (
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              You need at least $10.00 to make a withdrawal
+            </p>
+          )}
         </div>
       </DrawerContent>
     </Drawer>
