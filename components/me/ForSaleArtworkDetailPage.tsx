@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { forSaleArtworks } from '@/data/for-sale-artworks';
 import { forSaleArtworkDetails } from '@/data/for-sale-artwork-details';
+import TotalRoyaltyDrawer from './TotalRoyaltyDrawer';
 
 interface ForSaleArtworkDetailPageProps {
   artworkId: string;
@@ -14,6 +16,7 @@ interface ForSaleArtworkDetailPageProps {
 
 export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDetailPageProps) {
   const router = useRouter();
+  const [isRoyaltyDrawerOpen, setIsRoyaltyDrawerOpen] = useState(false);
   const artwork = forSaleArtworks.find(art => art.id === artworkId);
   const details = forSaleArtworkDetails.find(detail => detail.artworkId === artworkId);
 
@@ -26,8 +29,7 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
   };
 
   const handleCheckTotalRoyalty = () => {
-    // Navigate to royalty details or implement royalty check
-    console.log('Check total royalty for artwork:', artworkId);
+    setIsRoyaltyDrawerOpen(true);
   };
 
   if (!artwork || !details) {
@@ -170,6 +172,14 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
           </div>
         </div>
       </ScrollArea>
+
+      {/* Total Royalty Drawer */}
+      <TotalRoyaltyDrawer 
+        isOpen={isRoyaltyDrawerOpen}
+        onClose={() => setIsRoyaltyDrawerOpen(false)}
+        artwork={artwork}
+        details={details}
+      />
     </div>
   );
 }
