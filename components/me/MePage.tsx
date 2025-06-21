@@ -51,6 +51,15 @@ export default function MePage() {
     console.log('My NFT Wallet clicked');
   };
 
+  const handleArtistBadgeClick = () => {
+    // Reset verification status
+    localStorage.removeItem('artistVerified');
+    setIsVerifiedArtist(false);
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('artistVerified'));
+  };
+
   if (!isVerifiedArtist) {
     // Initial state - not verified artist
     return (
@@ -179,11 +188,13 @@ export default function MePage() {
             {/* Profile Card - Verified State */}
             <Card className="bg-secondary border-border rounded-3xl p-8 mb-8 relative">
               <div className="space-y-6">
-                {/* Artist Badge */}
+                {/* Artist Badge - Clickable to reset */}
                 <div className="absolute top-6 right-6">
-                  <Badge className="bg-success text-black font-semibold px-4 py-2 rounded-full text-sm">
-                    Artist
-                  </Badge>
+                  <button onClick={handleArtistBadgeClick}>
+                    <Badge className="bg-success text-black font-semibold px-4 py-2 rounded-full text-sm hover:bg-success/90 transition-colors cursor-pointer">
+                      Artist
+                    </Badge>
+                  </button>
                 </div>
 
                 {/* Profile Photo and Info */}
