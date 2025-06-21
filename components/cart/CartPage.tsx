@@ -52,16 +52,16 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <ScrollArea className="h-screen">
-        <div className="pb-32">
+        <div className="pb-32 lg:pb-8">
           {/* Header */}
-          <div className="flex items-center gap-4 px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-gray-200 max-w-7xl mx-auto">
             <button onClick={handleBack} className="p-2 -ml-2">
               <ArrowLeft size={24} className="text-gray-900" />
             </button>
             <h1 className="text-xl font-semibold text-gray-900">Cart</h1>
           </div>
 
-          <div className="px-6 py-6">
+          <div className="px-6 lg:px-12 py-6 max-w-7xl mx-auto">
             {cartItems.length === 0 ? (
               /* Empty Cart State */
               <div className="flex flex-col items-center justify-center py-20">
@@ -74,49 +74,79 @@ export default function CartPage() {
                 </p>
               </div>
             ) : (
-              /* Cart Items */
-              <div className="space-y-6">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4">
-                    {/* Artwork Thumbnail */}
-                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
-                      <img 
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
+              /* Responsive Layout for Cart Items */
+              <div className="lg:flex lg:gap-12 lg:items-start">
+                {/* Cart Items - Left Side on Desktop */}
+                <div className="lg:flex-1 space-y-6 mb-8 lg:mb-0">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="flex items-center gap-4 p-4 lg:p-6 bg-gray-50 lg:bg-white rounded-2xl lg:border lg:border-gray-200">
+                      {/* Artwork Thumbnail */}
+                      <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
+                        <img 
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Item Details */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-lg lg:text-2xl font-bold text-primary mb-1">
+                          ${item.price}
+                        </p>
+                        <p className="text-sm lg:text-base text-gray-500">
+                          {item.artist}
+                        </p>
+                      </div>
+
+                      {/* Remove Button */}
+                      <button 
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                      >
+                        <Trash size={20} className="text-gray-400" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Order Summary - Right Side on Desktop */}
+                <div className="lg:w-80 lg:flex-shrink-0">
+                  <div className="bg-gray-50 lg:bg-white lg:border lg:border-gray-200 rounded-2xl p-6 lg:p-8">
+                    <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
+                    
+                    {/* Items List */}
+                    <div className="space-y-4 mb-6">
+                      {cartItems.map((item) => (
+                        <div key={item.id} className="flex justify-between items-center">
+                          <span className="text-gray-600 truncate pr-2">{item.title}</span>
+                          <span className="font-semibold text-gray-900">${item.price}</span>
+                        </div>
+                      ))}
                     </div>
 
-                    {/* Item Details */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                        {item.title}
-                      </h3>
-                      <p className="text-lg font-bold text-primary mb-1">
-                        ${item.price}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {item.artist}
-                      </p>
+                    {/* Divider */}
+                    <div className="border-t border-gray-200 my-6"></div>
+
+                    {/* Total */}
+                    <div className="flex items-center justify-between mb-8">
+                      <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Total</h3>
+                      <p className="text-xl lg:text-2xl font-bold text-gray-900">${total}</p>
                     </div>
 
-                    {/* Remove Button */}
-                    <button 
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                      <Trash size={20} className="text-gray-400" />
-                    </button>
+                    {/* Checkout Button - Desktop */}
+                    <div className="hidden lg:block">
+                      <Button 
+                        onClick={handleCheckout}
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+                      >
+                        Checkout
+                      </Button>
+                    </div>
                   </div>
-                ))}
-
-                {/* Divider */}
-                <div className="border-t border-gray-200 my-8"></div>
-
-                {/* Total */}
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-gray-900">Total</h2>
-                  <p className="text-2xl font-bold text-gray-900">${total}</p>
                 </div>
               </div>
             )}
@@ -124,9 +154,9 @@ export default function CartPage() {
         </div>
       </ScrollArea>
 
-      {/* Fixed Checkout Button */}
+      {/* Fixed Checkout Button - Mobile Only */}
       {cartItems.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200">
+        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:hidden">
           <Button 
             onClick={handleCheckout}
             className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
