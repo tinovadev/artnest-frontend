@@ -31,7 +31,7 @@ export default function ProcessingPage() {
       {/* Artwork with scanning animation */}
       <div className="relative mb-12">
         {/* Extended scanning line container - wider than the image */}
-        <div className="absolute inset-0 -inset-x-8 overflow-hidden">
+        <div className="absolute inset-0 -inset-x-8 overflow-hidden z-10">
           <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan-pingpong">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
           </div>
