@@ -42,13 +42,8 @@ export default function CompletedPage() {
 
   const handleStartTracking = () => {
     setIsModalOpen(false);
-    // Navigate back to home or show success message
-    router.push('/');
-  };
-
-  const handleNotNow = () => {
-    setIsModalOpen(false);
-    router.push('/');
+    // Navigate to track page
+    router.push('/track');
   };
 
   return (
@@ -240,20 +235,13 @@ export default function CompletedPage() {
               and keep you posted.
             </p>
 
-            {/* Action Buttons */}
-            <div className="space-y-4 pt-4">
+            {/* Action Button */}
+            <div className="pt-4">
               <Button 
                 onClick={handleStartTracking}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
               >
                 Let's start
-              </Button>
-              <Button 
-                onClick={handleNotNow}
-                variant="outline"
-                className="w-full bg-black hover:bg-black/80 text-white border-0 font-semibold py-4 rounded-2xl text-lg"
-              >
-                Not now
               </Button>
             </div>
           </div>
