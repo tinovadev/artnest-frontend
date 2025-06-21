@@ -212,13 +212,6 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
                 />
               </div>
 
-              {/* Edit Basic Info Button */}
-              <Button 
-                className="w-full bg-transparent border-2 border-primary text-primary hover:bg-primary/5 font-semibold py-4 rounded-xl text-base"
-              >
-                Edit Basic Info
-              </Button>
-
               {/* About the Artist */}
               <div className="space-y-2">
                 <Label htmlFor="artistBio" className="text-base font-medium text-gray-900">
