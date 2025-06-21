@@ -126,86 +126,94 @@ export default function MePage() {
             </div>
 
             <div className="px-6 lg:px-12 max-w-7xl mx-auto">
-              {/* Profile Card - Initial State */}
-              <Card className="bg-secondary border-border rounded-3xl p-8 mb-8">
-                <div className="space-y-6">
-                  {/* Artist Name */}
-                  <h2 className="text-3xl lg:text-4xl font-pixel font-bold text-foreground">
-                    Aria Solen
-                  </h2>
+              {/* Responsive Layout */}
+              <div className="lg:flex lg:gap-12 lg:items-start">
+                {/* Profile Card - Left side on desktop */}
+                <div className="lg:flex-shrink-0 lg:w-96 mb-8 lg:mb-0">
+                  <Card className="bg-secondary border-border rounded-3xl p-8">
+                    <div className="space-y-6">
+                      {/* Artist Name */}
+                      <h2 className="text-3xl lg:text-4xl font-pixel font-bold text-foreground">
+                        Aria Solen
+                      </h2>
 
-                  {/* NFT Wallet Link */}
-                  <button 
-                    onClick={handleWalletClick}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <span className="text-base lg:text-lg">My NFT Wallet</span>
-                    <ArrowUpRight size={20} />
-                  </button>
+                      {/* NFT Wallet Link */}
+                      <button 
+                        onClick={handleWalletClick}
+                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <span className="text-base lg:text-lg">My NFT Wallet</span>
+                        <ArrowUpRight size={20} />
+                      </button>
 
-                  {/* Apply Artist Button */}
-                  <Button 
-                    onClick={handleApplyArtist}
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-                  >
-                    Apply Artist
-                  </Button>
-                </div>
-              </Card>
-
-              {/* Tab Navigation */}
-              <div className="flex mb-6">
-                <button
-                  onClick={() => setActiveTab('protected')}
-                  className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ${
-                    activeTab === 'protected'
-                      ? 'bg-primary text-white'
-                      : 'bg-transparent text-muted-foreground border border-border'
-                  }`}
-                >
-                  Protected
-                </button>
-                <button
-                  onClick={() => setActiveTab('for-sale')}
-                  className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ml-4 ${
-                    activeTab === 'for-sale'
-                      ? 'bg-primary text-white'
-                      : 'bg-transparent text-muted-foreground border border-border'
-                  }`}
-                >
-                  For Sale
-                </button>
-              </div>
-
-              {/* Single Artwork - Initial State */}
-              {activeTab === 'protected' && (
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                  <Card 
-                    className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
-                    onClick={() => handleProtectedArtworkClick('1')}
-                  >
-                    <div className="relative aspect-[4/5] overflow-hidden">
-                      <img 
-                        src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop"
-                        alt="Abstract Composition"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      {/* Apply Artist Button */}
+                      <Button 
+                        onClick={handleApplyArtist}
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+                      >
+                        Apply Artist
+                      </Button>
                     </div>
                   </Card>
                 </div>
-              )}
 
-              {activeTab === 'for-sale' && (
-                <div className="flex flex-col items-center justify-center py-20">
-                  <div className="text-center">
-                    <h3 className="text-xl font-semibold text-foreground mb-2">No artworks for sale</h3>
-                    <p className="text-muted-foreground">
-                      Your artworks available for purchase will appear here
-                    </p>
+                {/* Content Area - Right side on desktop */}
+                <div className="lg:flex-1">
+                  {/* Tab Navigation */}
+                  <div className="flex mb-6">
+                    <button
+                      onClick={() => setActiveTab('protected')}
+                      className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ${
+                        activeTab === 'protected'
+                          ? 'bg-primary text-white'
+                          : 'bg-transparent text-muted-foreground border border-border'
+                      }`}
+                    >
+                      Protected
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('for-sale')}
+                      className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ml-4 ${
+                        activeTab === 'for-sale'
+                          ? 'bg-primary text-white'
+                          : 'bg-transparent text-muted-foreground border border-border'
+                      }`}
+                    >
+                      For Sale
+                    </button>
                   </div>
+
+                  {/* Single Artwork - Initial State */}
+                  {activeTab === 'protected' && (
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+                      <Card 
+                        className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                        onClick={() => handleProtectedArtworkClick('1')}
+                      >
+                        <div className="relative aspect-[4/5] overflow-hidden">
+                          <img 
+                            src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop"
+                            alt="Abstract Composition"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                        </div>
+                      </Card>
+                    </div>
+                  )}
+
+                  {activeTab === 'for-sale' && (
+                    <div className="flex flex-col items-center justify-center py-20">
+                      <div className="text-center">
+                        <h3 className="text-xl font-semibold text-foreground mb-2">No artworks for sale</h3>
+                        <p className="text-muted-foreground">
+                          Your artworks available for purchase will appear here
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </ScrollArea>
@@ -257,42 +265,47 @@ export default function MePage() {
           </div>
 
           <div className="px-6 lg:px-12 max-w-7xl mx-auto">
-            {/* Profile Card - Verified State */}
-            <Card className="bg-secondary border-border rounded-3xl p-8 mb-8 relative">
-              <div className="space-y-6">
-                {/* Artist Badge - Clickable to reset */}
-                <div className="absolute top-6 right-6">
-                  <button onClick={handleArtistBadgeClick}>
-                    <Badge className="bg-success text-black font-semibold px-4 py-2 rounded-full text-sm hover:bg-success/90 transition-colors cursor-pointer">
-                      Artist
-                    </Badge>
-                  </button>
-                </div>
+            {/* Responsive Layout */}
+            <div className="lg:flex lg:gap-12 lg:items-start">
+              {/* Profile Card - Left side on desktop */}
+              <div className="lg:flex-shrink-0 lg:w-96 mb-8 lg:mb-0">
+                <Card className="bg-secondary border-border rounded-3xl p-8 relative">
+                  <div className="space-y-6">
+                    {/* Artist Badge - Clickable to reset */}
+                    <div className="absolute top-6 right-6">
+                      <button onClick={handleArtistBadgeClick}>
+                        <Badge className="bg-success text-black font-semibold px-4 py-2 rounded-full text-sm hover:bg-success/90 transition-colors cursor-pointer">
+                          Artist
+                        </Badge>
+                      </button>
+                    </div>
 
-                {/* Profile Photo and Info */}
-                <div className="flex items-start gap-4">
-                  <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex-shrink-0">
-                    <img 
-                      src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
-                      alt="Aria Solen"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  
-                  <div className="flex-1 pt-2">
-                    {/* Artist Name */}
-                    <h2 className="text-3xl lg:text-4xl font-pixel font-bold text-foreground mb-3">
-                      Aria Solen
-                    </h2>
+                    {/* Profile Photo and Info */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex-shrink-0">
+                        <img 
+                          src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+                          alt="Aria Solen"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
+                      <div className="flex-1 pt-2">
+                        {/* Artist Name */}
+                        <h2 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground mb-3">
+                          Aria Solen
+                        </h2>
 
-                    {/* Artist Description */}
-                    <p className="text-muted-foreground text-base leading-relaxed mb-4">
-                      I'm a digital illustrator exploring the<br />
-                      intersection of nature and imagination.
-                    </p>
+                        {/* Artist Description */}
+                        <p className="text-muted-foreground text-sm lg:text-base leading-relaxed mb-4">
+                          I'm a digital illustrator exploring the<br />
+                          intersection of nature and imagination.
+                        </p>
+                      </div>
+                    </div>
 
                     {/* Divider */}
-                    <div className="border-t border-border my-4"></div>
+                    <div className="border-t border-border"></div>
 
                     {/* NFT Wallet Link */}
                     <button 
@@ -303,91 +316,94 @@ export default function MePage() {
                       <ArrowUpRight size={20} />
                     </button>
                   </div>
+                </Card>
+              </div>
+
+              {/* Content Area - Right side on desktop */}
+              <div className="lg:flex-1">
+                {/* Tab Navigation */}
+                <div className="flex mb-6">
+                  <button
+                    onClick={() => setActiveTab('protected')}
+                    className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ${
+                      activeTab === 'protected'
+                        ? 'bg-primary text-white'
+                        : 'bg-transparent text-muted-foreground border border-border'
+                    }`}
+                  >
+                    Protected
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('for-sale')}
+                    className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ml-4 ${
+                      activeTab === 'for-sale'
+                        ? 'bg-primary text-white'
+                        : 'bg-transparent text-muted-foreground border border-border'
+                    }`}
+                  >
+                    For Sale
+                  </button>
                 </div>
-              </div>
-            </Card>
 
-            {/* Tab Navigation */}
-            <div className="flex mb-6">
-              <button
-                onClick={() => setActiveTab('protected')}
-                className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ${
-                  activeTab === 'protected'
-                    ? 'bg-primary text-white'
-                    : 'bg-transparent text-muted-foreground border border-border'
-                }`}
-              >
-                Protected
-              </button>
-              <button
-                onClick={() => setActiveTab('for-sale')}
-                className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ml-4 ${
-                  activeTab === 'for-sale'
-                    ? 'bg-primary text-white'
-                    : 'bg-transparent text-muted-foreground border border-border'
-                }`}
-              >
-                For Sale
-              </button>
-            </div>
-
-            {/* Content based on active tab */}
-            {activeTab === 'protected' && (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                {protectedArtworks.map((artwork, index) => (
-                  <Card 
-                    key={artwork.id} 
-                    className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer relative"
-                    onClick={() => handleProtectedArtworkClick(artwork.id)}
-                  >
-                    {/* Artwork Image */}
-                    <div className="relative aspect-[4/5] overflow-hidden">
-                      <img 
-                        src={artwork.image}
-                        alt={artwork.title}
-                        className="w-full h-full object-cover"
-                      />
-                      
-                      {/* Tracking Badge - Only on first artwork */}
-                      {index === 0 && (
-                        <div className="absolute bottom-3 left-3">
-                          <Badge className="bg-primary text-white font-semibold px-3 py-1 rounded-full text-xs">
-                            Tracking
-                          </Badge>
+                {/* Content based on active tab */}
+                {activeTab === 'protected' && (
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+                    {protectedArtworks.map((artwork, index) => (
+                      <Card 
+                        key={artwork.id} 
+                        className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer relative"
+                        onClick={() => handleProtectedArtworkClick(artwork.id)}
+                      >
+                        {/* Artwork Image */}
+                        <div className="relative aspect-[4/5] overflow-hidden">
+                          <img 
+                            src={artwork.image}
+                            alt={artwork.title}
+                            className="w-full h-full object-cover"
+                          />
+                          
+                          {/* Tracking Badge - Only on first artwork */}
+                          {index === 0 && (
+                            <div className="absolute bottom-3 left-3">
+                              <Badge className="bg-primary text-white font-semibold px-3 py-1 rounded-full text-xs">
+                                Tracking
+                              </Badge>
+                            </div>
+                          )}
+                          
+                          {/* Overlay on hover */}
+                          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                         </div>
-                      )}
-                      
-                      {/* Overlay on hover */}
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
+                      </Card>
+                    ))}
+                  </div>
+                )}
 
-            {activeTab === 'for-sale' && (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                {forSaleArtworks.map((artwork) => (
-                  <Card 
-                    key={artwork.id} 
-                    className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
-                    onClick={() => handleForSaleArtworkClick(artwork.id)}
-                  >
-                    {/* Artwork Image */}
-                    <div className="relative aspect-[4/5] overflow-hidden">
-                      <img 
-                        src={artwork.image}
-                        alt={artwork.title}
-                        className="w-full h-full object-cover"
-                      />
-                      
-                      {/* Overlay on hover */}
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                    </div>
-                  </Card>
-                ))}
+                {activeTab === 'for-sale' && (
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+                    {forSaleArtworks.map((artwork) => (
+                      <Card 
+                        key={artwork.id} 
+                        className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                        onClick={() => handleForSaleArtworkClick(artwork.id)}
+                      >
+                        {/* Artwork Image */}
+                        <div className="relative aspect-[4/5] overflow-hidden">
+                          <img 
+                            src={artwork.image}
+                            alt={artwork.title}
+                            className="w-full h-full object-cover"
+                          />
+                          
+                          {/* Overlay on hover */}
+                          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </ScrollArea>
