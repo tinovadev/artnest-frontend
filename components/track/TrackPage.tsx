@@ -272,19 +272,19 @@ export default function TrackPage() {
             </div>
             
             <DialogTitle className="text-xl font-bold text-foreground">
-              도용된 이력이 없습니다.
+              No theft history found.
             </DialogTitle>
             
             <p className="text-muted-foreground text-sm leading-relaxed">
-              현재까지 이 작품에 대한<br />
-              도용 사례가 발견되지 않았습니다.
+              No theft cases have been<br />
+              detected for this artwork so far.
             </p>
 
             <Button 
               onClick={() => setShowNoTheftModal(false)}
               className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl"
             >
-              확인
+              Confirm
             </Button>
           </div>
         </DialogContent>

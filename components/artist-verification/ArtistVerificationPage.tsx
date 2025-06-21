@@ -216,7 +216,7 @@ export default function ArtistVerificationPage() {
               onClick={handleConfirm}
               className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl"
             >
-              확인
+              Confirm
             </Button>
           </div>
         </DialogContent>

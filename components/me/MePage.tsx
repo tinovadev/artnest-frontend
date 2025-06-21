@@ -112,14 +112,14 @@ export default function MePage() {
                     className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
                   >
                     <PencilSimple size={16} className="text-muted-foreground" />
-                    편집하기
+                    Edit Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={handleUpload}
                     className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
                   >
                     <Plus size={16} className="text-muted-foreground" />
-                    업로드 하기
+                    Upload
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -243,14 +243,14 @@ export default function MePage() {
                   className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
                 >
                   <PencilSimple size={16} className="text-muted-foreground" />
-                  편집하기
+                  Edit Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={handleUpload}
                   className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
                 >
                   <Plus size={16} className="text-muted-foreground" />
-                  업로드 하기
+                  Upload
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

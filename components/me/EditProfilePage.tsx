@@ -44,7 +44,7 @@ export default function EditProfilePage() {
             <button onClick={handleBack} className="p-2 -ml-2">
               <ArrowLeft size={24} className="text-gray-900" />
             </button>
-            <h1 className="text-lg font-semibold text-gray-900">편집하기</h1>
+            <h1 className="text-lg font-semibold text-gray-900">Edit Profile</h1>
           </div>
 
           <div className="px-6 py-6 max-w-2xl mx-auto">
@@ -61,7 +61,7 @@ export default function EditProfilePage() {
                 variant="outline"
                 className="bg-transparent border-gray-300 text-gray-900 hover:bg-gray-50 rounded-xl px-6 py-2"
               >
-                사진 변경
+                Change Photo
               </Button>
             </div>
 
@@ -70,7 +70,7 @@ export default function EditProfilePage() {
               {/* Artist Name */}
               <div className="space-y-2">
                 <Label htmlFor="artistName" className="text-base font-medium text-gray-900">
-                  아티스트 이름
+                  Artist Name
                 </Label>
                 <Input
                   id="artistName"
@@ -83,7 +83,7 @@ export default function EditProfilePage() {
               {/* Description */}
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-base font-medium text-gray-900">
-                  아티스트 설명
+                  Artist Description
                 </Label>
                 <Textarea
                   id="description"
@@ -104,7 +104,7 @@ export default function EditProfilePage() {
             onClick={handleConfirm}
             className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-xl text-lg"
           >
-            확인
+            Confirm
           </Button>
         </div>
       </div>
