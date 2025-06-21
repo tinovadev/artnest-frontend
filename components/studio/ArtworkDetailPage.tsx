@@ -22,8 +22,8 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
   };
 
   const handleGoToCart = () => {
-    // Navigate to cart or add to cart functionality
-    console.log('Going to cart...');
+    // Navigate to cart page
+    router.push('/cart');
   };
 
   if (!artwork || !details) {

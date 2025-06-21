@@ -22,6 +22,10 @@ export default function StudioPage() {
     router.push(`/studio/${artworkId}`);
   };
 
+  const handleCartClick = () => {
+    router.push('/cart');
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <ScrollArea className="h-screen">
@@ -32,7 +36,10 @@ export default function StudioPage() {
               Studio
             </h1>
             
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors relative">
+            <button 
+              onClick={handleCartClick}
+              className="p-2 hover:bg-muted rounded-lg transition-colors relative"
+            >
               <ShoppingCart size={24} className="text-foreground" />
               {cart.length > 0 && (
                 <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
