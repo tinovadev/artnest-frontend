@@ -1,6 +1,6 @@
 'use client';
 
-import { X, TrendUp, Calendar, DollarSign } from 'phosphor-react';
+import { X, TrendUp, Calendar, CurrencyDollar } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -108,7 +108,7 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
               <div className="grid grid-cols-2 gap-4">
                 <Card className="bg-secondary border-border rounded-2xl p-6">
                   <div className="flex items-center gap-3 mb-2">
-                    <DollarSign size={20} className="text-success" />
+                    <CurrencyDollar size={20} className="text-success" />
                     <span className="text-sm text-muted-foreground">Total Earnings</span>
                   </div>
                   <div className="text-2xl font-bold text-foreground">
