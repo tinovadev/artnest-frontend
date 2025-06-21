@@ -20,6 +20,10 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
     router.back();
   };
 
+  const handleEdit = () => {
+    router.push(`/me/protected/${artworkId}/edit`);
+  };
+
   const handleStartTracking = () => {
     // Navigate to tracking or implement tracking logic
     console.log('Start tracking artwork:', artworkId);
@@ -46,7 +50,10 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
               <h1 className="text-lg font-semibold truncate">{artwork.title}</h1>
             </div>
             
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+            <button 
+              onClick={handleEdit}
+              className="p-2 hover:bg-muted rounded-lg transition-colors"
+            >
               <PencilSimple size={24} className="text-foreground" />
             </button>
           </div>
