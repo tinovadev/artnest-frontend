@@ -28,9 +28,9 @@ export default function TopNavbar() {
     },
     {
       icon: User,
-      label: 'Profile',
-      href: '/profile',
-      active: pathname === '/profile'
+      label: 'Me',
+      href: '/me',
+      active: pathname === '/me'
     }
   ];
 

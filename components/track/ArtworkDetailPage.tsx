@@ -88,7 +88,7 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
                     </div>
                     <div className="flex items-center gap-2">
                       <Eye size={16} />
-                      <span>검색 완료</span>
+                      <span>Search Complete</span>
                     </div>
                   </div>
 
@@ -148,7 +148,7 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
                                       : 'bg-green-500/20 text-green-400 border-green-500/30'
                                   }`}
                                 >
-                                  {detection.similarity}% 유사
+                                  {detection.similarity}% Similar
                                 </Badge>
                               </div>
                               

@@ -28,9 +28,9 @@ export default function Navbar() {
     },
     {
       icon: User,
-      label: '',
-      href: '/profile',
-      active: pathname === '/profile'
+      label: 'Me',
+      href: '/me',
+      active: pathname === '/me'
     }
   ];
 
@@ -46,13 +46,11 @@ export default function Navbar() {
                 weight={item.active ? "fill" : "regular"}
                 className={item.active ? "text-primary" : "text-muted-foreground"} 
               />
-              {item.label && (
-                <span className={`text-xs font-medium font-pixel ${
-                  item.active ? "text-primary" : "text-muted-foreground"
-                }`}>
-                  {item.label}
-                </span>
-              )}
+              <span className={`text-xs font-medium font-pixel ${
+                item.active ? "text-primary" : "text-muted-foreground"
+              }`}>
+                {item.label}
+              </span>
             </Link>
           );
         })}
