@@ -1,10 +1,11 @@
 'use client';
 
-import { DotsThree, Info, Trash, Stop, Play } from 'phosphor-react';
+import { DotsThree, Info, Trash, PencilSimple, Check, X } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,17 +16,22 @@ import Navbar from '@/components/shared/Navbar';
 import { trackingArtworks } from '@/data/tracking';
 import { useState } from 'react';
 
+type Mode = 'normal' | 'delete' | 'edit';
+
 export default function TrackPage() {
   const [artworks, setArtworks] = useState(trackingArtworks);
+  const [mode, setMode] = useState<Mode>('normal');
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const handleTrackNow = (artworkId: string) => {
     console.log('Tracking artwork:', artworkId);
     // Implement tracking logic here
   };
 
-  const handleDeleteArtwork = (artworkId: string) => {
-    setArtworks(prev => prev.filter(artwork => artwork.id !== artworkId));
-    console.log('Deleted artwork:', artworkId);
+  const handleDeleteSelected = () => {
+    setArtworks(prev => prev.filter(artwork => !selectedItems.includes(artwork.id)));
+    setSelectedItems([]);
+    setMode('normal');
   };
 
   const handleToggleTracking = (artworkId: string) => {
@@ -34,7 +40,32 @@ export default function TrackPage() {
         ? { ...artwork, status: artwork.status === 'tracking' ? 'stopped' : 'tracking' }
         : artwork
     ));
-    console.log('Toggled tracking for artwork:', artworkId);
+  };
+
+  const handleSelectItem = (artworkId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedItems(prev => [...prev, artworkId]);
+    } else {
+      setSelectedItems(prev => prev.filter(id => id !== artworkId));
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedItems(artworks.map(artwork => artwork.id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleModeChange = (newMode: Mode) => {
+    setMode(newMode);
+    setSelectedItems([]);
+  };
+
+  const handleCancel = () => {
+    setMode('normal');
+    setSelectedItems([]);
   };
 
   return (
@@ -46,6 +77,42 @@ export default function TrackPage() {
             <h1 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground">
               Track
             </h1>
+            
+            {mode === 'normal' ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                    <DotsThree size={24} className="text-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="end" 
+                  className="bg-secondary border-border rounded-xl p-2 min-w-[140px]"
+                >
+                  <DropdownMenuItem 
+                    onClick={() => handleModeChange('edit')}
+                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  >
+                    <PencilSimple size={16} className="text-muted-foreground" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => handleModeChange('delete')}
+                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  >
+                    <Trash size={16} className="text-muted-foreground" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <button 
+                onClick={handleCancel}
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
+              >
+                <X size={24} className="text-foreground" />
+              </button>
+            )}
           </div>
 
           <div className="px-6 lg:px-12 max-w-7xl mx-auto">
@@ -59,6 +126,30 @@ export default function TrackPage() {
               </div>
             </Card>
 
+            {/* Delete Mode Header */}
+            {mode === 'delete' && (
+              <div className="flex items-center justify-between mb-4 p-4 bg-secondary rounded-xl">
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    checked={selectedItems.length === artworks.length && artworks.length > 0}
+                    onCheckedChange={handleSelectAll}
+                    className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <span className="text-foreground font-medium">
+                    Select All ({selectedItems.length}/{artworks.length})
+                  </span>
+                </div>
+                {selectedItems.length > 0 && (
+                  <Button
+                    onClick={handleDeleteSelected}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm"
+                  >
+                    Delete ({selectedItems.length})
+                  </Button>
+                )}
+              </div>
+            )}
+
             {/* Artwork List */}
             <div className="space-y-4">
               {artworks.map((artwork) => (
@@ -67,6 +158,15 @@ export default function TrackPage() {
                   className="bg-secondary border-border rounded-2xl p-6"
                 >
                   <div className="flex items-center gap-4">
+                    {/* Checkbox for Delete Mode */}
+                    {mode === 'delete' && (
+                      <Checkbox
+                        checked={selectedItems.includes(artwork.id)}
+                        onCheckedChange={(checked) => handleSelectItem(artwork.id, checked as boolean)}
+                        className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      />
+                    )}
+
                     {/* Artwork Thumbnail */}
                     <div className="flex-shrink-0">
                       <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden bg-muted">
@@ -95,43 +195,6 @@ export default function TrackPage() {
                           >
                             {artwork.status === 'tracking' ? 'Tracking' : 'Stop'}
                           </Badge>
-                          
-                          {/* Individual Dropdown Menu */}
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <button className="p-1 hover:bg-muted rounded-lg transition-colors">
-                                <DotsThree size={20} className="text-muted-foreground" />
-                              </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent 
-                              align="end" 
-                              className="bg-secondary border-border rounded-xl p-2 min-w-[140px]"
-                            >
-                              <DropdownMenuItem 
-                                onClick={() => handleToggleTracking(artwork.id)}
-                                className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
-                              >
-                                {artwork.status === 'tracking' ? (
-                                  <>
-                                    <Stop size={16} className="text-muted-foreground" />
-                                    Stop
-                                  </>
-                                ) : (
-                                  <>
-                                    <Play size={16} className="text-muted-foreground" />
-                                    Start
-                                  </>
-                                )}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                onClick={() => handleDeleteArtwork(artwork.id)}
-                                className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
-                              >
-                                <Trash size={16} className="text-muted-foreground" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
                         </div>
                       </div>
                       
@@ -139,13 +202,30 @@ export default function TrackPage() {
                         Latest Date  {artwork.latestDate}
                       </p>
 
-                      {/* Track Now Button */}
-                      <Button 
-                        onClick={() => handleTrackNow(artwork.id)}
-                        className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-xl text-sm"
-                      >
-                        Track Now
-                      </Button>
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-3">
+                        {mode === 'normal' && (
+                          <Button 
+                            onClick={() => handleTrackNow(artwork.id)}
+                            className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-xl text-sm"
+                          >
+                            Track Now
+                          </Button>
+                        )}
+                        
+                        {mode === 'edit' && (
+                          <Button 
+                            onClick={() => handleToggleTracking(artwork.id)}
+                            className={`font-semibold px-6 py-2 rounded-xl text-sm ${
+                              artwork.status === 'tracking'
+                                ? 'bg-muted hover:bg-muted/80 text-foreground'
+                                : 'bg-primary hover:bg-primary/90 text-white'
+                            }`}
+                          >
+                            {artwork.status === 'tracking' ? 'Stop' : 'Start'}
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Card>
