@@ -53,7 +53,7 @@ export default function CompletedPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-4 px-6 py-4 border-b border-border flex-shrink-0">
+      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border flex-shrink-0 max-w-7xl mx-auto w-full">
         <button onClick={handleBack} className="p-2 -ml-2">
           <ArrowLeft size={24} className="text-foreground" />
         </button>
@@ -62,148 +62,157 @@ export default function CompletedPage() {
 
       {/* Scrollable Content */}
       <ScrollArea className="flex-1">
-        <div className="px-6 py-6 pb-24">
+        <div className="px-6 lg:px-12 py-6 pb-24 max-w-7xl mx-auto">
           {/* Success Message */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-pixel font-bold mb-2 text-primary">
+          <div className="mb-8 text-center lg:text-left">
+            <h1 className="text-2xl lg:text-4xl font-pixel font-bold mb-2 text-primary">
               Completed!
             </h1>
-            <p className="text-muted-foreground text-base">
+            <p className="text-muted-foreground text-base lg:text-lg">
               Your creation is now securely protected.
             </p>
           </div>
 
-          {/* Protected Artwork */}
-          <div className="mb-8">
-            <div className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/5] max-w-sm mx-auto">
-              <img 
-                src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=500&fit=crop"
-                alt="Protected artwork"
-                className="w-full h-full object-cover"
-              />
-              {/* Grid overlay to show protection */}
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
-                <div className="absolute inset-0 opacity-20">
-                  <div className="grid grid-cols-8 grid-rows-10 h-full w-full">
-                    {Array.from({ length: 80 }).map((_, i) => (
-                      <div key={i} className="border border-white/10" />
-                    ))}
+          {/* Main Content - Responsive Layout */}
+          <div className="lg:flex lg:gap-12 lg:items-start">
+            {/* Protected Artwork */}
+            <div className="lg:flex-shrink-0 mb-8 lg:mb-0">
+              <div className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/5] max-w-sm mx-auto lg:mx-0 lg:w-80 lg:h-96">
+                <img 
+                  src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=500&fit=crop"
+                  alt="Protected artwork"
+                  className="w-full h-full object-cover"
+                />
+                {/* Grid overlay to show protection */}
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
+                  <div className="absolute inset-0 opacity-20">
+                    <div className="grid grid-cols-8 grid-rows-10 h-full w-full">
+                      {Array.from({ length: 80 }).map((_, i) => (
+                        <div key={i} className="border border-white/10" />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Form Section */}
+            <div className="lg:flex-1 lg:max-w-2xl">
+              <Card className="bg-white border-0 rounded-3xl p-6 lg:p-8 space-y-6">
+                {/* Title */}
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-sm font-medium text-gray-700">
+                    Title
+                  </Label>
+                  <Input
+                    id="title"
+                    placeholder="A name that captures your art."
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                  />
+                </div>
+
+                {/* Artist */}
+                <div className="space-y-2">
+                  <Label htmlFor="artist" className="text-sm font-medium text-gray-700">
+                    Artist
+                  </Label>
+                  <Input
+                    id="artist"
+                    value={formData.artist}
+                    onChange={(e) => handleInputChange('artist', e.target.value)}
+                    className="border-gray-200 bg-white text-gray-900 rounded-xl h-12"
+                  />
+                </div>
+
+                {/* Year and Medium - Grid Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="year" className="text-sm font-medium text-gray-700">
+                      Year
+                    </Label>
+                    <Input
+                      id="year"
+                      placeholder="When did you make this?"
+                      value={formData.year}
+                      onChange={(e) => handleInputChange('year', e.target.value)}
+                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="medium" className="text-sm font-medium text-gray-700">
+                      Medium
+                    </Label>
+                    <Input
+                      id="medium"
+                      placeholder="Materials or techniques"
+                      value={formData.medium}
+                      onChange={(e) => handleInputChange('medium', e.target.value)}
+                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                    />
+                  </div>
+                </div>
+
+                {/* Size and Edition - Grid Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="size" className="text-sm font-medium text-gray-700">
+                      Size
+                    </Label>
+                    <Input
+                      id="size"
+                      placeholder="How big is your work?"
+                      value={formData.size}
+                      onChange={(e) => handleInputChange('size', e.target.value)}
+                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="edition" className="text-sm font-medium text-gray-700">
+                      Edition
+                    </Label>
+                    <Input
+                      id="edition"
+                      placeholder="Part of an edition?"
+                      value={formData.edition}
+                      onChange={(e) => handleInputChange('edition', e.target.value)}
+                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                    />
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+                    Description
+                  </Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Add a short description."
+                    value={formData.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl min-h-[100px] resize-none"
+                  />
+                </div>
+              </Card>
+            </div>
           </div>
-
-          {/* Form Section */}
-          <Card className="bg-white border-0 rounded-3xl p-6 space-y-6">
-            {/* Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title" className="text-sm font-medium text-gray-700">
-                Title
-              </Label>
-              <Input
-                id="title"
-                placeholder="A name that captures your art."
-                value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
-                className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
-              />
-            </div>
-
-            {/* Artist */}
-            <div className="space-y-2">
-              <Label htmlFor="artist" className="text-sm font-medium text-gray-700">
-                Artist
-              </Label>
-              <Input
-                id="artist"
-                value={formData.artist}
-                onChange={(e) => handleInputChange('artist', e.target.value)}
-                className="border-gray-200 bg-white text-gray-900 rounded-xl h-12"
-              />
-            </div>
-
-            {/* Year */}
-            <div className="space-y-2">
-              <Label htmlFor="year" className="text-sm font-medium text-gray-700">
-                Year
-              </Label>
-              <Input
-                id="year"
-                placeholder="When did you make this?"
-                value={formData.year}
-                onChange={(e) => handleInputChange('year', e.target.value)}
-                className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
-              />
-            </div>
-
-            {/* Medium */}
-            <div className="space-y-2">
-              <Label htmlFor="medium" className="text-sm font-medium text-gray-700">
-                Medium
-              </Label>
-              <Input
-                id="medium"
-                placeholder="What materials or techniques did you use?"
-                value={formData.medium}
-                onChange={(e) => handleInputChange('medium', e.target.value)}
-                className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
-              />
-            </div>
-
-            {/* Size */}
-            <div className="space-y-2">
-              <Label htmlFor="size" className="text-sm font-medium text-gray-700">
-                Size
-              </Label>
-              <Input
-                id="size"
-                placeholder="How big is your work?"
-                value={formData.size}
-                onChange={(e) => handleInputChange('size', e.target.value)}
-                className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
-              />
-            </div>
-
-            {/* Edition */}
-            <div className="space-y-2">
-              <Label htmlFor="edition" className="text-sm font-medium text-gray-700">
-                Edition
-              </Label>
-              <Input
-                id="edition"
-                placeholder="Is this part of an edition?"
-                value={formData.edition}
-                onChange={(e) => handleInputChange('edition', e.target.value)}
-                className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
-              />
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm font-medium text-gray-700">
-                Description
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="Add a short description."
-                value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl min-h-[100px] resize-none"
-              />
-            </div>
-          </Card>
         </div>
       </ScrollArea>
 
       {/* Fixed Confirm Button */}
-      <div className="flex-shrink-0 p-6 bg-background">
-        <Button 
-          onClick={handleConfirm}
-          className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-        >
-          Confirm
-        </Button>
+      <div className="flex-shrink-0 p-6 lg:px-12 bg-background">
+        <div className="max-w-7xl mx-auto">
+          <Button 
+            onClick={handleConfirm}
+            className="w-full lg:max-w-md lg:ml-auto lg:block bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+          >
+            Confirm
+          </Button>
+        </div>
       </div>
 
       {/* Tracking Modal */}
