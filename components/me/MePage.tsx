@@ -1,10 +1,16 @@
 'use client';
 
-import { DotsThree, ArrowUpRight } from 'phosphor-react';
+import { DotsThree, ArrowUpRight, PencilSimple, Plus } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import Navbar from '@/components/shared/Navbar';
 import TopNavbar from '@/components/shared/TopNavbar';
 import { protectedArtworks } from '@/data/protected-artworks';
@@ -69,6 +75,14 @@ export default function MePage() {
     router.push(`/me/for-sale/${artworkId}`);
   };
 
+  const handleEditProfile = () => {
+    router.push('/me/edit-profile');
+  };
+
+  const handleUpload = () => {
+    router.push('/ai-learning-off');
+  };
+
   if (!isVerifiedArtist) {
     // Initial state - not verified artist
     return (
@@ -83,9 +97,32 @@ export default function MePage() {
                 Me
               </h1>
               
-              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-                <DotsThree size={24} className="text-foreground" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                    <DotsThree size={24} className="text-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="end" 
+                  className="bg-secondary border-border rounded-xl p-2 min-w-[160px]"
+                >
+                  <DropdownMenuItem 
+                    onClick={handleEditProfile}
+                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  >
+                    <PencilSimple size={16} className="text-muted-foreground" />
+                    편집하기
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={handleUpload}
+                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  >
+                    <Plus size={16} className="text-muted-foreground" />
+                    업로드 하기
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             <div className="px-6 lg:px-12 max-w-7xl mx-auto">
@@ -191,9 +228,32 @@ export default function MePage() {
               Me
             </h1>
             
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-              <DotsThree size={24} className="text-foreground" />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                  <DotsThree size={24} className="text-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end" 
+                className="bg-secondary border-border rounded-xl p-2 min-w-[160px]"
+              >
+                <DropdownMenuItem 
+                  onClick={handleEditProfile}
+                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                >
+                  <PencilSimple size={16} className="text-muted-foreground" />
+                  편집하기
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={handleUpload}
+                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                >
+                  <Plus size={16} className="text-muted-foreground" />
+                  업로드 하기
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="px-6 lg:px-12 max-w-7xl mx-auto">
