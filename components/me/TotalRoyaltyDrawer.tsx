@@ -4,7 +4,7 @@ import { X, TrendUp, Calendar, CurrencyDollar } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Drawer, DrawerContent, DrawerOverlay } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerOverlay, DrawerTitle } from '@/components/ui/drawer';
 import { ForSaleArtwork } from '@/data/for-sale-artworks';
 import { ForSaleArtworkDetails } from '@/data/for-sale-artwork-details';
 
@@ -78,7 +78,7 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-border flex-shrink-0">
-            <h2 className="text-xl font-bold text-foreground">Total Royalty</h2>
+            <DrawerTitle className="text-xl font-bold text-foreground">Total Royalty</DrawerTitle>
             <button 
               onClick={onClose}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
