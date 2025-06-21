@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, X } from 'phosphor-react';
+import { ArrowLeft } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -222,14 +222,6 @@ export default function CompletedPage() {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogOverlay className="bg-black/80" />
         <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm mx-auto">
-          {/* Close Button */}
-          <button 
-            onClick={() => setIsModalOpen(false)}
-            className="absolute top-6 right-6 p-2 text-muted-foreground hover:text-foreground"
-          >
-            <X size={24} />
-          </button>
-
           {/* Modal Content */}
           <div className="text-center space-y-6">
             <DialogTitle className="text-2xl font-bold text-foreground">
