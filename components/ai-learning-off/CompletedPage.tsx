@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogContent, DialogOverlay } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogOverlay, DialogTitle } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -220,9 +220,9 @@ export default function CompletedPage() {
 
           {/* Modal Content */}
           <div className="text-center space-y-6">
-            <h2 className="text-2xl font-bold text-foreground">
+            <DialogTitle className="text-2xl font-bold text-foreground">
               Start tracking now?
-            </h2>
+            </DialogTitle>
             <p className="text-muted-foreground text-base leading-relaxed">
               We'll look out for any copycats<br />
               and keep you posted.
