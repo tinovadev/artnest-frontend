@@ -1,16 +1,18 @@
 'use client';
 
-import { ArrowLeft } from 'phosphor-react';
+import { ArrowLeft, CheckCircle } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Dialog, DialogContent, DialogOverlay, DialogTitle } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function ArtistVerificationPage() {
   const router = useRouter();
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     artistName: '',
@@ -43,7 +45,14 @@ export default function ArtistVerificationPage() {
   const handleSubmit = () => {
     // Handle form submission
     console.log('Form submitted:', formData);
-    // You can add validation and API call here
+    // Show success modal
+    setIsSuccessModalOpen(true);
+  };
+
+  const handleConfirm = () => {
+    setIsSuccessModalOpen(false);
+    // Navigate back to Me page
+    router.push('/me');
   };
 
   return (
@@ -175,6 +184,36 @@ export default function ArtistVerificationPage() {
           </div>
         </div>
       </ScrollArea>
+
+      {/* Success Modal */}
+      <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
+        <DialogOverlay className="bg-black/80" />
+        <DialogContent className="bg-white border-0 rounded-3xl p-8 max-w-sm mx-auto">
+          <div className="text-center space-y-6">
+            {/* Success Icon */}
+            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle size={32} className="text-primary" />
+            </div>
+            
+            <DialogTitle className="text-xl font-bold text-gray-900">
+              Application Submitted!
+            </DialogTitle>
+            
+            <p className="text-gray-600 text-base leading-relaxed">
+              Thank you for applying.<br />
+              We'll review your application and<br />
+              get back to you within a few days.
+            </p>
+
+            <Button 
+              onClick={handleConfirm}
+              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl"
+            >
+              확인
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
