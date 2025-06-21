@@ -4,6 +4,7 @@ import { ArrowLeft, Shield, ShieldSlash, Eye, Crown } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import TopNavbar from '@/components/shared/TopNavbar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -67,8 +68,10 @@ export default function AILearningOffPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <TopNavbar />
+      
       {/* Header */}
-      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border flex-shrink-0 max-w-7xl mx-auto w-full">
+      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border flex-shrink-0 max-w-7xl mx-auto w-full lg:mt-20">
         <button onClick={handleBack} className="p-2 -ml-2">
           <ArrowLeft size={24} className="text-foreground" />
         </button>

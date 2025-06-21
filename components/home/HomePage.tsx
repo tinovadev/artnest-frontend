@@ -8,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { testimonials } from '@/data/testimonials';
 import Header from '@/components/shared/Header';
 import Navbar from '@/components/shared/Navbar';
+import TopNavbar from '@/components/shared/TopNavbar';
 import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
@@ -19,9 +20,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
+      <TopNavbar />
+      
       <ScrollArea className="h-screen">
-        <div className="pb-20 lg:pb-8">
-          <Header />
+        <div className="pb-20 lg:pb-8 lg:pt-20">
+          <div className="lg:hidden">
+            <Header />
+          </div>
           
           <div className="px-6 lg:px-12 max-w-7xl mx-auto">
             {/* Main Content - Responsive Layout */}

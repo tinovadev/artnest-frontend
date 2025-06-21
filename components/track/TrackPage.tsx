@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Navbar from '@/components/shared/Navbar';
+import TopNavbar from '@/components/shared/TopNavbar';
 import { trackingArtworks } from '@/data/tracking';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -89,8 +90,10 @@ export default function TrackPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <TopNavbar />
+      
       <ScrollArea className="h-screen">
-        <div className="pb-20 lg:pb-8">
+        <div className="pb-20 lg:pb-8 lg:pt-20">
           {/* Header */}
           <div className="flex items-center justify-between px-6 lg:px-12 py-6 max-w-7xl mx-auto">
             <h1 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground">

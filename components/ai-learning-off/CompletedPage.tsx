@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, X } from 'phosphor-react';
+import { ArrowLeft } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogOverlay, DialogTitle } from '@/components/ui/dialog';
+import TopNavbar from '@/components/shared/TopNavbar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -41,8 +42,8 @@ export default function CompletedPage() {
 
   const handleStartTracking = () => {
     setIsModalOpen(false);
-    // Navigate back to home or show success message
-    router.push('/');
+    // Navigate to track page
+    router.push('/track');
   };
 
   const handleNotNow = () => {
@@ -52,8 +53,10 @@ export default function CompletedPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <TopNavbar />
+      
       {/* Header */}
-      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border flex-shrink-0 max-w-7xl mx-auto w-full">
+      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border flex-shrink-0 max-w-7xl mx-auto w-full lg:mt-20">
         <button onClick={handleBack} className="p-2 -ml-2">
           <ArrowLeft size={24} className="text-foreground" />
         </button>
@@ -219,14 +222,6 @@ export default function CompletedPage() {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogOverlay className="bg-black/80" />
         <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm mx-auto">
-          {/* Close Button */}
-          <button 
-            onClick={() => setIsModalOpen(false)}
-            className="absolute top-6 right-6 p-2 text-muted-foreground hover:text-foreground"
-          >
-            <X size={24} />
-          </button>
-
           {/* Modal Content */}
           <div className="text-center space-y-6">
             <DialogTitle className="text-2xl font-bold text-foreground">
