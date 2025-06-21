@@ -22,9 +22,9 @@ export default function Navbar() {
     },
     {
       icon: CreditCard,
-      label: '',
-      href: '/billing',
-      active: pathname === '/billing'
+      label: 'Studio',
+      href: '/studio',
+      active: pathname === '/studio'
     },
     {
       icon: User,
