@@ -14,7 +14,7 @@ export default function PaymentSuccessPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-4 px-6 py-4 flex-shrink-0">
+      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 flex-shrink-0 max-w-7xl mx-auto w-full lg:mt-20">
         <button onClick={handleBack} className="p-2 -ml-2">
           <ArrowLeft size={24} className="text-foreground" />
         </button>
@@ -22,10 +22,10 @@ export default function PaymentSuccessPage() {
       </div>
 
       {/* Main Content - Responsive Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 lg:px-12 text-center lg:text-left lg:gap-12">
+      <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 lg:px-12 text-center lg:text-left lg:gap-12 max-w-7xl mx-auto">
         {/* Success Icon */}
         <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
-          <CheckCircle size={80} weight="regular" className="text-primary lg:w-24 lg:h-24" />
+          <CheckCircle size={80} weight="regular" className="text-primary lg:w-24 lg:h-24 mx-auto lg:mx-0" />
         </div>
 
         {/* Text Content */}

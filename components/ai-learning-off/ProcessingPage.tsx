@@ -32,39 +32,41 @@ export default function ProcessingPage() {
       <TopNavbar />
       
       <div className="flex-1 flex items-center justify-center px-6 lg:px-12 lg:pt-20">
-        <div className="max-w-6xl mx-auto">
-          {/* Responsive Layout */}
-          <div className="lg:flex lg:items-center lg:gap-16">
+        <div className="max-w-6xl mx-auto w-full">
+          {/* Responsive Layout - Vertical on mobile, Horizontal on desktop */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
             {/* Artwork with scanning animation */}
-            <div className="relative mb-12 lg:mb-0 lg:flex-shrink-0">
+            <div className="relative mb-12 lg:mb-0 lg:flex-shrink-0 flex justify-center lg:justify-start">
               {/* Extended scanning line container - wider than the image */}
-              <div className="absolute inset-0 -inset-x-8 overflow-hidden z-10">
-                <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan-pingpong">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-                </div>
-              </div>
-
-              <div className="relative rounded-2xl overflow-hidden bg-muted w-80 h-80 lg:w-96 lg:h-96 mx-auto lg:mx-0">
-                <img 
-                  src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop"
-                  alt="Artwork being processed"
-                  className="w-full h-full object-cover"
-                />
-                
-                {/* Grid overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="grid grid-cols-8 grid-rows-8 h-full w-full">
-                      {Array.from({ length: 64 }).map((_, i) => (
-                        <div key={i} className="border border-white/10" />
-                      ))}
-                    </div>
+              <div className="relative">
+                <div className="absolute inset-0 -inset-x-8 overflow-hidden z-10">
+                  <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan-pingpong">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
                   </div>
                 </div>
 
-                {/* Processing overlay */}
-                <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">
-                  <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <div className="relative rounded-2xl overflow-hidden bg-muted w-80 h-80 lg:w-96 lg:h-96">
+                  <img 
+                    src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop"
+                    alt="Artwork being processed"
+                    className="w-full h-full object-cover"
+                  />
+                  
+                  {/* Grid overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
+                    <div className="absolute inset-0 opacity-20">
+                      <div className="grid grid-cols-8 grid-rows-8 h-full w-full">
+                        {Array.from({ length: 64 }).map((_, i) => (
+                          <div key={i} className="border border-white/10" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Processing overlay */}
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">
+                    <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  </div>
                 </div>
               </div>
             </div>
