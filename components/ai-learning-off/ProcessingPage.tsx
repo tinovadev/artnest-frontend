@@ -48,9 +48,9 @@ export default function ProcessingPage() {
             </div>
           </div>
 
-          {/* Animated scanning line */}
+          {/* Animated ping-pong scanning line */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan">
+            <div className="scan-line absolute left-0 right-0 h-1 bg-primary shadow-lg shadow-primary/50 animate-scan-pingpong">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
             </div>
           </div>

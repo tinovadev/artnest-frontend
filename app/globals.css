@@ -60,12 +60,12 @@
 }
 
 @layer components {
-  /* Scanning line animation */
+  /* Ping-pong scanning line animation */
   .scan-line {
-    animation: scan 2s ease-in-out infinite;
+    animation: scanPingPong 3s ease-in-out infinite;
   }
   
-  @keyframes scan {
+  @keyframes scanPingPong {
     0% {
       top: 0;
       opacity: 0;
@@ -73,20 +73,28 @@
     10% {
       opacity: 1;
     }
+    45% {
+      top: 90%;
+      opacity: 1;
+    }
     50% {
-      top: 50%;
+      top: 90%;
+      opacity: 1;
+    }
+    55% {
+      top: 90%;
       opacity: 1;
     }
     90% {
       opacity: 1;
     }
     100% {
-      top: 100%;
+      top: 0;
       opacity: 0;
     }
   }
   
-  .animate-scan {
-    animation: scan 2s ease-in-out infinite;
+  .animate-scan-pingpong {
+    animation: scanPingPong 3s ease-in-out infinite;
   }
 }
