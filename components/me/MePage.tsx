@@ -8,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import Navbar from '@/components/shared/Navbar';
 import TopNavbar from '@/components/shared/TopNavbar';
 import { protectedArtworks } from '@/data/protected-artworks';
+import { forSaleArtworks } from '@/data/for-sale-artworks';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -60,8 +61,12 @@ export default function MePage() {
     window.dispatchEvent(new Event('artistVerified'));
   };
 
-  const handleArtworkClick = (artworkId: string) => {
+  const handleProtectedArtworkClick = (artworkId: string) => {
     router.push(`/me/protected/${artworkId}`);
+  };
+
+  const handleForSaleArtworkClick = (artworkId: string) => {
+    router.push(`/me/for-sale/${artworkId}`);
   };
 
   if (!isVerifiedArtist) {
@@ -140,7 +145,7 @@ export default function MePage() {
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                   <Card 
                     className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
-                    onClick={() => handleArtworkClick('1')}
+                    onClick={() => handleProtectedArtworkClick('1')}
                   >
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <img 
@@ -273,7 +278,7 @@ export default function MePage() {
                   <Card 
                     key={artwork.id} 
                     className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer relative"
-                    onClick={() => handleArtworkClick(artwork.id)}
+                    onClick={() => handleProtectedArtworkClick(artwork.id)}
                   >
                     {/* Artwork Image */}
                     <div className="relative aspect-[4/5] overflow-hidden">
@@ -301,13 +306,26 @@ export default function MePage() {
             )}
 
             {activeTab === 'for-sale' && (
-              <div className="flex flex-col items-center justify-center py-20">
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">No artworks for sale</h3>
-                  <p className="text-muted-foreground">
-                    Your artworks available for purchase will appear here
-                  </p>
-                </div>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                {forSaleArtworks.map((artwork) => (
+                  <Card 
+                    key={artwork.id} 
+                    className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                    onClick={() => handleForSaleArtworkClick(artwork.id)}
+                  >
+                    {/* Artwork Image */}
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <img 
+                        src={artwork.image}
+                        alt={artwork.title}
+                        className="w-full h-full object-cover"
+                      />
+                      
+                      {/* Overlay on hover */}
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    </div>
+                  </Card>
+                ))}
               </div>
             )}
           </div>
