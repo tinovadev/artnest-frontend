@@ -1,11 +1,12 @@
 'use client';
 
-import { DotsThree, Info, Trash, PencilSimple, Check, X } from 'phosphor-react';
+import { DotsThree, Info, Trash, PencilSimple, X, Shield } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogOverlay, DialogTitle } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,15 +16,31 @@ import {
 import Navbar from '@/components/shared/Navbar';
 import { trackingArtworks } from '@/data/tracking';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type Mode = 'normal' | 'delete' | 'edit';
 
 export default function TrackPage() {
+  const router = useRouter();
   const [artworks, setArtworks] = useState(trackingArtworks);
   const [mode, setMode] = useState<Mode>('normal');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [showNoTheftModal, setShowNoTheftModal] = useState(false);
 
-  const handleTrackNow = (artworkId: string) => {
+  const handleArtworkClick = (artworkId: string) => {
+    if (mode !== 'normal') return;
+    
+    if (artworkId === '1') {
+      // Navigate to Sunny Garden detail page
+      router.push(`/track/${artworkId}`);
+    } else {
+      // Show no theft history modal for other artworks
+      setShowNoTheftModal(true);
+    }
+  };
+
+  const handleTrackNow = (artworkId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     console.log('Tracking artwork:', artworkId);
     // Implement tracking logic here
   };
@@ -34,7 +51,8 @@ export default function TrackPage() {
     setMode('normal');
   };
 
-  const handleToggleTracking = (artworkId: string) => {
+  const handleToggleTracking = (artworkId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     setArtworks(prev => prev.map(artwork => 
       artwork.id === artworkId 
         ? { ...artwork, status: artwork.status === 'tracking' ? 'stopped' : 'tracking' }
@@ -42,7 +60,8 @@ export default function TrackPage() {
     ));
   };
 
-  const handleSelectItem = (artworkId: string, checked: boolean) => {
+  const handleSelectItem = (artworkId: string, checked: boolean, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (checked) {
       setSelectedItems(prev => [...prev, artworkId]);
     } else {
@@ -155,14 +174,17 @@ export default function TrackPage() {
               {artworks.map((artwork) => (
                 <Card 
                   key={artwork.id} 
-                  className="bg-secondary border-border rounded-2xl p-6"
+                  className={`bg-secondary border-border rounded-2xl p-6 ${
+                    mode === 'normal' ? 'cursor-pointer hover:bg-secondary/80 transition-colors' : ''
+                  }`}
+                  onClick={() => handleArtworkClick(artwork.id)}
                 >
                   <div className="flex items-center gap-4">
                     {/* Checkbox for Delete Mode */}
                     {mode === 'delete' && (
                       <Checkbox
                         checked={selectedItems.includes(artwork.id)}
-                        onCheckedChange={(checked) => handleSelectItem(artwork.id, checked as boolean)}
+                        onCheckedChange={(checked) => handleSelectItem(artwork.id, checked as boolean, event as any)}
                         className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                       />
                     )}
@@ -206,7 +228,7 @@ export default function TrackPage() {
                       <div className="flex items-center gap-3">
                         {mode === 'normal' && (
                           <Button 
-                            onClick={() => handleTrackNow(artwork.id)}
+                            onClick={(e) => handleTrackNow(artwork.id, e)}
                             className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-xl text-sm"
                           >
                             Track Now
@@ -215,7 +237,7 @@ export default function TrackPage() {
                         
                         {mode === 'edit' && (
                           <Button 
-                            onClick={() => handleToggleTracking(artwork.id)}
+                            onClick={(e) => handleToggleTracking(artwork.id, e)}
                             className={`font-semibold px-6 py-2 rounded-xl text-sm ${
                               artwork.status === 'tracking'
                                 ? 'bg-muted hover:bg-muted/80 text-foreground'
@@ -236,6 +258,34 @@ export default function TrackPage() {
       </ScrollArea>
 
       <Navbar />
+
+      {/* No Theft History Modal */}
+      <Dialog open={showNoTheftModal} onOpenChange={setShowNoTheftModal}>
+        <DialogOverlay className="bg-black/80" />
+        <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm mx-auto">
+          <div className="text-center space-y-6">
+            <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
+              <Shield size={32} className="text-success" />
+            </div>
+            
+            <DialogTitle className="text-xl font-bold text-foreground">
+              도용된 이력이 없습니다.
+            </DialogTitle>
+            
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              현재까지 이 작품에 대한<br />
+              도용 사례가 발견되지 않았습니다.
+            </p>
+
+            <Button 
+              onClick={() => setShowNoTheftModal(false)}
+              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl"
+            >
+              확인
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
