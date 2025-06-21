@@ -3,6 +3,7 @@
 import { DotsThree, ArrowUpRight } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Navbar from '@/components/shared/Navbar';
 import TopNavbar from '@/components/shared/TopNavbar';
@@ -15,10 +16,6 @@ type TabType = 'protected' | 'for-sale';
 export default function MePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('protected');
-
-  const handleApplyArtist = () => {
-    router.push('/artist-verification');
-  };
 
   const handleWalletClick = () => {
     // Handle wallet navigation
@@ -44,29 +41,50 @@ export default function MePage() {
 
           <div className="px-6 lg:px-12 max-w-7xl mx-auto">
             {/* Profile Card */}
-            <Card className="bg-secondary border-border rounded-3xl p-8 mb-8">
+            <Card className="bg-secondary border-border rounded-3xl p-8 mb-8 relative">
               <div className="space-y-6">
-                {/* Artist Name */}
-                <h2 className="text-3xl lg:text-4xl font-pixel font-bold text-foreground">
-                  Aria Solen
-                </h2>
+                {/* Artist Badge */}
+                <div className="absolute top-6 right-6">
+                  <Badge className="bg-success text-black font-semibold px-4 py-2 rounded-full text-sm">
+                    Artist
+                  </Badge>
+                </div>
 
-                {/* NFT Wallet Link */}
-                <button 
-                  onClick={handleWalletClick}
-                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <span className="text-base lg:text-lg">My NFT Wallet</span>
-                  <ArrowUpRight size={20} />
-                </button>
+                {/* Profile Photo and Info */}
+                <div className="flex items-start gap-4">
+                  <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex-shrink-0">
+                    <img 
+                      src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+                      alt="Aria Solen"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  <div className="flex-1 pt-2">
+                    {/* Artist Name */}
+                    <h2 className="text-3xl lg:text-4xl font-pixel font-bold text-foreground mb-3">
+                      Aria Solen
+                    </h2>
 
-                {/* Apply Artist Button */}
-                <Button 
-                  onClick={handleApplyArtist}
-                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-                >
-                  Apply Artist
-                </Button>
+                    {/* Artist Description */}
+                    <p className="text-muted-foreground text-base leading-relaxed mb-4">
+                      I'm a digital illustrator exploring the<br />
+                      intersection of nature and imagination.
+                    </p>
+
+                    {/* Divider */}
+                    <div className="border-t border-border my-4"></div>
+
+                    {/* NFT Wallet Link */}
+                    <button 
+                      onClick={handleWalletClick}
+                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <span className="text-base lg:text-lg">My NFT Wallet</span>
+                      <ArrowUpRight size={20} />
+                    </button>
+                  </div>
+                </div>
               </div>
             </Card>
 
@@ -96,11 +114,11 @@ export default function MePage() {
 
             {/* Content based on active tab */}
             {activeTab === 'protected' && (
-              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-                {protectedArtworks.map((artwork) => (
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                {protectedArtworks.map((artwork, index) => (
                   <Card 
                     key={artwork.id} 
-                    className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                    className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer relative"
                   >
                     {/* Artwork Image */}
                     <div className="relative aspect-[4/5] overflow-hidden">
@@ -110,18 +128,17 @@ export default function MePage() {
                         className="w-full h-full object-cover"
                       />
                       
+                      {/* Tracking Badge - Only on first artwork */}
+                      {index === 0 && (
+                        <div className="absolute bottom-3 left-3">
+                          <Badge className="bg-primary text-white font-semibold px-3 py-1 rounded-full text-xs">
+                            Tracking
+                          </Badge>
+                        </div>
+                      )}
+                      
                       {/* Overlay on hover */}
                       <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                    </div>
-
-                    {/* Artwork Info */}
-                    <div className="p-4">
-                      <h3 className="text-sm lg:text-base font-semibold text-foreground truncate">
-                        {artwork.title}
-                      </h3>
-                      <p className="text-xs lg:text-sm text-muted-foreground mt-1">
-                        {artwork.date}
-                      </p>
                     </div>
                   </Card>
                 ))}
