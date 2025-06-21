@@ -60,6 +60,10 @@ export default function MePage() {
     window.dispatchEvent(new Event('artistVerified'));
   };
 
+  const handleArtworkClick = (artworkId: string) => {
+    router.push(`/me/protected/${artworkId}`);
+  };
+
   if (!isVerifiedArtist) {
     // Initial state - not verified artist
     return (
@@ -134,7 +138,10 @@ export default function MePage() {
               {/* Single Artwork - Initial State */}
               {activeTab === 'protected' && (
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                  <Card className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer">
+                  <Card 
+                    className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                    onClick={() => handleArtworkClick('1')}
+                  >
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <img 
                         src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop"
@@ -266,6 +273,7 @@ export default function MePage() {
                   <Card 
                     key={artwork.id} 
                     className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer relative"
+                    onClick={() => handleArtworkClick(artwork.id)}
                   >
                     {/* Artwork Image */}
                     <div className="relative aspect-[4/5] overflow-hidden">
