@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, Check } from 'phosphor-react';
+import { ArrowLeft, CheckCircle } from 'phosphor-react';
 import { useRouter } from 'next/navigation';
 
 export default function PaymentSuccessPage() {
@@ -23,9 +23,9 @@ export default function PaymentSuccessPage() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
-        {/* Success Icon - Stroke Style */}
-        <div className="w-20 h-20 border-4 border-primary rounded-full flex items-center justify-center mb-8">
-          <Check size={32} weight="regular" className="text-primary" />
+        {/* Success Icon - Phosphor CheckCircle */}
+        <div className="mb-8">
+          <CheckCircle size={80} weight="regular" className="text-primary" />
         </div>
 
         {/* Thank You Message */}
