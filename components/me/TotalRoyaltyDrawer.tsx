@@ -1,6 +1,6 @@
 'use client';
 
-import { X, TrendUp, Calendar, CurrencyDollar } from 'phosphor-react';
+import { X, Calendar, CurrencyDollar } from 'phosphor-react';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerOverlay, DrawerTitle } from '@/components/ui/drawer';
@@ -18,48 +18,48 @@ interface TotalRoyaltyDrawerProps {
 const royaltyData = {
   totalEarnings: 24.56,
   thisMonth: 8.32,
-  totalPurchases: 12,
-  thisMonthPurchases: 4,
   recentPurchases: [
     {
       id: '1',
       date: '2025.01.15',
       buyer: 'TechCorp AI',
-      purpose: 'Model Training Dataset',
-      amount: 8.00,
-      usageType: 'Commercial License'
+      amount: 8.00
     },
     {
       id: '2',
       date: '2025.01.12',
       buyer: 'Creative Studio Inc',
-      purpose: 'Style Reference',
-      amount: 5.60,
-      usageType: 'Educational License'
+      amount: 5.60
     },
     {
       id: '3',
       date: '2025.01.10',
       buyer: 'AI Research Lab',
-      purpose: 'Academic Research',
-      amount: 3.20,
-      usageType: 'Research License'
+      amount: 3.20
     },
     {
       id: '4',
       date: '2025.01.08',
       buyer: 'Digital Agency',
-      purpose: 'Client Project',
-      amount: 4.80,
-      usageType: 'Commercial License'
+      amount: 4.80
     },
     {
       id: '5',
       date: '2025.01.05',
       buyer: 'Startup AI',
-      purpose: 'Product Development',
-      amount: 2.96,
-      usageType: 'Commercial License'
+      amount: 2.96
+    },
+    {
+      id: '6',
+      date: '2025.01.03',
+      buyer: 'Media Company',
+      amount: 7.20
+    },
+    {
+      id: '7',
+      date: '2025.01.01',
+      buyer: 'Design Studio',
+      amount: 4.40
     }
   ]
 };
@@ -122,29 +122,6 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
                 </Card>
               </div>
 
-              {/* Purchase Statistics */}
-              <Card className="bg-secondary border-border rounded-2xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <TrendUp size={20} className="text-primary" />
-                  <h3 className="text-lg font-semibold text-foreground">Purchase Statistics</h3>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <div className="text-2xl font-bold text-foreground mb-1">
-                      {royaltyData.totalPurchases}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Total Purchases</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-foreground mb-1">
-                      {royaltyData.thisMonthPurchases}
-                    </div>
-                    <div className="text-sm text-muted-foreground">This Month</div>
-                  </div>
-                </div>
-              </Card>
-
               {/* Recent Purchases */}
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-4">Recent Purchases</h3>
@@ -153,16 +130,12 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
                     <Card key={purchase.id} className="bg-secondary border-border rounded-2xl p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="font-semibold text-foreground">{purchase.buyer}</span>
-                            <span className="font-bold text-foreground">${purchase.amount.toFixed(2)}</span>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-semibold text-foreground text-base">{purchase.buyer}</span>
+                            <span className="font-bold text-foreground text-base">${purchase.amount.toFixed(2)}</span>
                           </div>
-                          <div className="text-sm text-muted-foreground mb-1">
-                            {purchase.purpose}
-                          </div>
-                          <div className="flex items-center justify-between text-xs text-muted-foreground">
-                            <span>{purchase.usageType}</span>
-                            <span>{purchase.date}</span>
+                          <div className="text-sm text-muted-foreground">
+                            {purchase.date}
                           </div>
                         </div>
                       </div>
