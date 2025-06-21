@@ -22,6 +22,10 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
     router.back();
   };
 
+  const handleViewDetails = (detectionIndex: number) => {
+    router.push(`/track/${artworkId}/similarity/${detectionIndex}`);
+  };
+
   if (!artwork) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
@@ -156,6 +160,7 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
                             <Button 
                               size="sm"
                               variant="outline"
+                              onClick={() => handleViewDetails(index)}
                               className="bg-transparent border-border text-foreground hover:bg-muted text-xs px-3 py-1 h-8"
                             >
                               View Details
