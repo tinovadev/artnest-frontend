@@ -8,15 +8,16 @@ import Navbar from '@/components/shared/Navbar';
 import TopNavbar from '@/components/shared/TopNavbar';
 import { protectedArtworks } from '@/data/protected-artworks';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type TabType = 'protected' | 'for-sale';
 
 export default function MePage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('protected');
 
   const handleApplyArtist = () => {
-    // Handle apply artist functionality
-    console.log('Apply Artist clicked');
+    router.push('/artist-verification');
   };
 
   const handleWalletClick = () => {
