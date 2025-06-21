@@ -87,8 +87,9 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
             </button>
           </div>
 
+          {/* Scrollable Content */}
           <ScrollArea className="flex-1">
-            <div className="p-6 space-y-6">
+            <div className="p-6 pb-32 space-y-6">
               {/* Artwork Info */}
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-muted flex-shrink-0">
@@ -175,27 +176,27 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
                   ))}
                 </div>
               </div>
-
-              {/* Withdraw Button */}
-              <div className="pt-4">
-                <Button 
-                  onClick={handleWithdraw}
-                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-                  disabled={royaltyData.totalEarnings < 10} // Minimum withdrawal amount
-                >
-                  {royaltyData.totalEarnings >= 10 
-                    ? `Withdraw $${royaltyData.totalEarnings.toFixed(2)}`
-                    : 'Minimum $10.00 to withdraw'
-                  }
-                </Button>
-                {royaltyData.totalEarnings < 10 && (
-                  <p className="text-xs text-muted-foreground text-center mt-2">
-                    You need at least $10.00 to make a withdrawal
-                  </p>
-                )}
-              </div>
             </div>
           </ScrollArea>
+
+          {/* Fixed Withdraw Button */}
+          <div className="flex-shrink-0 p-6 bg-background border-t border-border">
+            <Button 
+              onClick={handleWithdraw}
+              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+              disabled={royaltyData.totalEarnings < 10} // Minimum withdrawal amount
+            >
+              {royaltyData.totalEarnings >= 10 
+                ? `Withdraw $${royaltyData.totalEarnings.toFixed(2)}`
+                : 'Minimum $10.00 to withdraw'
+              }
+            </Button>
+            {royaltyData.totalEarnings < 10 && (
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                You need at least $10.00 to make a withdrawal
+              </p>
+            )}
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
