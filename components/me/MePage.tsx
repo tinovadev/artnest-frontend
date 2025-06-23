@@ -1,6 +1,6 @@
 'use client';
 
-import { DotsThree, ArrowUpRight, PencilSimple, Plus } from 'phosphor-react';
+import { DotsThree, ArrowUpRight, PencilSimple, Plus, SignOut } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import Navbar from '@/components/shared/Navbar';
 import TopNavbar from '@/components/shared/TopNavbar';
@@ -83,6 +84,14 @@ export default function MePage() {
     router.push('/ai-learning-off');
   };
 
+  const handleLogout = () => {
+    // Clear any stored user data
+    localStorage.removeItem('artistVerified');
+    
+    // Navigate to login page
+    router.push('/login');
+  };
+
   if (!isVerifiedArtist) {
     // Initial state - not verified artist
     return (
@@ -120,6 +129,14 @@ export default function MePage() {
                   >
                     <Plus size={16} className="text-muted-foreground" />
                     Upload
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-border my-1" />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  >
+                    <SignOut size={16} className="text-muted-foreground" />
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -259,6 +276,14 @@ export default function MePage() {
                 >
                   <Plus size={16} className="text-muted-foreground" />
                   Upload
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-border my-1" />
+                <DropdownMenuItem 
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                >
+                  <SignOut size={16} className="text-muted-foreground" />
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
