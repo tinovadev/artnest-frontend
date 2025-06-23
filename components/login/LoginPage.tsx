@@ -31,10 +31,13 @@ export default function LoginPage() {
           <div className="flex-1 flex flex-col justify-center max-w-md mx-auto w-full">
             {/* ArtNest Logo */}
             <div className="mb-16">
-              <h1 className="text-4xl font-pixel font-bold mb-8">
-                <span className="text-primary">a</span>
-                <span className="text-foreground">rtnest</span>
-              </h1>
+              <div className="mb-8">
+                <img 
+                  src="/artnest-logo.svg" 
+                  alt="ArtNest Logo" 
+                  className="h-12 w-auto"
+                />
+              </div>
               
               {/* Tagline */}
               <div className="space-y-2 mb-16">
