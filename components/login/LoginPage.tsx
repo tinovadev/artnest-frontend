@@ -103,50 +103,40 @@ export default function LoginPage() {
 
         {/* Desktop Layout */}
         <div className="hidden lg:flex min-h-screen">
-          {/* Left Side - Branding */}
-          <div className="flex-1 bg-background flex flex-col justify-center px-12 xl:px-20">
-            <div className="max-w-lg">
+          {/* Left Side - Logo and Slogan Only */}
+          <div className="flex-1 bg-background flex flex-col justify-center items-center px-12 xl:px-20">
+            <div className="text-center">
               {/* ArtNest Logo */}
               <div className="mb-16">
                 <img 
                   src="/artnest-logo.svg" 
                   alt="ArtNest Logo" 
-                  className="h-16 w-auto mb-12"
+                  className="h-20 xl:h-24 w-auto mx-auto"
                 />
-                
-                {/* Tagline */}
-                <div className="space-y-4">
-                  <h1 className="text-4xl xl:text-5xl font-pixel font-bold text-primary leading-tight">
-                    Nest your art.
-                  </h1>
-                  <h1 className="text-4xl xl:text-5xl font-pixel font-bold text-primary leading-tight">
-                    Lock your rights.
-                  </h1>
-                </div>
               </div>
-
-              {/* Service Description */}
-              <div className="space-y-6">
-                <h2 className="text-xl xl:text-2xl font-semibold text-primary">
-                  ArtNest provides NFT-based artwork protection and sales services.
-                </h2>
-                
-                <p className="text-base xl:text-lg text-muted-foreground leading-relaxed">
-                  Protect your creative work from unauthorized AI training and monetize your art through our secure NFT-based platform.
-                </p>
+              
+              {/* Tagline */}
+              <div className="space-y-4">
+                <h1 className="text-5xl xl:text-6xl font-pixel font-bold text-primary leading-tight">
+                  Nest your art.
+                </h1>
+                <h1 className="text-5xl xl:text-6xl font-pixel font-bold text-primary leading-tight">
+                  Lock your rights.
+                </h1>
               </div>
             </div>
           </div>
 
-          {/* Right Side - Login Form */}
+          {/* Right Side - NFT Information and Login */}
           <div className="flex-1 bg-secondary flex flex-col justify-center px-12 xl:px-20">
             <div className="max-w-md mx-auto w-full">
+              {/* NFT Service Description */}
               <div className="mb-12">
                 <h2 className="text-2xl xl:text-3xl font-bold text-foreground mb-8">
-                  Welcome to ArtNest
+                  ArtNest provides NFT-based artwork protection and sales services.
                 </h2>
                 
-                <p className="text-base text-muted-foreground leading-relaxed mb-8">
+                <p className="text-base xl:text-lg text-muted-foreground leading-relaxed mb-8">
                   When you sign up, a personal wallet will be automatically created for NFT use. Do you agree? 
                   (You can check your wallet address anytime in My Page.)
                 </p>
@@ -187,12 +177,6 @@ export default function LoginPage() {
                 </div>
                 Google Login
               </Button>
-
-              {/* Additional Info */}
-              <p className="text-sm text-muted-foreground text-center mt-8 leading-relaxed">
-                By signing up, you agree to our Terms of Service and Privacy Policy. 
-                Your wallet will be securely generated and managed.
-              </p>
             </div>
           </div>
         </div>
