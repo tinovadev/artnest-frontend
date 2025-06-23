@@ -144,7 +144,7 @@ export default function AILearningOffPage() {
       </ScrollArea>
 
       {/* Fixed Confirm Button */}
-      <div className="flex-shrink-0 p-6 lg:px-12 bg-background">
+      <div className="flex-shrink-0 p-6 lg:p-12 bg-background">
         <div className="max-w-7xl mx-auto">
           <Button
             onClick={handleConfirm}
