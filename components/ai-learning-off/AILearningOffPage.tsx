@@ -75,7 +75,7 @@ export default function AILearningOffPage() {
       </div>
 
       {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="mb-9 flex-1">
         <div className="mx-auto max-w-7xl px-6 py-6 lg:px-12">
           {/* Main Content - Responsive Layout */}
           <div className="lg:flex lg:items-start lg:gap-12">
