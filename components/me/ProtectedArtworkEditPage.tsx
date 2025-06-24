@@ -240,7 +240,7 @@ export default function ProtectedArtworkEditPage({
               </div>
             </div>
 
-            <div className="lg:flex lg:justify-end lg:pt-6">
+            <div className="pt-4 lg:flex lg:justify-end lg:pt-6">
               <Button
                 onClick={handleConfirm}
                 className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90 lg:w-auto lg:min-w-[200px]"
