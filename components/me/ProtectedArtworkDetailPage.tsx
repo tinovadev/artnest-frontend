@@ -114,7 +114,7 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
                 <div className="hidden lg:block pt-4">
                   <Button 
                     onClick={handleStartTracking}
-                    className="w-full lg:max-w-md bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+                    className="w-full  bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
                   >
                     Start Tracking
                   </Button>
