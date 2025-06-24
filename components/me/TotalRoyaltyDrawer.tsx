@@ -68,7 +68,7 @@ export default function TotalRoyaltyDrawer({ isOpen, onClose, artwork, details }
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerOverlay className="bg-black/80" />
-      <DrawerContent className="bg-background border-0 rounded-t-3xl h-[90vh] flex flex-col">
+      <DrawerContent className="bg-background border-0 rounded-t-3xl h-[90vh] flex flex-col max-w-4xl mx-auto">
         {/* Header - Fixed */}
         <div className="flex items-center justify-between p-6 border-b border-border flex-shrink-0">
           <DrawerTitle className="text-xl font-bold text-foreground">Total Royalty</DrawerTitle>
