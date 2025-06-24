@@ -149,7 +149,7 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
                 <div className="hidden lg:block">
                   <Button 
                     onClick={handleGoToCart}
-                    className="w-full lg:max-w-md bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
                   >
                     Go to Cart
                   </Button>
