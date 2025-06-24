@@ -1,42 +1,54 @@
-'use client';
+"use client";
 
-import { ArrowLeft } from 'phosphor-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { forSaleArtworks } from '@/data/for-sale-artworks';
-import { forSaleArtworkDetails } from '@/data/for-sale-artwork-details';
+import { ArrowLeft } from "phosphor-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { forSaleArtworks } from "@/data/for-sale-artworks";
+import { forSaleArtworkDetails } from "@/data/for-sale-artwork-details";
 
 interface ForSaleArtworkEditPageProps {
   artworkId: string;
 }
 
-export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEditPageProps) {
+export default function ForSaleArtworkEditPage({
+  artworkId,
+}: ForSaleArtworkEditPageProps) {
   const router = useRouter();
-  const artwork = forSaleArtworks.find(art => art.id === artworkId);
-  const details = forSaleArtworkDetails.find(detail => detail.artworkId === artworkId);
+  const artwork = forSaleArtworks.find((art) => art.id === artworkId);
+  const details = forSaleArtworkDetails.find(
+    (detail) => detail.artworkId === artworkId,
+  );
 
   const [formData, setFormData] = useState({
-    title: artwork?.title || '',
+    title: artwork?.title || "",
     price: artwork?.price || 10,
-    year: details?.year || '',
-    artist: details?.artist || 'Aria Solen',
-    dimensions: details?.dimensions || '',
-    medium: details?.medium || '',
-    edition: details?.edition || '',
-    description: details?.description || '',
-    artistBio: details?.artistBio.title || '',
+    year: details?.year || "",
+    artist: details?.artist || "Aria Solen",
+    dimensions: details?.dimensions || "",
+    medium: details?.medium || "",
+    edition: details?.edition || "",
+    description: details?.description || "",
+    artistBio: details?.artistBio.title || "",
     royaltyPerUse: details?.royalty.pricePerUse || 0.08,
     permissions: {
-      commercialTraining: details?.license.permissions.includes('Commercial training allowed') || false,
-      resaleNotPermitted: details?.license.restrictions.includes('Resale of image not permitted') || false,
-      derivativeGeneration: details?.license.permissions.includes('Derivative generation permitted') || false
-    }
+      commercialTraining:
+        details?.license.permissions.includes("Commercial training allowed") ||
+        false,
+      resaleNotPermitted:
+        details?.license.restrictions.includes(
+          "Resale of image not permitted",
+        ) || false,
+      derivativeGeneration:
+        details?.license.permissions.includes(
+          "Derivative generation permitted",
+        ) || false,
+    },
   });
 
   const handleBack = () => {
@@ -44,33 +56,33 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
   };
 
   const handleInputChange = (field: string, value: string | number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handlePermissionChange = (permission: string, checked: boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       permissions: {
         ...prev.permissions,
-        [permission]: checked
-      }
+        [permission]: checked,
+      },
     }));
   };
 
   const handleConfirm = () => {
     // Handle form submission - update artwork details
-    console.log('Updated for sale artwork details:', formData);
-    
+    console.log("Updated for sale artwork details:", formData);
+
     // Navigate back to detail page
     router.push(`/me/for-sale/${artworkId}`);
   };
 
   if (!artwork) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <p className="text-muted-foreground">Artwork not found</p>
       </div>
     );
@@ -81,164 +93,224 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
       <ScrollArea className="h-screen">
         <div className="pb-32">
           {/* Header */}
-          <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-gray-200 max-w-7xl mx-auto lg:mt-20">
-            <button onClick={handleBack} className="p-2 -ml-2">
+          <div className="mx-auto flex max-w-7xl items-center gap-4 border-b border-gray-200 px-6 py-4 lg:mt-20 lg:px-12">
+            <button onClick={handleBack} className="-ml-2 p-2">
               <ArrowLeft size={24} className="text-gray-900" />
             </button>
-            <h1 className="text-lg font-semibold text-gray-900 truncate">{artwork.title}</h1>
+            <h1 className="truncate text-lg font-semibold text-gray-900">
+              {artwork.title}
+            </h1>
           </div>
 
-          <div className="px-6 lg:px-12 py-6 max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl px-6 py-6 lg:px-12">
             {/* Responsive Layout */}
-            <div className="lg:flex lg:gap-12 lg:items-start">
+            <div className="lg:flex lg:items-start lg:gap-12">
               {/* Artwork Image - Left Side on Desktop */}
-              <div className="lg:flex-shrink-0 mb-8 lg:mb-0">
-                <div className="relative rounded-3xl overflow-hidden bg-gray-100 aspect-[4/5] w-full max-w-md mx-auto lg:mx-0 lg:w-96 lg:h-[480px]">
-                  <img 
+              <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
+                <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl bg-gray-100 lg:mx-0 lg:h-[480px] lg:w-96">
+                  <img
                     src={artwork.image}
                     alt={artwork.title}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                   />
                 </div>
               </div>
 
               {/* Form - Right Side on Desktop */}
-              <div className="lg:flex-1 lg:max-w-2xl">
+              <div className="lg:flex-1">
                 <div className="space-y-6">
                   {/* Title */}
                   <div className="space-y-2">
-                    <Label htmlFor="title" className="text-base font-medium text-gray-900">
+                    <Label
+                      htmlFor="title"
+                      className="text-base font-medium text-gray-900"
+                    >
                       Title
                     </Label>
                     <Input
                       id="title"
                       value={formData.title}
-                      onChange={(e) => handleInputChange('title', e.target.value)}
-                      className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                      onChange={(e) =>
+                        handleInputChange("title", e.target.value)
+                      }
+                      className="h-14 rounded-xl border-gray-300 bg-white text-base text-gray-900"
                     />
                   </div>
 
                   {/* Price */}
                   <div className="space-y-2">
-                    <Label htmlFor="price" className="text-base font-medium text-gray-900">
+                    <Label
+                      htmlFor="price"
+                      className="text-base font-medium text-gray-900"
+                    >
                       Price
                     </Label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-900 text-base">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 transform text-base text-gray-900">
+                        $
+                      </span>
                       <Input
                         id="price"
                         type="number"
                         value={formData.price}
-                        onChange={(e) => handleInputChange('price', parseInt(e.target.value) || 0)}
-                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base pl-8"
+                        onChange={(e) =>
+                          handleInputChange(
+                            "price",
+                            parseInt(e.target.value) || 0,
+                          )
+                        }
+                        className="h-14 rounded-xl border-gray-300 bg-white pl-8 text-base text-gray-900"
                       />
                     </div>
                   </div>
 
                   {/* Year and Artist - Grid Layout */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="year" className="text-base font-medium text-gray-900">
+                      <Label
+                        htmlFor="year"
+                        className="text-base font-medium text-gray-900"
+                      >
                         Year
                       </Label>
                       <Input
                         id="year"
                         value={formData.year}
-                        onChange={(e) => handleInputChange('year', e.target.value)}
-                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                        onChange={(e) =>
+                          handleInputChange("year", e.target.value)
+                        }
+                        className="h-14 rounded-xl border-gray-300 bg-white text-base text-gray-900"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="artist" className="text-base font-medium text-gray-900">
+                      <Label
+                        htmlFor="artist"
+                        className="text-base font-medium text-gray-900"
+                      >
                         Artist
                       </Label>
                       <Input
                         id="artist"
                         value={formData.artist}
-                        onChange={(e) => handleInputChange('artist', e.target.value)}
-                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                        onChange={(e) =>
+                          handleInputChange("artist", e.target.value)
+                        }
+                        className="h-14 rounded-xl border-gray-300 bg-white text-base text-gray-900"
                       />
                     </div>
                   </div>
 
                   {/* Dimensions and Medium - Grid Layout */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="dimensions" className="text-base font-medium text-gray-900">
+                      <Label
+                        htmlFor="dimensions"
+                        className="text-base font-medium text-gray-900"
+                      >
                         Dimensions
                       </Label>
                       <Input
                         id="dimensions"
                         value={formData.dimensions}
-                        onChange={(e) => handleInputChange('dimensions', e.target.value)}
-                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                        onChange={(e) =>
+                          handleInputChange("dimensions", e.target.value)
+                        }
+                        className="h-14 rounded-xl border-gray-300 bg-white text-base text-gray-900"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="medium" className="text-base font-medium text-gray-900">
+                      <Label
+                        htmlFor="medium"
+                        className="text-base font-medium text-gray-900"
+                      >
                         Medium
                       </Label>
                       <Input
                         id="medium"
                         value={formData.medium}
-                        onChange={(e) => handleInputChange('medium', e.target.value)}
-                        className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                        onChange={(e) =>
+                          handleInputChange("medium", e.target.value)
+                        }
+                        className="h-14 rounded-xl border-gray-300 bg-white text-base text-gray-900"
                       />
                     </div>
                   </div>
 
                   {/* Edition */}
                   <div className="space-y-2">
-                    <Label htmlFor="edition" className="text-base font-medium text-gray-900">
+                    <Label
+                      htmlFor="edition"
+                      className="text-base font-medium text-gray-900"
+                    >
                       Edition
                     </Label>
                     <Input
                       id="edition"
                       value={formData.edition}
-                      onChange={(e) => handleInputChange('edition', e.target.value)}
-                      className="border-gray-300 bg-white text-gray-900 rounded-xl h-14 text-base"
+                      onChange={(e) =>
+                        handleInputChange("edition", e.target.value)
+                      }
+                      className="h-14 rounded-xl border-gray-300 bg-white text-base text-gray-900"
                     />
                   </div>
 
                   {/* Description */}
                   <div className="space-y-2">
-                    <Label htmlFor="description" className="text-base font-medium text-gray-900">
+                    <Label
+                      htmlFor="description"
+                      className="text-base font-medium text-gray-900"
+                    >
                       Description
                     </Label>
                     <Textarea
                       id="description"
                       value={formData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      className="border-gray-300 bg-white text-gray-900 rounded-xl min-h-[120px] resize-none text-base"
+                      onChange={(e) =>
+                        handleInputChange("description", e.target.value)
+                      }
+                      className="min-h-[120px] resize-none rounded-xl border-gray-300 bg-white text-base text-gray-900"
                     />
                   </div>
 
                   {/* About the Artist */}
                   <div className="space-y-2">
-                    <Label htmlFor="artistBio" className="text-base font-medium text-gray-900">
+                    <Label
+                      htmlFor="artistBio"
+                      className="text-base font-medium text-gray-900"
+                    >
                       About the Artist
                     </Label>
                     <Textarea
                       id="artistBio"
                       value={formData.artistBio}
-                      onChange={(e) => handleInputChange('artistBio', e.target.value)}
-                      className="border-gray-300 bg-white text-gray-900 rounded-xl min-h-[80px] resize-none text-base"
+                      onChange={(e) =>
+                        handleInputChange("artistBio", e.target.value)
+                      }
+                      className="min-h-[80px] resize-none rounded-xl border-gray-300 bg-white text-base text-gray-900"
                     />
                   </div>
 
                   {/* Royalty per Use */}
                   <div className="space-y-2">
-                    <Label htmlFor="royaltyPerUse" className="text-base font-medium text-gray-900">
+                    <Label
+                      htmlFor="royaltyPerUse"
+                      className="text-base font-medium text-gray-900"
+                    >
                       Royalty per Use
                     </Label>
                     <Input
                       id="royaltyPerUse"
                       placeholder="How much royalty would you like to earn?"
                       value={formData.royaltyPerUse}
-                      onChange={(e) => handleInputChange('royaltyPerUse', parseFloat(e.target.value) || 0)}
-                      className="border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-14 text-base"
+                      onChange={(e) =>
+                        handleInputChange(
+                          "royaltyPerUse",
+                          parseFloat(e.target.value) || 0,
+                        )
+                      }
+                      className="h-14 rounded-xl border-gray-300 bg-white text-base text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
 
@@ -247,16 +319,24 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
                     <Label className="text-base font-medium text-gray-900">
                       AI Usage License
                     </Label>
-                    
-                    <div className="space-y-4 p-4 border border-gray-300 rounded-xl">
+
+                    <div className="space-y-4 rounded-xl border border-gray-300 p-4">
                       <div className="flex items-center space-x-3">
                         <Checkbox
                           id="commercialTraining"
                           checked={formData.permissions.commercialTraining}
-                          onCheckedChange={(checked) => handlePermissionChange('commercialTraining', checked as boolean)}
-                          className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          onCheckedChange={(checked) =>
+                            handlePermissionChange(
+                              "commercialTraining",
+                              checked as boolean,
+                            )
+                          }
+                          className="border-gray-300 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                         />
-                        <Label htmlFor="commercialTraining" className="text-base text-gray-900 cursor-pointer">
+                        <Label
+                          htmlFor="commercialTraining"
+                          className="cursor-pointer text-base text-gray-900"
+                        >
                           Commercial training allowed
                         </Label>
                       </div>
@@ -265,10 +345,18 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
                         <Checkbox
                           id="resaleNotPermitted"
                           checked={formData.permissions.resaleNotPermitted}
-                          onCheckedChange={(checked) => handlePermissionChange('resaleNotPermitted', checked as boolean)}
-                          className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          onCheckedChange={(checked) =>
+                            handlePermissionChange(
+                              "resaleNotPermitted",
+                              checked as boolean,
+                            )
+                          }
+                          className="border-gray-300 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                         />
-                        <Label htmlFor="resaleNotPermitted" className="text-base text-gray-900 cursor-pointer">
+                        <Label
+                          htmlFor="resaleNotPermitted"
+                          className="cursor-pointer text-base text-gray-900"
+                        >
                           Resale of image not permitted
                         </Label>
                       </div>
@@ -277,10 +365,18 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
                         <Checkbox
                           id="derivativeGeneration"
                           checked={formData.permissions.derivativeGeneration}
-                          onCheckedChange={(checked) => handlePermissionChange('derivativeGeneration', checked as boolean)}
-                          className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          onCheckedChange={(checked) =>
+                            handlePermissionChange(
+                              "derivativeGeneration",
+                              checked as boolean,
+                            )
+                          }
+                          className="border-gray-300 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                         />
-                        <Label htmlFor="derivativeGeneration" className="text-base text-gray-900 cursor-pointer">
+                        <Label
+                          htmlFor="derivativeGeneration"
+                          className="cursor-pointer text-base text-gray-900"
+                        >
                           Derivative generation permitted
                         </Label>
                       </div>
@@ -289,23 +385,18 @@ export default function ForSaleArtworkEditPage({ artworkId }: ForSaleArtworkEdit
                 </div>
               </div>
             </div>
+
+            <div className="pt-4 lg:flex lg:justify-end lg:pt-6">
+              <Button
+                onClick={handleConfirm}
+                className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90 lg:w-auto lg:min-w-[200px]"
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
         </div>
       </ScrollArea>
-
-      {/* Fixed Confirm Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:relative lg:border-t-0 lg:bg-transparent lg:p-0">
-        <div className="max-w-7xl mx-auto lg:px-12">
-          <div className="lg:flex lg:justify-end lg:pt-6">
-            <Button 
-              onClick={handleConfirm}
-              className="w-full lg:w-auto lg:min-w-[200px] bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

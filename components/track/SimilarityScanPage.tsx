@@ -61,7 +61,7 @@ export default function SimilarityScanPage({
             <div className="lg:flex lg:items-start lg:gap-12">
               {/* Comparison Images - Left Side on Desktop */}
               <div className="mb-8 lg:mb-0 lg:w-[50%] lg:flex-shrink-0">
-                <div className="mx-auto grid grid-cols-2 gap-0 overflow-hidden rounded-2xl lg:mx-0">
+                <div className="mx-auto grid grid-cols-2 gap-[1px] overflow-hidden rounded-2xl lg:mx-0">
                   {/* Original Artwork */}
                   <div className="relative">
                     <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
@@ -93,7 +93,7 @@ export default function SimilarityScanPage({
               </div>
 
               {/* Content - Right Side on Desktop */}
-              <div className="space-y-8 lg:max-w-2xl lg:flex-1">
+              <div className="space-y-8 lg:flex-1">
                 {/* Similarity Score */}
                 <div>
                   <h2 className="mb-4 text-lg font-semibold lg:text-xl">

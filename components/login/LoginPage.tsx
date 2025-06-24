@@ -104,8 +104,8 @@ export default function LoginPage() {
         {/* Desktop Layout */}
         <div className="hidden lg:flex min-h-screen">
           {/* Left Side - Logo and Slogan Only (Left Aligned) */}
-          <div className="flex-1 bg-background flex flex-col justify-center px-12 xl:px-20">
-            <div className="text-left">
+          <div className="flex-1 bg-background flex flex-col justify-center px-12 lg:px-20">
+            <div className="text-left lg:pl-40">
               {/* ArtNest Logo */}
               <div className="mb-16">
                 <img 

@@ -57,12 +57,12 @@ export default function CompletedPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <TopNavbar />
 
       {/* Header */}
-      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border flex-shrink-0 max-w-7xl mx-auto w-full lg:mt-20">
-        <button onClick={handleBack} className="p-2 -ml-2">
+      <div className="mx-auto flex w-full max-w-7xl flex-shrink-0 items-center gap-4 border-b border-border px-6 py-4 lg:mt-20 lg:px-12">
+        <button onClick={handleBack} className="-ml-2 p-2">
           <ArrowLeft size={24} className="text-foreground" />
         </button>
         <h1 className="text-lg font-semibold">AI Learning Off</h1>
@@ -70,31 +70,31 @@ export default function CompletedPage() {
 
       {/* Scrollable Content */}
       <ScrollArea className="flex-1">
-        <div className="px-4 lg:px-12 py-4 max-w-7xl mx-auto">
+        <div className="mx-auto max-w-7xl px-4 py-4 lg:px-12">
           {/* Success Message */}
           <div className="mb-4">
-            <h1 className="text-3xl lg:text-5xl font-pixel font-bold mb-1 text-primary">
+            <h1 className="mb-1 font-pixel text-3xl font-bold text-primary lg:text-5xl">
               Completed!
             </h1>
-            <p className="text-muted-foreground text-base lg:text-lg">
+            <p className="text-base text-muted-foreground lg:text-lg">
               Your creation is now securely protected.
             </p>
           </div>
 
           {/* Main Content - Responsive Layout */}
-          <div className="lg:flex lg:gap-12 lg:items-start">
+          <div className="lg:flex lg:items-start lg:gap-12">
             {/* Protected Artwork */}
-            <div className="lg:flex-shrink-0 mb-4 lg:mb-0">
-              <div className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/5] max-w-sm mx-auto lg:mx-0 lg:w-80 lg:h-96">
+            <div className="mb-4 lg:mb-0 lg:flex-shrink-0">
+              <div className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-2xl bg-muted lg:mx-0 lg:h-96 lg:w-80">
                 <img
                   src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=500&fit=crop"
                   alt="Protected artwork"
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                 />
                 {/* Grid overlay to show protection */}
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
                   <div className="absolute inset-0 opacity-20">
-                    <div className="grid grid-cols-8 grid-rows-10 h-full w-full">
+                    <div className="grid-rows-10 grid h-full w-full grid-cols-8">
                       {Array.from({ length: 80 }).map((_, i) => (
                         <div key={i} className="border border-white/10" />
                       ))}
@@ -105,8 +105,8 @@ export default function CompletedPage() {
             </div>
 
             {/* Form Section */}
-            <div className="lg:flex-1 lg:max-w-2xl">
-              <Card className="bg-white border-0 rounded-3xl p-6 lg:p-8 space-y-6">
+            <div className="lg:flex-1">
+              <Card className="space-y-6 rounded-3xl border-0 bg-white p-6 lg:p-8">
                 {/* Title */}
                 <div className="space-y-2">
                   <Label
@@ -120,7 +120,7 @@ export default function CompletedPage() {
                     placeholder="A name that captures your art."
                     value={formData.title}
                     onChange={(e) => handleInputChange("title", e.target.value)}
-                    className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                    className="h-12 rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
 
@@ -138,12 +138,12 @@ export default function CompletedPage() {
                     onChange={(e) =>
                       handleInputChange("artist", e.target.value)
                     }
-                    className="border-gray-200 bg-white text-gray-900 rounded-xl h-12"
+                    className="h-12 rounded-xl border-gray-200 bg-white text-gray-900"
                   />
                 </div>
 
                 {/* Year and Medium - Grid Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   <div className="space-y-2">
                     <Label
                       htmlFor="year"
@@ -158,7 +158,7 @@ export default function CompletedPage() {
                       onChange={(e) =>
                         handleInputChange("year", e.target.value)
                       }
-                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                      className="h-12 rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
 
@@ -176,13 +176,13 @@ export default function CompletedPage() {
                       onChange={(e) =>
                         handleInputChange("medium", e.target.value)
                       }
-                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                      className="h-12 rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
                 </div>
 
                 {/* Size and Edition - Grid Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   <div className="space-y-2">
                     <Label
                       htmlFor="size"
@@ -197,7 +197,7 @@ export default function CompletedPage() {
                       onChange={(e) =>
                         handleInputChange("size", e.target.value)
                       }
-                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                      className="h-12 rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
 
@@ -215,7 +215,7 @@ export default function CompletedPage() {
                       onChange={(e) =>
                         handleInputChange("edition", e.target.value)
                       }
-                      className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl h-12"
+                      className="h-12 rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
                 </div>
@@ -235,37 +235,34 @@ export default function CompletedPage() {
                     onChange={(e) =>
                       handleInputChange("description", e.target.value)
                     }
-                    className="border-gray-200 bg-white text-gray-900 placeholder:text-gray-400 rounded-xl min-h-[100px] resize-none"
+                    className="min-h-[100px] resize-none rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
               </Card>
+
+              <div className="pt-4 lg:flex lg:justify-end">
+                <Button
+                  onClick={handleConfirm}
+                  className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-foreground hover:bg-primary/90 lg:ml-auto lg:block"
+                >
+                  Confirm
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </ScrollArea>
 
-      {/* Fixed Confirm Button */}
-      <div className="flex-shrink-0 p-6 lg:p-12 bg-background">
-        <div className="max-w-7xl mx-auto">
-          <Button
-            onClick={handleConfirm}
-            className="w-full lg:max-w-md lg:ml-auto lg:block bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-          >
-            Confirm
-          </Button>
-        </div>
-      </div>
-
       {/* Tracking Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogOverlay className="bg-black/80" />
-        <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm mx-auto">
+        <DialogContent className="w-[calc(100svw-32px)] max-w-sm rounded-3xl border-0 bg-secondary p-8">
           {/* Modal Content */}
-          <div className="text-center space-y-2">
+          <div className="space-y-2 text-center">
             <DialogTitle className="text-2xl font-bold text-foreground">
               Start tracking now?
             </DialogTitle>
-            <p className="text-muted-foreground text-base leading-relaxed">
+            <p className="text-base leading-relaxed text-muted-foreground">
               We'll look out for any copycats
               <br />
               and keep you posted.
@@ -275,14 +272,14 @@ export default function CompletedPage() {
             <div className="space-y-2 pt-4">
               <Button
                 onClick={handleStartTracking}
-                className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+                className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
               >
                 Let's start
               </Button>
               <Button
                 onClick={handleNotNow}
                 variant="outline"
-                className="w-full bg-black hover:bg-black/80 text-white border-0 font-semibold py-4 rounded-2xl text-lg"
+                className="w-full rounded-2xl border-0 bg-black py-4 text-lg font-semibold text-white hover:bg-black/80"
               >
                 Not now
               </Button>

@@ -64,7 +64,7 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
               </div>
 
               {/* Content - Right Side on Desktop */}
-              <div className="lg:flex-1 lg:max-w-2xl space-y-8">
+              <div className="lg:flex-1 space-y-8">
                 {/* Status and Info */}
                 <div>
                   <div className="flex items-center justify-between mb-4">

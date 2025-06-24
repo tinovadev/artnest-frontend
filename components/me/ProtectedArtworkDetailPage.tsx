@@ -84,7 +84,7 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
               </div>
 
               {/* Content - Right Side on Desktop */}
-              <div className="lg:flex-1 lg:max-w-2xl space-y-6">
+              <div className="lg:flex-1 space-y-6">
                 {/* Title */}
                 <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
                   {artwork.title}
@@ -114,7 +114,7 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
                 <div className="hidden lg:block pt-4">
                   <Button 
                     onClick={handleStartTracking}
-                    className="w-full lg:max-w-md bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
+                    className="w-full  bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
                   >
                     Start Tracking
                   </Button>

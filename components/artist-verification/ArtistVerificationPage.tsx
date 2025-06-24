@@ -86,7 +86,7 @@ export default function ArtistVerificationPage() {
               </div>
 
               {/* Form - Right side on desktop */}
-              <div className="lg:flex-1 lg:max-w-2xl">
+              <div className="lg:flex-1">
                 <div className="space-y-6">
                   {/* Full Name */}
                   <div className="space-y-2">
@@ -200,7 +200,7 @@ export default function ArtistVerificationPage() {
       {/* Success Modal */}
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
         <DialogOverlay className="bg-black/80" />
-        <DialogContent className="bg-white border-0 rounded-3xl p-8 max-w-sm mx-auto">
+        <DialogContent className="bg-white border-0 rounded-3xl p-8 max-w-sm w-[calc(100svw-32px)]">
           <div className="text-center space-y-6">
             {/* Success Icon */}
             <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">

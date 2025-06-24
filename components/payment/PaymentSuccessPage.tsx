@@ -29,7 +29,7 @@ export default function PaymentSuccessPage() {
         </div>
 
         {/* Text Content */}
-        <div className="lg:flex-1 lg:max-w-2xl">
+        <div className="lg:flex-1">
           {/* Thank You Message */}
           <h1 className="text-3xl lg:text-5xl xl:text-6xl font-pixel font-bold text-primary mb-6 leading-tight">
             Thank You For<br />
