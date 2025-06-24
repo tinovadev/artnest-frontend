@@ -200,7 +200,7 @@ export default function ArtistVerificationPage() {
       {/* Success Modal */}
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
         <DialogOverlay className="bg-black/80" />
-        <DialogContent className="bg-white border-0 rounded-3xl p-8 max-w-sm mx-auto">
+        <DialogContent className="bg-white border-0 rounded-3xl p-8 max-w-sm w-[calc(100svw-32px)]">
           <div className="text-center space-y-6">
             {/* Success Icon */}
             <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">

@@ -256,7 +256,7 @@ export default function CompletedPage() {
       {/* Tracking Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogOverlay className="bg-black/80" />
-        <DialogContent className="mx-auto max-w-sm rounded-3xl border-0 bg-secondary p-8">
+        <DialogContent className="w-[calc(100svw-32px)] max-w-sm rounded-3xl border-0 bg-secondary p-8">
           {/* Modal Content */}
           <div className="space-y-2 text-center">
             <DialogTitle className="text-2xl font-bold text-foreground">

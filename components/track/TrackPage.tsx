@@ -265,7 +265,7 @@ export default function TrackPage() {
       {/* No Theft History Modal */}
       <Dialog open={showNoTheftModal} onOpenChange={setShowNoTheftModal}>
         <DialogOverlay className="bg-black/80" />
-        <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm mx-auto">
+        <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm w-[calc(100svw-32px)]">
           <div className="text-center space-y-6">
             <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
               <Shield size={32} className="text-success" />
