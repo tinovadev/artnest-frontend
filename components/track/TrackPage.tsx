@@ -39,6 +39,7 @@ export default function TrackPage() {
   const [mode, setMode] = useState<Mode>("normal");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showNoTheftModal, setShowNoTheftModal] = useState(false);
+  const [loadingArtworkId, setLoadingArtworkId] = useState<string | null>(null);
 
   const handleArtworkClick = (artworkId: string) => {
     if (mode !== "normal") return;
@@ -54,8 +55,13 @@ export default function TrackPage() {
 
   const handleTrackNow = (artworkId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("Tracking artwork:", artworkId);
-    // Implement tracking logic here
+    setLoadingArtworkId(artworkId);
+
+    // Simulate tracking logic with a timeout
+    setTimeout(() => {
+      console.log("Tracking artwork:", artworkId);
+      setLoadingArtworkId(null);
+    }, 2000);
   };
 
   const handleDeleteSelected = () => {
@@ -269,8 +275,16 @@ export default function TrackPage() {
                           <Button
                             onClick={(e) => handleTrackNow(artwork.id, e)}
                             className="rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+                            disabled={loadingArtworkId === artwork.id}
                           >
-                            Track Now
+                            {loadingArtworkId === artwork.id ? (
+                              <div className="flex items-center gap-2">
+                                <span className="loader h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                                Tracking...
+                              </div>
+                            ) : (
+                              "Track Now"
+                            )}
                           </Button>
                         )}
 
