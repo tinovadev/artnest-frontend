@@ -42,7 +42,7 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
       <ScrollArea className="h-screen">
         <div className="pb-8 lg:pt-20">
           {/* Header */}
-          <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border">
+          <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border max-w-7xl mx-auto w-full">
             <button onClick={handleBack} className="p-2 -ml-2">
               <ArrowLeft size={24} className="text-foreground" />
             </button>
@@ -92,9 +92,11 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
                     </div>
                   </div>
 
-                  <Button className="w-full lg:max-w-md bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl">
-                    Track Now
-                  </Button>
+              
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl">
+                      Track Now
+                    </Button>
+                 
                 </div>
 
                 {/* Detection Results */}
@@ -168,14 +170,14 @@ export default function ArtworkDetailPage({ artworkId }: ArtworkDetailPageProps)
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleViewDetails(index)}
-                                  className="bg-transparent border-border text-foreground hover:bg-muted text-xs px-3 py-1 h-8"
+                                  className="bg-transparent border-border text-foreground hover:bg-muted text-xs px-3 py-1 h-8 rounded-xl"
                                 >
                                   View Details
                                 </Button>
                                 <Button 
                                   size="sm"
                                   variant="outline"
-                                  className="bg-transparent border-border text-foreground hover:bg-muted text-xs px-3 py-1 h-8"
+                                  className="bg-transparent border-border text-foreground hover:bg-muted text-xs px-3 py-1 h-8 rounded-xl"
                                 >
                                   <Download size={14} className="mr-1" />
                                   Report
