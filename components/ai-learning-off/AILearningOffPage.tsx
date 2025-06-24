@@ -63,12 +63,12 @@ export default function AILearningOffPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <TopNavbar />
 
       {/* Header */}
-      <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-border flex-shrink-0 max-w-7xl mx-auto w-full lg:mt-20">
-        <button onClick={handleBack} className="p-2 -ml-2">
+      <div className="mx-auto flex w-full max-w-7xl flex-shrink-0 items-center gap-4 border-b border-border px-6 py-4 lg:mt-20 lg:px-12">
+        <button onClick={handleBack} className="-ml-2 p-2">
           <ArrowLeft size={24} className="text-foreground" />
         </button>
         <h1 className="text-lg font-semibold">AI Learning Off</h1>
@@ -76,21 +76,21 @@ export default function AILearningOffPage() {
 
       {/* Scrollable Content */}
       <ScrollArea className="flex-1">
-        <div className="px-6 lg:px-12 py-6 max-w-7xl mx-auto">
+        <div className="mx-auto max-w-7xl px-6 py-6 lg:px-12">
           {/* Main Content - Responsive Layout */}
-          <div className="lg:flex lg:gap-12 lg:items-start">
+          <div className="lg:flex lg:items-start lg:gap-12">
             {/* Artwork Preview */}
-            <div className="lg:flex-shrink-0 mb-8 lg:mb-0">
-              <div className="relative rounded-2xl overflow-hidden bg-muted aspect-square w-full max-w-sm lg:w-96 lg:h-96 mx-auto lg:mx-0">
+            <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
+              <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl bg-muted lg:mx-0 lg:h-96 lg:w-96">
                 <img
                   src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop"
                   alt="Artwork preview"
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                 />
                 {/* Grid overlay to simulate protection visualization */}
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
                   <div className="absolute inset-0 opacity-20">
-                    <div className="grid grid-cols-8 grid-rows-8 h-full w-full">
+                    <div className="grid-rows-8 grid h-full w-full grid-cols-8">
                       {Array.from({ length: 64 }).map((_, i) => (
                         <div key={i} className="border border-white/10" />
                       ))}
@@ -101,8 +101,8 @@ export default function AILearningOffPage() {
             </div>
 
             {/* Settings Section */}
-            <div className="lg:flex-1 lg:max-w-2xl">
-              <h2 className="text-xl lg:text-2xl font-semibold mb-4">
+            <div className="lg:flex-1">
+              <h2 className="mb-4 text-xl font-semibold lg:text-2xl">
                 Customize your
                 <br />
                 AI Learning Off settings
@@ -112,22 +112,22 @@ export default function AILearningOffPage() {
                 {protectionOptions.map((option) => (
                   <Card
                     key={option.id}
-                    className={`px-6 py-5 cursor-pointer transition-all duration-200 rounded-2xl  ${
+                    className={`cursor-pointer rounded-2xl px-6 py-5 transition-all duration-200 ${
                       selectedOption === option.id
-                        ? "bg-primary/20 border-primary border-2"
-                        : "bg-secondary hover:border-primary border-2"
+                        ? "border-2 border-primary bg-primary/20"
+                        : "border-2 bg-secondary hover:border-primary"
                     }`}
                     onClick={() => handleOptionSelect(option.id)}
                   >
-                    <div className="flex items-start gap-4 flex-col">
-                      <div className="flex-shrink-0 mt-1 p-1 bg-primary/20 rounded-full">
+                    <div className="flex flex-col items-start gap-4">
+                      <div className="mt-1 flex-shrink-0 rounded-full bg-primary/20 p-1">
                         {option.icon}
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-semibold mb-2 text-foreground">
+                        <h3 className="mb-2 text-lg font-semibold text-foreground">
                           {option.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
                           {option.description}
                         </p>
                         <div className="text-lg font-bold text-foreground">
@@ -138,22 +138,19 @@ export default function AILearningOffPage() {
                   </Card>
                 ))}
               </div>
+
+              <div className="pt-4 lg:flex lg:justify-end">
+                <Button
+                  onClick={handleConfirm}
+                  className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-foreground hover:bg-primary/90 lg:ml-auto lg:block"
+                >
+                  Confirm
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </ScrollArea>
-
-      {/* Fixed Confirm Button */}
-      <div className="flex-shrink-0 p-6 lg:p-12 bg-background">
-        <div className="max-w-7xl mx-auto">
-          <Button
-            onClick={handleConfirm}
-            className="w-full lg:max-w-md lg:ml-auto lg:block bg-primary hover:bg-primary/90 text-foreground font-semibold py-4 rounded-2xl text-lg"
-          >
-            Confirm
-          </Button>
-        </div>
-      </div>
     </div>
   );
 }

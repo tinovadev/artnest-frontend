@@ -93,7 +93,7 @@ export default function SimilarityScanPage({
               </div>
 
               {/* Content - Right Side on Desktop */}
-              <div className="space-y-8 lg:max-w-2xl lg:flex-1">
+              <div className="space-y-8 lg:flex-1">
                 {/* Similarity Score */}
                 <div>
                   <h2 className="mb-4 text-lg font-semibold lg:text-xl">

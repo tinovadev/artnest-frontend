@@ -86,7 +86,7 @@ export default function ArtistVerificationPage() {
               </div>
 
               {/* Form - Right side on desktop */}
-              <div className="lg:flex-1 lg:max-w-2xl">
+              <div className="lg:flex-1">
                 <div className="space-y-6">
                   {/* Full Name */}
                   <div className="space-y-2">

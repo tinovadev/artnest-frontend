@@ -84,7 +84,7 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
               </div>
 
               {/* Content - Right Side on Desktop */}
-              <div className="lg:flex-1 lg:max-w-2xl space-y-6">
+              <div className="lg:flex-1 space-y-6">
                 {/* Title */}
                 <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
                   {artwork.title}

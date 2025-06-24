@@ -32,7 +32,7 @@ export default function HomePage() {
             {/* Main Content - Responsive Layout */}
             <div className="lg:flex lg:gap-12 lg:items-start">
               {/* Main CTA Card */}
-              <div className="lg:flex-1 lg:max-w-2xl">
+              <div className="lg:flex-1">
                 <Card className="space-y-8 bg-primary border-0 w-full rounded-3xl px-6 py-5 lg:p-12 mb-12 lg:mb-0 overflow-hidden">
                   <h1 className="text-5xl lg:text-7xl font-pixel font-bold leading-[1.2] lg:leading-[1.2] text-foreground">
                     Try it
@@ -63,7 +63,7 @@ export default function HomePage() {
               </div>
 
               {/* Why Artists Choose Us Section */}
-              <div className="lg:flex-1 lg:max-w-xl lg:my-auto">
+              <div className="lg:flex-1 lg:my-auto">
                 <h2 className="text-2xl lg:text-3xl font-sans font-bold mb-4 text-foreground">
                   Why Artists Choose Us
                 </h2>
