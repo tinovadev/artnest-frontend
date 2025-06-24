@@ -10,7 +10,7 @@ export interface StudioArtwork {
 export const studioArtworks: StudioArtwork[] = [
   {
     id: '1',
-    title: 'Memories of Su...',
+    title: 'Memories of Sunny',
     price: 10,
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop',
     artist: 'Digital Artist',
@@ -26,7 +26,7 @@ export const studioArtworks: StudioArtwork[] = [
   },
   {
     id: '3',
-    title: 'Canvas of Reme...',
+    title: 'Canvas of Remembrance',
     price: 10,
     image: 'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400&h=400&fit=crop',
     artist: 'Modern Artist',
@@ -34,7 +34,7 @@ export const studioArtworks: StudioArtwork[] = [
   },
   {
     id: '4',
-    title: 'Stars in the Nigh...',
+    title: 'Stars in the Night',
     price: 10,
     image: 'https://images.unsplash.com/photo-1549887534-1541e9326642?w=400&h=400&fit=crop',
     artist: 'Night Sky Artist',
@@ -42,7 +42,7 @@ export const studioArtworks: StudioArtwork[] = [
   },
   {
     id: '5',
-    title: 'Whispers of the...',
+    title: 'Whispers of the Sea',
     price: 10,
     image: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400&h=400&fit=crop',
     artist: 'Nature Artist',
