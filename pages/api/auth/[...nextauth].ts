@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { query } from "../../../lib/db";
+import { createWallet } from "@/lib/rpc";
 
+
+// DELETE FROM users WHERE id = (SELECT id FROM users WHERE email = 'troublesome.dev@gmail.com');
 export default NextAuth({
   providers: [
     GoogleProvider({
@@ -23,10 +26,26 @@ export default NextAuth({
               id, email, username, fullname, created_at, updated_at
             ) VALUES (
               gen_random_uuid(), $1, $2, $3, NOW(), NOW()
-            )
-          `;
+              ) RETURNING id
+              `;
+            const res = await query(insertText, [user.email, username, fullname]);
+            const returnUserId = res.rows[0].id;
 
-          await query(insertText, [user.email, username, fullname]);
+            const {address, privateKey} = await createWallet();
+
+            const updateText = `
+            UPDATE users SET
+                algo_address = $1,
+                algo_private_key = $2,
+                updated_at = NOW()
+            WHERE id = $3
+            `;
+            await query(updateText, [
+                address,
+                privateKey,
+                returnUserId,
+            ]);
+
         }
         return true;
       } catch (e) {
