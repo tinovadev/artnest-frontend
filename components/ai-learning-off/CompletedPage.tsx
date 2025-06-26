@@ -69,7 +69,7 @@ export default function CompletedPage() {
       </div>
 
       {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="mb-9 flex-1">
         <div className="mx-auto max-w-7xl px-4 py-4 lg:px-12">
           {/* Success Message */}
           <div className="mb-4">

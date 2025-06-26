@@ -1,71 +1,77 @@
-'use client';
+"use client";
 
-import { DotsThree, ArrowUpRight, PencilSimple, Plus, SignOut } from 'phosphor-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  DotsThree,
+  ArrowUpRight,
+  PencilSimple,
+  Plus,
+  SignOut,
+} from "phosphor-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import Navbar from '@/components/shared/Navbar';
-import TopNavbar from '@/components/shared/TopNavbar';
-import { protectedArtworks } from '@/data/protected-artworks';
-import { forSaleArtworks } from '@/data/for-sale-artworks';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/dropdown-menu";
+import Navbar from "@/components/shared/Navbar";
+import TopNavbar from "@/components/shared/TopNavbar";
+import { protectedArtworks } from "@/data/protected-artworks";
+import { forSaleArtworks } from "@/data/for-sale-artworks";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-type TabType = 'protected' | 'for-sale';
+type TabType = "protected" | "for-sale";
 
 export default function MePage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabType>('protected');
+  const [activeTab, setActiveTab] = useState<TabType>("protected");
   const [isVerifiedArtist, setIsVerifiedArtist] = useState(false);
 
   // Check verification status on component mount
   useEffect(() => {
-    const verificationStatus = localStorage.getItem('artistVerified');
-    setIsVerifiedArtist(verificationStatus === 'true');
+    const verificationStatus = localStorage.getItem("artistVerified");
+    setIsVerifiedArtist(verificationStatus === "true");
   }, []);
 
   // Listen for verification status changes
   useEffect(() => {
     const handleStorageChange = () => {
-      const verificationStatus = localStorage.getItem('artistVerified');
-      setIsVerifiedArtist(verificationStatus === 'true');
+      const verificationStatus = localStorage.getItem("artistVerified");
+      setIsVerifiedArtist(verificationStatus === "true");
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    
+    window.addEventListener("storage", handleStorageChange);
+
     // Also listen for custom event for same-tab updates
-    window.addEventListener('artistVerified', handleStorageChange);
+    window.addEventListener("artistVerified", handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('artistVerified', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("artistVerified", handleStorageChange);
     };
   }, []);
 
   const handleApplyArtist = () => {
-    router.push('/artist-verification');
+    router.push("/artist-verification");
   };
 
   const handleWalletClick = () => {
     // Handle wallet navigation
-    console.log('My NFT Wallet clicked');
+    console.log("My NFT Wallet clicked");
   };
 
   const handleArtistBadgeClick = () => {
     // Reset verification status
-    localStorage.removeItem('artistVerified');
+    localStorage.removeItem("artistVerified");
     setIsVerifiedArtist(false);
-    
+
     // Dispatch custom event to notify other components
-    window.dispatchEvent(new Event('artistVerified'));
+    window.dispatchEvent(new Event("artistVerified"));
   };
 
   const handleProtectedArtworkClick = (artworkId: string) => {
@@ -77,19 +83,19 @@ export default function MePage() {
   };
 
   const handleEditProfile = () => {
-    router.push('/me/edit-profile');
+    router.push("/me/edit-profile");
   };
 
   const handleUpload = () => {
-    router.push('/ai-learning-off');
+    router.push("/ai-learning-off");
   };
 
   const handleLogout = () => {
     // Clear any stored user data
-    localStorage.removeItem('artistVerified');
-    
+    localStorage.removeItem("artistVerified");
+
     // Navigate to login page
-    router.push('/login');
+    router.push("/login");
   };
 
   if (!isVerifiedArtist) {
@@ -97,43 +103,43 @@ export default function MePage() {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <TopNavbar />
-        
-        <ScrollArea className="h-screen">
+
+        <ScrollArea className="mb-9 h-screen">
           <div className="pb-20 lg:pb-8 lg:pt-20">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 lg:px-12 py-6 max-w-7xl mx-auto">
-              <h1 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-12">
+              <h1 className="font-pixel text-2xl font-bold text-foreground lg:text-3xl">
                 Me
               </h1>
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                  <button className="rounded-lg p-2 transition-colors hover:bg-muted">
                     <DotsThree size={24} className="text-foreground" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="end" 
-                  className="bg-secondary border-border rounded-xl p-2 min-w-[160px]"
+                <DropdownMenuContent
+                  align="end"
+                  className="min-w-[160px] rounded-xl border-border bg-secondary p-2"
                 >
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={handleEditProfile}
-                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                    className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                   >
                     <PencilSimple size={16} className="text-muted-foreground" />
                     Edit Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={handleUpload}
-                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                    className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                   >
                     <Plus size={16} className="text-muted-foreground" />
                     Upload
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-border my-1" />
-                  <DropdownMenuItem 
+                  <DropdownMenuSeparator className="my-1 bg-border" />
+                  <DropdownMenuItem
                     onClick={handleLogout}
-                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                    className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                   >
                     <SignOut size={16} className="text-muted-foreground" />
                     Logout
@@ -142,34 +148,38 @@ export default function MePage() {
               </DropdownMenu>
             </div>
 
-            <div className="px-6 lg:px-12 max-w-7xl mx-auto">
+            <div className="mx-auto max-w-7xl px-6 lg:px-12">
               {/* Responsive Layout */}
-              <div className="lg:flex lg:gap-12 lg:items-start">
+              <div className="lg:flex lg:items-start lg:gap-12">
                 {/* Profile Card - Left side on desktop */}
-                <div className="lg:flex-shrink-0 lg:w-96 mb-8 lg:mb-0">
-                  <Card className="bg-secondary border-border rounded-3xl p-8">
+                <div className="mb-8 lg:mb-0 lg:w-96 lg:flex-shrink-0">
+                  <Card className="rounded-3xl border-border bg-secondary p-8">
                     <div className="space-y-6">
                       {/* Artist Name */}
-                      <h2 className="text-3xl lg:text-4xl font-pixel font-bold text-foreground">
+                      <h2 className="font-pixel text-3xl font-bold text-foreground lg:text-4xl">
                         Aria Solen
                       </h2>
 
                       {/* NFT Wallet Link */}
-                      <button 
+                      <button
                         onClick={handleWalletClick}
-                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
                       >
-                        <span className="text-base lg:text-lg">My NFT Wallet</span>
+                        <span className="text-base lg:text-lg">
+                          My NFT Wallet
+                        </span>
                         <ArrowUpRight size={20} />
                       </button>
 
                       {/* Apply Artist Button */}
-                      <Button 
-                        onClick={handleApplyArtist}
-                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-                      >
-                        Apply Artist
-                      </Button>
+                      <div className="flex justify-center">
+                        <Button
+                          onClick={handleApplyArtist}
+                          className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
+                        >
+                          Apply Artist
+                        </Button>
+                      </div>
                     </div>
                   </Card>
                 </div>
@@ -177,23 +187,23 @@ export default function MePage() {
                 {/* Content Area - Right side on desktop */}
                 <div className="lg:flex-1">
                   {/* Tab Navigation */}
-                  <div className="flex mb-6">
+                  <div className="mb-6 flex">
                     <button
-                      onClick={() => setActiveTab('protected')}
-                      className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ${
-                        activeTab === 'protected'
-                          ? 'bg-primary text-white'
-                          : 'bg-transparent text-muted-foreground border border-border'
+                      onClick={() => setActiveTab("protected")}
+                      className={`rounded-2xl px-6 py-3 text-base font-semibold transition-colors ${
+                        activeTab === "protected"
+                          ? "bg-primary text-white"
+                          : "border border-border bg-transparent text-muted-foreground"
                       }`}
                     >
                       Protected
                     </button>
                     <button
-                      onClick={() => setActiveTab('for-sale')}
-                      className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ml-4 ${
-                        activeTab === 'for-sale'
-                          ? 'bg-primary text-white'
-                          : 'bg-transparent text-muted-foreground border border-border'
+                      onClick={() => setActiveTab("for-sale")}
+                      className={`ml-4 rounded-2xl px-6 py-3 text-base font-semibold transition-colors ${
+                        activeTab === "for-sale"
+                          ? "bg-primary text-white"
+                          : "border border-border bg-transparent text-muted-foreground"
                       }`}
                     >
                       For Sale
@@ -201,28 +211,30 @@ export default function MePage() {
                   </div>
 
                   {/* Single Artwork - Initial State */}
-                  {activeTab === 'protected' && (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-                      <Card 
-                        className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
-                        onClick={() => handleProtectedArtworkClick('1')}
+                  {activeTab === "protected" && (
+                    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
+                      <Card
+                        className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
+                        onClick={() => handleProtectedArtworkClick("1")}
                       >
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          <img 
+                          <img
                             src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop"
                             alt="Abstract Composition"
-                            className="w-full h-full object-cover"
+                            className="h-full w-full object-cover"
                           />
-                          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                          <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </div>
                       </Card>
                     </div>
                   )}
 
-                  {activeTab === 'for-sale' && (
+                  {activeTab === "for-sale" && (
                     <div className="flex flex-col items-center justify-center py-20">
                       <div className="text-center">
-                        <h3 className="text-xl font-semibold text-foreground mb-2">No artworks for sale</h3>
+                        <h3 className="mb-2 text-xl font-semibold text-foreground">
+                          No artworks for sale
+                        </h3>
                         <p className="text-muted-foreground">
                           Your artworks available for purchase will appear here
                         </p>
@@ -244,43 +256,43 @@ export default function MePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <TopNavbar />
-      
+
       <ScrollArea className="h-screen">
         <div className="pb-20 lg:pb-8 lg:pt-20">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 lg:px-12 py-6 max-w-7xl mx-auto">
-            <h1 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-12">
+            <h1 className="font-pixel text-2xl font-bold text-foreground lg:text-3xl">
               Me
             </h1>
-            
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                <button className="rounded-lg p-2 transition-colors hover:bg-muted">
                   <DotsThree size={24} className="text-foreground" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="end" 
-                className="bg-secondary border-border rounded-xl p-2 min-w-[160px]"
+              <DropdownMenuContent
+                align="end"
+                className="min-w-[160px] rounded-xl border-border bg-secondary p-2"
               >
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={handleEditProfile}
-                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                 >
                   <PencilSimple size={16} className="text-muted-foreground" />
                   Edit Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={handleUpload}
-                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                 >
                   <Plus size={16} className="text-muted-foreground" />
                   Upload
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-border my-1" />
-                <DropdownMenuItem 
+                <DropdownMenuSeparator className="my-1 bg-border" />
+                <DropdownMenuItem
                   onClick={handleLogout}
-                  className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                 >
                   <SignOut size={16} className="text-muted-foreground" />
                   Logout
@@ -289,17 +301,17 @@ export default function MePage() {
             </DropdownMenu>
           </div>
 
-          <div className="px-6 lg:px-12 max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl px-6 lg:px-12">
             {/* Responsive Layout */}
-            <div className="lg:flex lg:gap-12 lg:items-start">
+            <div className="lg:flex lg:items-start lg:gap-12">
               {/* Profile Card - Left side on desktop */}
-              <div className="lg:flex-shrink-0 lg:w-96 mb-8 lg:mb-0">
-                <Card className="bg-secondary border-border rounded-3xl p-8 relative">
+              <div className="mb-8 lg:mb-0 lg:w-96 lg:flex-shrink-0">
+                <Card className="relative rounded-3xl border-border bg-secondary p-8">
                   <div className="space-y-6">
                     {/* Artist Badge - Clickable to reset */}
-                    <div className="absolute top-6 right-6">
+                    <div className="absolute right-6 top-6">
                       <button onClick={handleArtistBadgeClick}>
-                        <Badge className="bg-success text-black font-semibold px-4 py-2 rounded-full text-sm hover:bg-success/90 transition-colors cursor-pointer">
+                        <Badge className="cursor-pointer rounded-full bg-success px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-success/90">
                           Artist
                         </Badge>
                       </button>
@@ -307,23 +319,24 @@ export default function MePage() {
 
                     {/* Profile Photo and Info */}
                     <div className="flex items-start gap-4">
-                      <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex-shrink-0">
-                        <img 
+                      <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-muted">
+                        <img
                           src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
                           alt="Aria Solen"
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
-                      
+
                       <div className="flex-1 pt-2">
                         {/* Artist Name */}
-                        <h2 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground mb-3">
+                        <h2 className="mb-3 font-pixel text-2xl font-bold text-foreground lg:text-3xl">
                           Aria Solen
                         </h2>
 
                         {/* Artist Description */}
-                        <p className="text-muted-foreground text-sm lg:text-base leading-relaxed mb-4">
-                          I'm a digital illustrator exploring the<br />
+                        <p className="mb-4 text-sm leading-relaxed text-muted-foreground lg:text-base">
+                          I'm a digital illustrator exploring the
+                          <br />
                           intersection of nature and imagination.
                         </p>
                       </div>
@@ -333,11 +346,13 @@ export default function MePage() {
                     <div className="border-t border-border"></div>
 
                     {/* NFT Wallet Link */}
-                    <button 
+                    <button
                       onClick={handleWalletClick}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      <span className="text-base lg:text-lg">My NFT Wallet</span>
+                      <span className="text-base lg:text-lg">
+                        My NFT Wallet
+                      </span>
                       <ArrowUpRight size={20} />
                     </button>
                   </div>
@@ -347,23 +362,23 @@ export default function MePage() {
               {/* Content Area - Right side on desktop */}
               <div className="lg:flex-1">
                 {/* Tab Navigation */}
-                <div className="flex mb-6">
+                <div className="mb-6 flex">
                   <button
-                    onClick={() => setActiveTab('protected')}
-                    className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ${
-                      activeTab === 'protected'
-                        ? 'bg-primary text-white'
-                        : 'bg-transparent text-muted-foreground border border-border'
+                    onClick={() => setActiveTab("protected")}
+                    className={`rounded-2xl px-6 py-3 text-base font-semibold transition-colors ${
+                      activeTab === "protected"
+                        ? "bg-primary text-white"
+                        : "border border-border bg-transparent text-muted-foreground"
                     }`}
                   >
                     Protected
                   </button>
                   <button
-                    onClick={() => setActiveTab('for-sale')}
-                    className={`px-6 py-3 rounded-2xl font-semibold text-base transition-colors ml-4 ${
-                      activeTab === 'for-sale'
-                        ? 'bg-primary text-white'
-                        : 'bg-transparent text-muted-foreground border border-border'
+                    onClick={() => setActiveTab("for-sale")}
+                    className={`ml-4 rounded-2xl px-6 py-3 text-base font-semibold transition-colors ${
+                      activeTab === "for-sale"
+                        ? "bg-primary text-white"
+                        : "border border-border bg-transparent text-muted-foreground"
                     }`}
                   >
                     For Sale
@@ -371,57 +386,57 @@ export default function MePage() {
                 </div>
 
                 {/* Content based on active tab */}
-                {activeTab === 'protected' && (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+                {activeTab === "protected" && (
+                  <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                     {protectedArtworks.map((artwork, index) => (
-                      <Card 
-                        key={artwork.id} 
-                        className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer relative"
+                      <Card
+                        key={artwork.id}
+                        className="group relative cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
                         onClick={() => handleProtectedArtworkClick(artwork.id)}
                       >
                         {/* Artwork Image */}
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          <img 
+                          <img
                             src={artwork.image}
                             alt={artwork.title}
-                            className="w-full h-full object-cover"
+                            className="h-full w-full object-cover"
                           />
-                          
+
                           {/* Tracking Badge - Only on first artwork */}
                           {index === 0 && (
                             <div className="absolute bottom-3 left-3">
-                              <Badge className="bg-primary text-white font-semibold px-3 py-1 rounded-full text-xs">
+                              <Badge className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
                                 Tracking
                               </Badge>
                             </div>
                           )}
-                          
+
                           {/* Overlay on hover */}
-                          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                          <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </div>
                       </Card>
                     ))}
                   </div>
                 )}
 
-                {activeTab === 'for-sale' && (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+                {activeTab === "for-sale" && (
+                  <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                     {forSaleArtworks.map((artwork) => (
-                      <Card 
-                        key={artwork.id} 
-                        className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                      <Card
+                        key={artwork.id}
+                        className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
                         onClick={() => handleForSaleArtworkClick(artwork.id)}
                       >
                         {/* Artwork Image */}
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          <img 
+                          <img
                             src={artwork.image}
                             alt={artwork.title}
-                            className="w-full h-full object-cover"
+                            className="h-full w-full object-cover"
                           />
-                          
+
                           {/* Overlay on hover */}
-                          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                          <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </div>
                       </Card>
                     ))}

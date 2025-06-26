@@ -1,37 +1,50 @@
-'use client';
+"use client";
 
-import { DotsThree, Info, Trash, PencilSimple, X, Shield } from 'phosphor-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogOverlay, DialogTitle } from '@/components/ui/dialog';
+import {
+  DotsThree,
+  Info,
+  Trash,
+  PencilSimple,
+  X,
+  Shield,
+} from "phosphor-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogOverlay,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import Navbar from '@/components/shared/Navbar';
-import TopNavbar from '@/components/shared/TopNavbar';
-import { trackingArtworks } from '@/data/tracking';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/dropdown-menu";
+import Navbar from "@/components/shared/Navbar";
+import TopNavbar from "@/components/shared/TopNavbar";
+import { trackingArtworks } from "@/data/tracking";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-type Mode = 'normal' | 'delete' | 'edit';
+type Mode = "normal" | "delete" | "edit";
 
 export default function TrackPage() {
   const router = useRouter();
   const [artworks, setArtworks] = useState(trackingArtworks);
-  const [mode, setMode] = useState<Mode>('normal');
+  const [mode, setMode] = useState<Mode>("normal");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showNoTheftModal, setShowNoTheftModal] = useState(false);
+  const [loadingArtworkId, setLoadingArtworkId] = useState<string | null>(null);
 
   const handleArtworkClick = (artworkId: string) => {
-    if (mode !== 'normal') return;
-    
-    if (artworkId === '1') {
+    if (mode !== "normal") return;
+
+    if (artworkId === "1") {
       // Navigate to Sunny Garden detail page
       router.push(`/track/${artworkId}`);
     } else {
@@ -42,37 +55,53 @@ export default function TrackPage() {
 
   const handleTrackNow = (artworkId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('Tracking artwork:', artworkId);
-    // Implement tracking logic here
+    setLoadingArtworkId(artworkId);
+
+    // Simulate tracking logic with a timeout
+    setTimeout(() => {
+      console.log("Tracking artwork:", artworkId);
+      setLoadingArtworkId(null);
+    }, 2000);
   };
 
   const handleDeleteSelected = () => {
-    setArtworks(prev => prev.filter(artwork => !selectedItems.includes(artwork.id)));
+    setArtworks((prev) =>
+      prev.filter((artwork) => !selectedItems.includes(artwork.id)),
+    );
     setSelectedItems([]);
-    setMode('normal');
+    setMode("normal");
   };
 
   const handleToggleTracking = (artworkId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setArtworks(prev => prev.map(artwork => 
-      artwork.id === artworkId 
-        ? { ...artwork, status: artwork.status === 'tracking' ? 'stopped' : 'tracking' }
-        : artwork
-    ));
+    setArtworks((prev) =>
+      prev.map((artwork) =>
+        artwork.id === artworkId
+          ? {
+              ...artwork,
+              status: artwork.status === "tracking" ? "stopped" : "tracking",
+            }
+          : artwork,
+      ),
+    );
   };
 
-  const handleSelectItem = (artworkId: string, checked: boolean, e: React.MouseEvent) => {
+  const handleSelectItem = (
+    artworkId: string,
+    checked: boolean,
+    e: React.MouseEvent,
+  ) => {
     e.stopPropagation();
     if (checked) {
-      setSelectedItems(prev => [...prev, artworkId]);
+      setSelectedItems((prev) => [...prev, artworkId]);
     } else {
-      setSelectedItems(prev => prev.filter(id => id !== artworkId));
+      setSelectedItems((prev) => prev.filter((id) => id !== artworkId));
     }
   };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedItems(artworks.map(artwork => artwork.id));
+      setSelectedItems(artworks.map((artwork) => artwork.id));
     } else {
       setSelectedItems([]);
     }
@@ -84,43 +113,43 @@ export default function TrackPage() {
   };
 
   const handleCancel = () => {
-    setMode('normal');
+    setMode("normal");
     setSelectedItems([]);
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <TopNavbar />
-      
-      <ScrollArea className="h-screen">
+
+      <ScrollArea className="mb-9 h-screen">
         <div className="pb-20 lg:pb-8 lg:pt-20">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 lg:px-12 py-6 max-w-7xl mx-auto">
-            <h1 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-12">
+            <h1 className="font-pixel text-2xl font-bold text-foreground lg:text-3xl">
               Track
             </h1>
-            
-            {mode === 'normal' ? (
+
+            {mode === "normal" ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                  <button className="rounded-lg p-2 transition-colors hover:bg-muted">
                     <DotsThree size={24} className="text-foreground" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="end" 
-                  className="bg-secondary border-border rounded-xl p-2 min-w-[140px]"
+                <DropdownMenuContent
+                  align="end"
+                  className="min-w-[140px] rounded-xl border-border bg-secondary p-2"
                 >
-                  <DropdownMenuItem 
-                    onClick={() => handleModeChange('edit')}
-                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  <DropdownMenuItem
+                    onClick={() => handleModeChange("edit")}
+                    className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                   >
                     <PencilSimple size={16} className="text-muted-foreground" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => handleModeChange('delete')}
-                    className="flex items-center gap-3 px-3 py-2 text-foreground hover:bg-muted rounded-lg cursor-pointer"
+                  <DropdownMenuItem
+                    onClick={() => handleModeChange("delete")}
+                    className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-foreground hover:bg-muted"
                   >
                     <Trash size={16} className="text-muted-foreground" />
                     Delete
@@ -128,43 +157,46 @@ export default function TrackPage() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <button 
+              <button
                 onClick={handleCancel}
-                className="p-2 hover:bg-muted rounded-lg transition-colors"
+                className="rounded-lg p-2 transition-colors hover:bg-muted"
               >
                 <X size={24} className="text-foreground" />
               </button>
             )}
           </div>
 
-          <div className="px-6 lg:px-12 max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl px-6 lg:px-12">
             {/* Info Banner */}
-            <Card className="bg-primary/20 border-primary/30 rounded-2xl p-4 mb-6">
+            <Card className="mb-6 rounded-2xl border-primary/30 bg-primary/20 p-4">
               <div className="flex items-start gap-3">
-                <Info size={20} className="text-primary flex-shrink-0 mt-0.5" />
-                <p className="text-primary text-sm lg:text-base font-medium">
+                <Info size={20} className="mt-0.5 flex-shrink-0 text-primary" />
+                <p className="text-sm font-medium text-primary lg:text-base">
                   Automatic tracking is performed once every day.
                 </p>
               </div>
             </Card>
 
             {/* Delete Mode Header */}
-            {mode === 'delete' && (
-              <div className="flex items-center justify-between mb-4 p-4 bg-secondary rounded-xl">
+            {mode === "delete" && (
+              <div className="mb-4 flex items-center justify-between rounded-xl bg-secondary p-4">
                 <div className="flex items-center gap-3">
                   <Checkbox
-                    checked={selectedItems.length === artworks.length && artworks.length > 0}
+                    checked={
+                      selectedItems.length === artworks.length &&
+                      artworks.length > 0
+                    }
                     onCheckedChange={handleSelectAll}
-                    className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    className="border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                   />
-                  <span className="text-foreground font-medium">
+                  <span className="font-medium text-foreground">
                     Select All ({selectedItems.length}/{artworks.length})
                   </span>
                 </div>
                 {selectedItems.length > 0 && (
                   <Button
                     onClick={handleDeleteSelected}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm"
+                    className="rounded-xl bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
                   >
                     Delete ({selectedItems.length})
                   </Button>
@@ -175,79 +207,97 @@ export default function TrackPage() {
             {/* Artwork List */}
             <div className="space-y-4">
               {artworks.map((artwork) => (
-                <Card 
-                  key={artwork.id} 
-                  className={`bg-secondary border-border rounded-2xl p-6 ${
-                    mode === 'normal' ? 'cursor-pointer hover:bg-secondary/80 transition-colors' : ''
+                <Card
+                  key={artwork.id}
+                  className={`rounded-2xl border-border bg-secondary p-6 ${
+                    mode === "normal"
+                      ? "cursor-pointer transition-colors hover:bg-secondary/80"
+                      : ""
                   }`}
                   onClick={() => handleArtworkClick(artwork.id)}
                 >
                   <div className="flex items-center gap-4">
                     {/* Checkbox for Delete Mode */}
-                    {mode === 'delete' && (
+                    {mode === "delete" && (
                       <Checkbox
                         checked={selectedItems.includes(artwork.id)}
-                        onCheckedChange={(checked) => handleSelectItem(artwork.id, checked as boolean, event as any)}
-                        className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                        onCheckedChange={(checked) =>
+                          handleSelectItem(
+                            artwork.id,
+                            checked as boolean,
+                            event as any,
+                          )
+                        }
+                        className="border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                       />
                     )}
 
                     {/* Artwork Thumbnail */}
                     <div className="flex-shrink-0">
-                      <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden bg-muted">
-                        <img 
+                      <div className="h-16 w-16 overflow-hidden rounded-xl bg-muted lg:h-20 lg:w-20">
+                        <img
                           src={artwork.image}
                           alt={artwork.title}
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
                     </div>
 
                     {/* Artwork Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-lg lg:text-xl font-semibold text-foreground truncate pr-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-2 flex items-start justify-between">
+                        <h3 className="truncate pr-2 text-lg font-semibold text-foreground lg:text-xl">
                           {artwork.title}
                         </h3>
                         <div className="flex items-center gap-2">
-                          <Badge 
+                          <Badge
                             variant="secondary"
-                            className={`flex-shrink-0 px-3 py-1 text-xs font-medium rounded-full ${
-                              artwork.status === 'tracking' 
-                                ? 'bg-primary/20 text-primary border-primary/30' 
-                                : 'bg-muted text-muted-foreground border-border'
+                            className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
+                              artwork.status === "tracking"
+                                ? "border-primary/30 bg-primary/20 text-primary"
+                                : "border-border bg-muted text-muted-foreground"
                             }`}
                           >
-                            {artwork.status === 'tracking' ? 'Tracking' : 'Stop'}
+                            {artwork.status === "tracking"
+                              ? "Tracking"
+                              : "Stop"}
                           </Badge>
                         </div>
                       </div>
-                      
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Latest Date  {artwork.latestDate}
+
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        Latest Date {artwork.latestDate}
                       </p>
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-3">
-                        {mode === 'normal' && (
-                          <Button 
+                        {mode === "normal" && (
+                          <Button
                             onClick={(e) => handleTrackNow(artwork.id, e)}
-                            className="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-xl text-sm"
+                            className="rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+                            disabled={loadingArtworkId === artwork.id}
                           >
-                            Track Now
+                            {loadingArtworkId === artwork.id ? (
+                              <div className="flex items-center gap-2">
+                                <span className="loader h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                                Tracking...
+                              </div>
+                            ) : (
+                              "Track Now"
+                            )}
                           </Button>
                         )}
-                        
-                        {mode === 'edit' && (
-                          <Button 
+
+                        {mode === "edit" && (
+                          <Button
                             onClick={(e) => handleToggleTracking(artwork.id, e)}
-                            className={`font-semibold px-6 py-2 rounded-xl text-sm ${
-                              artwork.status === 'tracking'
-                                ? 'bg-muted hover:bg-muted/80 text-foreground'
-                                : 'bg-primary hover:bg-primary/90 text-white'
+                            className={`rounded-xl px-6 py-2 text-sm font-semibold ${
+                              artwork.status === "tracking"
+                                ? "bg-muted text-foreground hover:bg-muted/80"
+                                : "bg-primary text-white hover:bg-primary/90"
                             }`}
                           >
-                            {artwork.status === 'tracking' ? 'Stop' : 'Start'}
+                            {artwork.status === "tracking" ? "Stop" : "Start"}
                           </Button>
                         )}
                       </div>
@@ -265,24 +315,25 @@ export default function TrackPage() {
       {/* No Theft History Modal */}
       <Dialog open={showNoTheftModal} onOpenChange={setShowNoTheftModal}>
         <DialogOverlay className="bg-black/80" />
-        <DialogContent className="bg-secondary border-0 rounded-3xl p-8 max-w-sm w-[calc(100svw-32px)]">
-          <div className="text-center space-y-6">
-            <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
+        <DialogContent className="w-[calc(100svw-32px)] max-w-sm rounded-3xl border-0 bg-secondary p-8">
+          <div className="space-y-6 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success/20">
               <Shield size={32} className="text-success" />
             </div>
-            
+
             <DialogTitle className="text-xl font-bold text-foreground">
               No theft history found.
             </DialogTitle>
-            
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              No theft cases have been<br />
+
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              No theft cases have been
+              <br />
               detected for this artwork so far.
             </p>
 
-            <Button 
+            <Button
               onClick={() => setShowNoTheftModal(false)}
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl"
+              className="w-full rounded-xl bg-primary py-3 font-semibold text-white hover:bg-primary/90"
             >
               Confirm
             </Button>

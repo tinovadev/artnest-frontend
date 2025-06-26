@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { Plus, ShoppingCart } from 'phosphor-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import Navbar from '@/components/shared/Navbar';
-import TopNavbar from '@/components/shared/TopNavbar';
-import { studioArtworks } from '@/data/studio-artworks';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Plus, ShoppingCart } from "phosphor-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Navbar from "@/components/shared/Navbar";
+import TopNavbar from "@/components/shared/TopNavbar";
+import { studioArtworks } from "@/data/studio-artworks";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function StudioPage() {
   const router = useRouter();
   const [cart, setCart] = useState<string[]>([]);
 
   const handleAddToCart = (artworkId: string) => {
-    setCart(prev => [...prev, artworkId]);
+    setCart((prev) => [...prev, artworkId]);
     // Add visual feedback or toast notification here
   };
 
@@ -24,73 +24,75 @@ export default function StudioPage() {
   };
 
   const handleCartClick = () => {
-    router.push('/cart');
+    router.push("/cart");
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <TopNavbar />
-      
-      <ScrollArea className="h-screen">
+
+      <ScrollArea className="mb-9 h-screen">
         <div className="pb-20 lg:pb-8 lg:pt-20">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 lg:px-12 py-6 max-w-7xl mx-auto">
-            <h1 className="text-2xl lg:text-3xl font-pixel font-bold text-foreground">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-12">
+            <h1 className="font-pixel text-2xl font-bold text-foreground lg:text-3xl">
               Studio
             </h1>
-            
-            <button 
+
+            <button
               onClick={handleCartClick}
-              className="p-2 hover:bg-muted rounded-lg transition-colors relative"
+              className="relative rounded-lg p-2 transition-colors hover:bg-muted"
             >
               <ShoppingCart size={24} className="text-foreground" />
               {cart.length > 0 && (
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">{cart.length}</span>
+                <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary">
+                  <span className="text-xs font-bold text-white">
+                    {cart.length}
+                  </span>
                 </div>
               )}
             </button>
           </div>
 
-          <div className="px-6 lg:px-12 max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl px-6 lg:px-12">
             {/* Artwork Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
               {studioArtworks.map((artwork) => (
-                <Card 
-                  key={artwork.id} 
-                  className="bg-secondary border-0 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-transform duration-200 cursor-pointer"
+                <Card
+                  key={artwork.id}
+                  className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
                   onClick={() => handleArtworkClick(artwork.id)}
                 >
                   {/* Artwork Image */}
                   <div className="relative aspect-square overflow-hidden">
-                    <img 
+                    <img
                       src={artwork.image}
                       alt={artwork.title}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
-                    
+
                     {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                   </div>
 
                   {/* Artwork Info */}
                   <div className="p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-sm lg:text-base font-semibold text-foreground truncate mb-1">
+                    <div className="mb-2 flex items-start justify-between">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="mb-1 truncate text-sm font-semibold text-foreground lg:text-base">
                           {artwork.title}
                         </h3>
-                        <p className="text-lg lg:text-xl font-bold text-foreground">
+                        <p className="text-lg font-bold text-foreground lg:text-xl">
                           ${artwork.price}
                         </p>
                       </div>
-                      
+
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleAddToCart(artwork.id);
                         }}
-                        className="bg-primary hover:bg-primary/90 text-white rounded-full w-8 h-8 lg:w-10 lg:h-10 p-0 flex-shrink-0 ml-2"
+                        className="ml-2 h-8 w-8 flex-shrink-0 rounded-full bg-primary p-0 text-white hover:bg-primary/90 lg:h-10 lg:w-10"
                       >
                         <Plus size={16} weight="bold" />
                       </Button>
