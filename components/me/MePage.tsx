@@ -172,12 +172,14 @@ export default function MePage() {
                       </button>
 
                       {/* Apply Artist Button */}
-                      <Button
-                        onClick={handleApplyArtist}
-                        className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
-                      >
-                        Apply Artist
-                      </Button>
+                      <div className="flex justify-center">
+                        <Button
+                          onClick={handleApplyArtist}
+                          className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
+                        >
+                          Apply Artist
+                        </Button>
+                      </div>
                     </div>
                   </Card>
                 </div>

@@ -163,13 +163,15 @@ export default function SimilarityScanPage({
                   </div>
                 </div>
 
-                {/* Download Report Button */}
-                <Button
-                  onClick={handleDownloadReport}
-                  className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
-                >
-                  Download Report
-                </Button>
+                <div className="flex justify-end">
+                  {/* Download Report Button */}
+                  <Button
+                    onClick={handleDownloadReport}
+                    className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
+                  >
+                    Download Report
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
