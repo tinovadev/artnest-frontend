@@ -35,8 +35,8 @@ export default function TopNavbar() {
   ];
 
   return (
-    <div className="hidden lg:block fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm z-50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+    <div className="fixed left-0 right-0 top-0 z-40 hidden bg-background/95 backdrop-blur-sm lg:block">
+      <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ export default function TopNavbar() {
                 <Link
                   key={index}
                   href={item.href}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-muted transition-colors"
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 transition-colors hover:bg-muted"
                 >
                   <Icon
                     size={20}

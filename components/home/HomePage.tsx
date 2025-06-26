@@ -20,7 +20,18 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div className="relative min-h-screen bg-background font-sans text-foreground">
+      <div className="absolute right-4 top-4 z-50 h-[64px] cursor-pointer hover:opacity-80 lg:right-8 lg:top-8 lg:h-[100px]">
+        <a href="https://bolt.new/" target="_blank">
+          <img
+            className="h-full w-full object-cover"
+            //
+            alt="Bolt"
+            src="./white_circle_360x360.png"
+          />
+        </a>
+      </div>
+
       <TopNavbar />
 
       <ScrollArea className="h-screen">
