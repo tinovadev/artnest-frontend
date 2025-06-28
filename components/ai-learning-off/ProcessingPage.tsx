@@ -79,7 +79,7 @@ export default function ProcessingPage() {
                 protection...
               </h1>
               <p className="mb-6 text-muted-foreground lg:mb-8 lg:text-lg">
-                We're taking care of your work.
+                We&#39;re taking care of your work.
                 <br />
                 Just a moment.
               </p>
