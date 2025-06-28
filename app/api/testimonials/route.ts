@@ -1,16 +1,15 @@
+
 import { testimonials } from '@/data/testimonials';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === 'GET') {
-    const artwork = testimonials
-    return res.status(200).json(artwork);
-  }
+export async function GET(req: NextRequest) {
+  return NextResponse.json(testimonials);
+}
 
-  res.setHeader('Allow', ['GET']);
-  res.status(405).end(`Method ${req.method} Not Allowed`);
-  return;
+export async function POST() {
+  return new NextResponse('Method Not Allowed', {
+    status: 405,
+    headers: { Allow: 'GET' },
+  });
 }
