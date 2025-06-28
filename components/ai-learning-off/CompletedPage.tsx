@@ -13,19 +13,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { Artwork } from "@/lib/types";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-
-export interface Artwork {
-  title: string;
-  artist: string;
-  year: string;
-  medium: string;
-  dimensions: string;
-  edition: string;
-  description: string;
-}
 
 export default function CompletedPage() {
   const router = useRouter();
