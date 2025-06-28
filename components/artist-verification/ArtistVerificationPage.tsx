@@ -1,18 +1,18 @@
 "use client";
 
-import { ArrowLeft, CheckCircle } from "phosphor-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
   DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, CheckCircle } from "phosphor-react";
 import { useState } from "react";
 
 export default function ArtistVerificationPage() {
@@ -247,7 +247,7 @@ export default function ArtistVerificationPage() {
             <p className="text-base leading-relaxed text-gray-600">
               Thank you for applying.
               <br />
-              We'll review your application and
+              We&#39;ll review your application and
               <br />
               get back to you within a few days.
             </p>
