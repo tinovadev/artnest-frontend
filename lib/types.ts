@@ -1,6 +1,6 @@
 export interface Artwork {
   id?: string;
-  user_id: string;
+  userId: string;
   title: string;
   artist: string;
   year: string;
@@ -8,12 +8,26 @@ export interface Artwork {
   dimensions: string;
   edition: string;
   description: string;
-  imag_url?: string;
-  unit_price?: number;
+  imageUrl?: string;
+  unitPrice?: number;
   currency?: string;
-  createdAt
 }
 
+//
+export enum ArtworksTrackingStatus {
+  Tracking = "tracking",
+  Stopped = "stopped",
+}
+
+export interface ArtworksTrackingHistoryResponse {
+  id?: string;
+  user_id: string;
+  artwork_id: string;
+  status: ArtworksTrackingStatus;
+  created_at: Date;
+}
+
+//
 export interface ApiSuccess<T> {
   success: boolean;
   result: T[];

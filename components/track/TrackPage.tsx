@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { trackingArtworks } from "@/data/tracking";
-import { ApiSuccess, Artwork } from "@/lib/types";
+import { ApiSuccess, Artwork, ArtworksTrackingStatus } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import {
   DotsThree,
@@ -38,6 +38,9 @@ export default function TrackPage() {
   const router = useRouter();
   const [artworks, setArtworks] = useState(trackingArtworks);
   const [artworks2, setArtworks2] = useState<Artwork[] | null>(null);
+  const [trackingStatus, setTrackingStatus] = useState<ArtworksTrackingStatus>(
+    ArtworksTrackingStatus.Stopped,
+  );
   const [mode, setMode] = useState<Mode>("normal");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showNoTheftModal, setShowNoTheftModal] = useState(false);
@@ -93,8 +96,31 @@ export default function TrackPage() {
     setMode("normal");
   };
 
-  const handleToggleTracking = (artworkId: string, e: React.MouseEvent) => {
+  const handleToggleTracking = async (
+    artworkId: string,
+    currentStatus: ArtworksTrackingStatus,
+    e: React.MouseEvent,
+  ) => {
     e.stopPropagation();
+
+    const newStatus = currentStatus === "tracking" ? "stopped" : "tracking";
+
+    const response = await fetch("/api/tracking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        artworkId,
+        newStatus,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Tracking artworks failed");
+    }
+
     setArtworks((prev) =>
       prev.map((artwork) =>
         artwork.id === artworkId
@@ -311,7 +337,13 @@ export default function TrackPage() {
 
                         {mode === "edit" && (
                           <Button
-                            onClick={(e) => handleToggleTracking(artwork.id, e)}
+                            onClick={(e) =>
+                              handleToggleTracking(
+                                artwork.id,
+                                artwork.status,
+                                e,
+                              )
+                            }
                             className={`rounded-xl px-6 py-2 text-sm font-semibold ${
                               artwork.status === "tracking"
                                 ? "bg-muted text-foreground hover:bg-muted/80"
