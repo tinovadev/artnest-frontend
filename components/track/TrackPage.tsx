@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  DotsThree,
-  Info,
-  Trash,
-  PencilSimple,
-  X,
-  Shield,
-} from "phosphor-react";
+import Navbar from "@/components/shared/Navbar";
+import TopNavbar from "@/components/shared/TopNavbar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -25,21 +18,49 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Navbar from "@/components/shared/Navbar";
-import TopNavbar from "@/components/shared/TopNavbar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { trackingArtworks } from "@/data/tracking";
-import { useState } from "react";
+import { ApiSuccess, Artwork } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import {
+  DotsThree,
+  Info,
+  PencilSimple,
+  Shield,
+  Trash,
+  X,
+} from "phosphor-react";
+import { useEffect, useState } from "react";
 
 type Mode = "normal" | "delete" | "edit";
 
 export default function TrackPage() {
   const router = useRouter();
   const [artworks, setArtworks] = useState(trackingArtworks);
+  const [artworks2, setArtworks2] = useState<Artwork[] | null>(null);
   const [mode, setMode] = useState<Mode>("normal");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showNoTheftModal, setShowNoTheftModal] = useState(false);
   const [loadingArtworkId, setLoadingArtworkId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handler = async () => {
+      const response = await fetch("/api/tracking", {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Tracking artworks upload failed");
+      }
+
+      const parsedResponse = (await response.json()) as ApiSuccess<Artwork>;
+
+      setArtworks2(parsedResponse.result);
+    };
+
+    void handler();
+  }, []);
 
   const handleArtworkClick = (artworkId: string) => {
     if (mode !== "normal") return;
