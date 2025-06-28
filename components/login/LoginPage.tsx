@@ -1,26 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [agreed, setAgreed] = useState(false);
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     if (!agreed) {
       alert("Please agree to the terms before proceeding.");
       return;
     }
 
-    // Simulate login process
-    console.log("Google login initiated");
-
-    // Navigate to home page after login
-    router.push("/");
+    // NextAuth 구글 로그인 호출
+    try {
+      await signIn("google", { callbackUrl: "/" });
+      // signIn 호출 후 자동 리다이렉트 되므로 아래 코드가 실행 안 될 수도 있음
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
   };
 
   return (
