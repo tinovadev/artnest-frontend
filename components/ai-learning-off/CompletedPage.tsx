@@ -1,24 +1,25 @@
 "use client";
 
-import { ArrowLeft } from "phosphor-react";
+import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
   DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog";
-import TopNavbar from "@/components/shared/TopNavbar";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function CompletedPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -30,9 +31,7 @@ export default function CompletedPage() {
     description: "",
   });
 
-  const handleBack = () => {
-    router.back();
-  };
+  const artworkUrl = searchParams.get("artworkUrl");
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -57,16 +56,8 @@ export default function CompletedPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="flex min-h-screen flex-col bg-background p-20 text-foreground">
       <TopNavbar />
-
-      {/* Header */}
-      <div className="mx-auto flex w-full max-w-7xl flex-shrink-0 items-center gap-4 border-b border-border px-6 py-4 lg:mt-20 lg:px-12">
-        <button onClick={handleBack} className="-ml-2 p-2">
-          <ArrowLeft size={24} className="text-foreground" />
-        </button>
-        <h1 className="text-lg font-semibold">AI Learning Off</h1>
-      </div>
 
       {/* Scrollable Content */}
       <ScrollArea className="mb-9 flex-1">
@@ -86,10 +77,11 @@ export default function CompletedPage() {
             {/* Protected Artwork */}
             <div className="mb-4 lg:mb-0 lg:flex-shrink-0">
               <div className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-2xl bg-muted lg:mx-0 lg:h-96 lg:w-80">
-                <img
-                  src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=500&fit=crop"
+                <Image
+                  src={artworkUrl ?? ""}
                   alt="Protected artwork"
                   className="h-full w-full object-cover"
+                  fill={true}
                 />
                 {/* Grid overlay to show protection */}
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
@@ -263,7 +255,7 @@ export default function CompletedPage() {
               Start tracking now?
             </DialogTitle>
             <p className="text-base leading-relaxed text-muted-foreground">
-              We'll look out for any copycats
+              We&#39;ll look out for any copycats
               <br />
               and keep you posted.
             </p>
@@ -274,7 +266,7 @@ export default function CompletedPage() {
                 onClick={handleStartTracking}
                 className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
               >
-                Let's start
+                Let&#39;s start
               </Button>
               <Button
                 onClick={handleNotNow}

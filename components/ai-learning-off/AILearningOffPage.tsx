@@ -168,12 +168,13 @@ export default function AILearningOffPage() {
         const errorData = await response.json();
         throw new Error(errorData.error || "Upload failed");
       }
+
+      const result = await response.json();
+
+      router.push(`/processing?artworkUrl=${result.url}`);
     } catch (error) {
       // image upload failed dialog
     }
-
-    // Navigate to processing page
-    router.push("/processing");
   }, [artworkFormData, router, uploadedArtwork]);
 
   return (

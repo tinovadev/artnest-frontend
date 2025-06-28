@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import TopNavbar from "@/components/shared/TopNavbar";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ProcessingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [progress, setProgress] = useState(0);
+
+  const artworkUrl = decodeURIComponent(searchParams.get("artworkUrl") || "");
 
   useEffect(() => {
     // Simulate processing progress
@@ -16,7 +20,7 @@ export default function ProcessingPage() {
           clearInterval(interval);
           // Navigate to completed page after processing
           setTimeout(() => {
-            router.push("/completed");
+            router.push(`/completed?artworkUrl=${artworkUrl}`);
           }, 1000);
           return 100;
         }
@@ -25,7 +29,7 @@ export default function ProcessingPage() {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [router]);
+  }, [artworkUrl, router]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -46,10 +50,11 @@ export default function ProcessingPage() {
                 </div>
 
                 <div className="relative h-80 w-80 overflow-hidden rounded-2xl bg-muted lg:h-96 lg:w-96">
-                  <img
-                    src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop"
+                  <Image
+                    src={artworkUrl ?? ""}
                     alt="Artwork being processed"
                     className="h-full w-full object-cover"
+                    fill={true}
                   />
 
                   {/* Grid overlay */}
