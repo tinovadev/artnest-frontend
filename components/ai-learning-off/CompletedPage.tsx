@@ -17,16 +17,26 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+export interface Artwork {
+  title: string;
+  artist: string;
+  year: string;
+  medium: string;
+  dimensions: string;
+  edition: string;
+  description: string;
+}
+
 export default function CompletedPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Artwork>({
     title: "",
     artist: "Aria Solen",
     year: "",
     medium: "",
-    size: "",
+    dimensions: "",
     edition: "",
     description: "",
   });
@@ -40,9 +50,26 @@ export default function CompletedPage() {
     }));
   };
 
-  const handleConfirm = () => {
-    setIsModalOpen(true);
-  };
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const response = await fetch("/api/protected-artwork-details", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Artwork formData upload failed");
+    }
+
+    const parsedResponse = await response.json();
+
+    if (!parsedResponse.result) {
+      setIsModalOpen(true);
+    }
+  }
 
   const handleStartTracking = () => {
     setIsModalOpen(false);
@@ -77,12 +104,15 @@ export default function CompletedPage() {
             {/* Protected Artwork */}
             <div className="mb-4 lg:mb-0 lg:flex-shrink-0">
               <div className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-2xl bg-muted lg:mx-0 lg:h-96 lg:w-80">
-                <Image
-                  src={artworkUrl ?? ""}
-                  alt="Protected artwork"
-                  className="h-full w-full object-cover"
-                  fill={true}
-                />
+                {artworkUrl ? (
+                  <Image
+                    src={artworkUrl}
+                    alt="Protected artwork"
+                    className="h-full w-full object-cover"
+                    fill={true}
+                    priority={true}
+                  />
+                ) : null}
                 {/* Grid overlay to show protection */}
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
                   <div className="absolute inset-0 opacity-20">
@@ -97,7 +127,7 @@ export default function CompletedPage() {
             </div>
 
             {/* Form Section */}
-            <div className="lg:flex-1">
+            <form onSubmit={handleSubmit} className="lg:flex-1">
               <Card className="space-y-6 rounded-3xl border-0 bg-white p-6 lg:p-8">
                 {/* Title */}
                 <div className="space-y-2">
@@ -134,7 +164,7 @@ export default function CompletedPage() {
                   />
                 </div>
 
-                {/* Year and Medium - Grid Layout */}
+                {/* Year & Medium */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   <div className="space-y-2">
                     <Label
@@ -153,7 +183,6 @@ export default function CompletedPage() {
                       className="h-12 rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
-
                   <div className="space-y-2">
                     <Label
                       htmlFor="medium"
@@ -173,26 +202,25 @@ export default function CompletedPage() {
                   </div>
                 </div>
 
-                {/* Size and Edition - Grid Layout */}
+                {/* Size & Edition */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   <div className="space-y-2">
                     <Label
-                      htmlFor="size"
+                      htmlFor="dimensions"
                       className="text-sm font-medium text-gray-700"
                     >
-                      Size
+                      Dimensions
                     </Label>
                     <Input
-                      id="size"
+                      id="dimensions"
                       placeholder="How big is your work?"
-                      value={formData.size}
+                      value={formData.dimensions}
                       onChange={(e) =>
-                        handleInputChange("size", e.target.value)
+                        handleInputChange("dimensions", e.target.value)
                       }
                       className="h-12 rounded-xl border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
-
                   <div className="space-y-2">
                     <Label
                       htmlFor="edition"
@@ -234,13 +262,13 @@ export default function CompletedPage() {
 
               <div className="pt-4 lg:flex lg:justify-end">
                 <Button
-                  onClick={handleConfirm}
+                  type="submit"
                   className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-foreground hover:bg-primary/90 lg:ml-auto lg:block"
                 >
                   Confirm
                 </Button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </ScrollArea>
