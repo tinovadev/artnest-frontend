@@ -219,9 +219,8 @@ export default function MePage() {
                       >
                         <div className="relative aspect-[4/5] overflow-hidden">
                           <img
-                            src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop"
-                            alt="Abstract Composition"
-                            className="h-full w-full object-cover"
+                            alt={protectedArtworks[0].title}
+                            src={protectedArtworks[0].image}
                           />
                           <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </div>
@@ -321,7 +320,7 @@ export default function MePage() {
                     <div className="flex items-start gap-4">
                       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-muted">
                         <img
-                          src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+                          src="https://images.unsplash.com/photo-1664482017668-91158897414c?q=80&w=2342&auto=format&fit=crop"
                           alt="Aria Solen"
                           className="h-full w-full object-cover"
                         />

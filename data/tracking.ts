@@ -11,7 +11,7 @@ export const trackingArtworks: TrackingArtwork[] = [
     id: "1",
     title: "Sunny Garden",
     image:
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1578321709315-d0dc844abfe5?q=80&w=1362&auto=format&fit=crop",
     latestDate: "2025.06.04",
     status: "tracking",
   },
@@ -19,15 +19,15 @@ export const trackingArtworks: TrackingArtwork[] = [
     id: "2",
     title: "Memories of Spring",
     image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1579009615313-c951b4023427?q=80&w=2270&auto=format&fit=crop",
     latestDate: "2025.06.04",
     status: "tracking",
   },
   {
     id: "3",
-    title: "Canvas of Remembrance",
+    title: "Blute Patterns",
     image:
-      "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1579009721337-cec3c69778e4?q=80&w=2150&auto=format&fit=crop",
     latestDate: "2025.06.04",
     status: "stopped",
   },
