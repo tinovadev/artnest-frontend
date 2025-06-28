@@ -12,10 +12,22 @@ export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<Artwork>>> {
   try {
-    const userId = "37b5571d-1049-4f7a-b8a1-486c5bcacbe6";
-    const searchText = `SELECT * FROM artworks WHERE user_id = $1;`;
+    const searchText = `
+    SELECT DISTINCT ON (ah.artwork_id)
+      ah.id,
+      a.title,
+      a.image_url,
+      ah.created_at,
+      ah.status
+    FROM artworks_tracking_history ah
+    JOIN artworks a ON a.id = ah.artwork_id
+    WHERE ah.user_id = $1
+    ORDER BY ah.artwork_id, ah.created_at DESC;
+    `;
 
-    const response: QueryResult<Artwork> = await query(searchText, [userId]);
+    const response: QueryResult<Artwork> = await query(searchText, [
+      process.env.USERID,
+    ]);
 
     return NextResponse.json({ success: true, result: response.rows });
   } catch (error) {
@@ -38,7 +50,7 @@ export async function POST(
       id, user_id, artwork_id, status, created_at 
     ) VALUES (
       gen_random_uuid(), $1, $2, $3, NOW()
-    ) RETURNING *
+    ) RETURNING status
     `;
 
     const response: QueryResult<ArtworksTrackingHistoryResponse> = await query(

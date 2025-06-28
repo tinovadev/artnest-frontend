@@ -103,7 +103,10 @@ export default function TrackPage() {
   ) => {
     e.stopPropagation();
 
-    const newStatus = currentStatus === "tracking" ? "stopped" : "tracking";
+    const newStatus =
+      currentStatus === ArtworksTrackingStatus.Tracking
+        ? ArtworksTrackingStatus.Stopped
+        : ArtworksTrackingStatus.Tracking;
 
     const response = await fetch("/api/tracking", {
       method: "POST",
@@ -121,12 +124,16 @@ export default function TrackPage() {
       throw new Error(errorData.error || "Tracking artworks failed");
     }
 
+    const parsedResponse = await response.json();
+
+    setTrackingStatus(parsedResponse.result);
+
     setArtworks((prev) =>
       prev.map((artwork) =>
         artwork.id === artworkId
           ? {
               ...artwork,
-              status: artwork.status === "tracking" ? "stopped" : "tracking",
+              status: newStatus,
             }
           : artwork,
       ),
@@ -345,12 +352,14 @@ export default function TrackPage() {
                               )
                             }
                             className={`rounded-xl px-6 py-2 text-sm font-semibold ${
-                              artwork.status === "tracking"
+                              artwork.status === ArtworksTrackingStatus.Tracking
                                 ? "bg-muted text-foreground hover:bg-muted/80"
                                 : "bg-primary text-white hover:bg-primary/90"
                             }`}
                           >
-                            {artwork.status === "tracking" ? "Stop" : "Start"}
+                            {artwork.status === ArtworksTrackingStatus.Tracking
+                              ? "Stop"
+                              : "Start"}
                           </Button>
                         )}
                       </div>
