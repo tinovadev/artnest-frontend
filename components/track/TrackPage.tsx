@@ -19,8 +19,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { trackingArtworks } from "@/data/tracking";
-import { ApiSuccess, Artwork, ArtworksTrackingStatus } from "@/lib/types";
+import { ApiSuccess } from "@/lib/types";
+import {
+  ArtworksTrackingHistoryResponse,
+  TrackingArtwork,
+  TrackingArtworkStatus,
+} from "@/lib/types/track";
 import { useRouter } from "next/navigation";
 import {
   DotsThree,
@@ -36,11 +40,10 @@ type Mode = "normal" | "delete" | "edit";
 
 export default function TrackPage() {
   const router = useRouter();
-  const [artworks, setArtworks] = useState(trackingArtworks);
-  const [artworks2, setArtworks2] = useState<Artwork[] | null>(null);
-  const [trackingStatus, setTrackingStatus] = useState<ArtworksTrackingStatus>(
-    ArtworksTrackingStatus.Stopped,
-  );
+  // const [artworks, setArtworks] = useState(trackingArtworks);
+  const [artworksTrackingHistory, setArtworkTrackingHistory] = useState<
+    TrackingArtwork[] | null
+  >(null);
   const [mode, setMode] = useState<Mode>("normal");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showNoTheftModal, setShowNoTheftModal] = useState(false);
@@ -57,9 +60,10 @@ export default function TrackPage() {
         throw new Error(errorData.error || "Tracking artworks upload failed");
       }
 
-      const parsedResponse = (await response.json()) as ApiSuccess<Artwork>;
+      const parsedResponse =
+        (await response.json()) as ApiSuccess<TrackingArtwork>;
 
-      setArtworks2(parsedResponse.result);
+      setArtworkTrackingHistory(parsedResponse.result);
     };
 
     void handler();
@@ -89,24 +93,25 @@ export default function TrackPage() {
   };
 
   const handleDeleteSelected = () => {
-    setArtworks((prev) =>
-      prev.filter((artwork) => !selectedItems.includes(artwork.id)),
+    setArtworkTrackingHistory((prev) =>
+      prev!.filter((artwork) => !selectedItems.includes(artwork.id)),
     );
     setSelectedItems([]);
     setMode("normal");
   };
 
   const handleToggleTracking = async (
+    historyId: string,
     artworkId: string,
-    currentStatus: ArtworksTrackingStatus,
+    currentStatus: TrackingArtworkStatus,
     e: React.MouseEvent,
   ) => {
     e.stopPropagation();
 
     const newStatus =
-      currentStatus === ArtworksTrackingStatus.Tracking
-        ? ArtworksTrackingStatus.Stopped
-        : ArtworksTrackingStatus.Tracking;
+      currentStatus === TrackingArtworkStatus.Tracking
+        ? TrackingArtworkStatus.Stopped
+        : TrackingArtworkStatus.Tracking;
 
     const response = await fetch("/api/tracking", {
       method: "POST",
@@ -124,18 +129,18 @@ export default function TrackPage() {
       throw new Error(errorData.error || "Tracking artworks failed");
     }
 
-    const parsedResponse = await response.json();
+    const parsedResponse =
+      (await response.json()) as ApiSuccess<ArtworksTrackingHistoryResponse>;
+    console.log(parsedResponse);
 
-    setTrackingStatus(parsedResponse.result);
-
-    setArtworks((prev) =>
-      prev.map((artwork) =>
-        artwork.id === artworkId
+    setArtworkTrackingHistory((prev) =>
+      prev!.map((history) =>
+        history.id === historyId
           ? {
-              ...artwork,
+              ...history,
               status: newStatus,
             }
-          : artwork,
+          : history,
       ),
     );
   };
@@ -155,7 +160,7 @@ export default function TrackPage() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedItems(artworks.map((artwork) => artwork.id));
+      setSelectedItems(artworksTrackingHistory!.map((artwork) => artwork.id));
     } else {
       setSelectedItems([]);
     }
@@ -237,14 +242,16 @@ export default function TrackPage() {
                 <div className="flex items-center gap-3">
                   <Checkbox
                     checked={
-                      selectedItems.length === artworks.length &&
-                      artworks.length > 0
+                      selectedItems.length ===
+                        artworksTrackingHistory?.length &&
+                      artworksTrackingHistory?.length > 0
                     }
                     onCheckedChange={handleSelectAll}
                     className="border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                   />
                   <span className="font-medium text-foreground">
-                    Select All ({selectedItems.length}/{artworks.length})
+                    Select All ({selectedItems.length}/
+                    {artworksTrackingHistory?.length})
                   </span>
                 </div>
                 {selectedItems.length > 0 && (
@@ -260,24 +267,24 @@ export default function TrackPage() {
 
             {/* Artwork List */}
             <div className="space-y-4">
-              {artworks.map((artwork) => (
+              {artworksTrackingHistory?.map((history) => (
                 <Card
-                  key={artwork.id}
+                  key={history.id}
                   className={`rounded-2xl border-border bg-secondary p-6 ${
                     mode === "normal"
                       ? "cursor-pointer transition-colors hover:bg-secondary/80"
                       : ""
                   }`}
-                  onClick={() => handleArtworkClick(artwork.id)}
+                  onClick={() => handleArtworkClick(history.id)}
                 >
                   <div className="flex items-center gap-4">
                     {/* Checkbox for Delete Mode */}
                     {mode === "delete" && (
                       <Checkbox
-                        checked={selectedItems.includes(artwork.id)}
+                        checked={selectedItems.includes(history.id)}
                         onCheckedChange={(checked) =>
                           handleSelectItem(
-                            artwork.id,
+                            history.id,
                             checked as boolean,
                             event as any,
                           )
@@ -290,8 +297,8 @@ export default function TrackPage() {
                     <div className="flex-shrink-0">
                       <div className="h-16 w-16 overflow-hidden rounded-xl bg-muted lg:h-20 lg:w-20">
                         <img
-                          src={artwork.image}
-                          alt={artwork.title}
+                          src={history.image}
+                          alt={history.title}
                           className="h-full w-full object-cover"
                         />
                       </div>
@@ -301,18 +308,18 @@ export default function TrackPage() {
                     <div className="min-w-0 flex-1">
                       <div className="mb-2 flex items-start justify-between">
                         <h3 className="truncate pr-2 text-lg font-semibold text-foreground lg:text-xl">
-                          {artwork.title}
+                          {history.title}
                         </h3>
                         <div className="flex items-center gap-2">
                           <Badge
                             variant="secondary"
                             className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
-                              artwork.status === "tracking"
+                              history.status === TrackingArtworkStatus.Tracking
                                 ? "border-primary/30 bg-primary/20 text-primary"
                                 : "border-border bg-muted text-muted-foreground"
                             }`}
                           >
-                            {artwork.status === "tracking"
+                            {history.status === TrackingArtworkStatus.Tracking
                               ? "Tracking"
                               : "Stop"}
                           </Badge>
@@ -320,18 +327,18 @@ export default function TrackPage() {
                       </div>
 
                       <p className="mb-4 text-sm text-muted-foreground">
-                        Latest Date {artwork.latestDate}
+                        Latest Date {history.latestDate}
                       </p>
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-3">
                         {mode === "normal" && (
                           <Button
-                            onClick={(e) => handleTrackNow(artwork.id, e)}
+                            onClick={(e) => handleTrackNow(history.id, e)}
                             className="rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-white hover:bg-primary/90"
-                            disabled={loadingArtworkId === artwork.id}
+                            disabled={loadingArtworkId === history.id}
                           >
-                            {loadingArtworkId === artwork.id ? (
+                            {loadingArtworkId === history.id ? (
                               <div className="flex items-center gap-2">
                                 <span className="loader h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
                                 Tracking...
@@ -346,18 +353,19 @@ export default function TrackPage() {
                           <Button
                             onClick={(e) =>
                               handleToggleTracking(
-                                artwork.id,
-                                artwork.status,
+                                history.id,
+                                history.artworkId,
+                                history.status,
                                 e,
                               )
                             }
                             className={`rounded-xl px-6 py-2 text-sm font-semibold ${
-                              artwork.status === ArtworksTrackingStatus.Tracking
+                              history.status === TrackingArtworkStatus.Tracking
                                 ? "bg-muted text-foreground hover:bg-muted/80"
                                 : "bg-primary text-white hover:bg-primary/90"
                             }`}
                           >
-                            {artwork.status === ArtworksTrackingStatus.Tracking
+                            {history.status === TrackingArtworkStatus.Tracking
                               ? "Stop"
                               : "Start"}
                           </Button>

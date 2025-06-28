@@ -6,6 +6,7 @@ export enum TrackingArtworkStatus {
 //
 export interface TrackingArtwork {
   id: string;
+  artworkId: string;
   title: string;
   image: string;
   latestDate: string;
@@ -14,6 +15,7 @@ export interface TrackingArtwork {
 
 export interface TrackingArtworkDB {
   id: string;
+  artwork_id: string;
   title: string;
   image_url: string;
   created_at: string;

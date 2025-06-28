@@ -1,20 +1,23 @@
 import { query } from "@/lib/db";
+import { ApiResponse } from "@/lib/types";
 import {
-  ApiResponse,
-  Artwork,
   ArtworksTrackingHistoryResponse,
-} from "@/lib/types";
+  TrackingArtwork,
+  TrackingArtworkDB,
+} from "@/lib/types/track";
+import { formatDateToDotFormat } from "@/lib/utils";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { QueryResult } from "pg";
 
 export async function GET(
   request: NextRequest,
-): Promise<NextResponse<ApiResponse<Artwork>>> {
+): Promise<NextResponse<ApiResponse<TrackingArtwork>>> {
   try {
     const searchText = `
     SELECT DISTINCT ON (ah.artwork_id)
       ah.id,
+      ah.artwork_id,
       a.title,
       a.image_url,
       ah.created_at,
@@ -25,11 +28,18 @@ export async function GET(
     ORDER BY ah.artwork_id, ah.created_at DESC;
     `;
 
-    const response: QueryResult<Artwork> = await query(searchText, [
+    const response: QueryResult<TrackingArtworkDB> = await query(searchText, [
       process.env.USERID,
     ]);
 
-    return NextResponse.json({ success: true, result: response.rows });
+    const results: TrackingArtwork[] = response.rows.map((row) => ({
+      artworkId: row.artwork_id,
+      image: row.image_url,
+      latestDate: formatDateToDotFormat(row.created_at),
+      ...row,
+    }));
+
+    return NextResponse.json({ success: true, result: results });
   } catch (error) {
     console.error("DB SELECT 실패:", error);
     return NextResponse.json(
