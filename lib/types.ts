@@ -1,6 +1,6 @@
 export interface Artwork {
   id?: string;
-  userId: string;
+  userId?: string;
   title: string;
   artist: string;
   year: string;
