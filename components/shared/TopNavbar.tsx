@@ -1,12 +1,15 @@
 "use client";
 
 import { House, Broadcast, CreditCard, User } from "phosphor-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function TopNavbar() {
   const pathname = usePathname();
-
+  const router = useRouter();
+  const handleSubmit = () => {
+    return router.push("/");
+  }
   const navItems = [
     {
       icon: House,
@@ -41,9 +44,10 @@ export default function TopNavbar() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <img
+              onClick={handleSubmit}
               src="/artnest-logo.svg"
               alt="ArtNest Logo"
-              className="h-8 w-auto"
+              className="h-8 w-auto mouse-hover"
             />
           </div>
 
