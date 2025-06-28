@@ -4,7 +4,7 @@ import { query } from "@/lib/db";
 import { createWallet } from "@/lib/rpc";
 import type { NextAuthOptions } from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_SSO_CLIENT_ID!,
