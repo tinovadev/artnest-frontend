@@ -90,7 +90,7 @@ export default function HomePage() {
                       className="rounded-2xl border-border bg-secondary px-6 py-5 lg:p-8"
                     >
                       <div className="flex items-start gap-4">
-                        <Avatar className="h-12 w-12 flex-shrink-0 lg:h-16 lg:w-16">
+                        <Avatar className="h-12 w-12 flex-shrink-0 object-cover lg:h-16 lg:w-16">
                           <AvatarImage
                             src={testimonial.avatar}
                             alt={testimonial.name}
