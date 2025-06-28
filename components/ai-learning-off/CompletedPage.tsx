@@ -41,6 +41,8 @@ export default function CompletedPage() {
     description: "",
   });
 
+  const [artworkData, setArtworkData] = useState<Artwork | null>(null);
+
   const artworkUrl = searchParams?.get("artworkUrl");
 
   const handleInputChange = (field: string, value: string) => {
@@ -65,15 +67,16 @@ export default function CompletedPage() {
     }
 
     const parsedResponse = await response.json();
+    setArtworkData(parsedResponse.result);
 
-    if (!parsedResponse.result) {
-      setIsModalOpen(true);
-    }
+    setIsModalOpen(true);
   }
 
   const handleStartTracking = () => {
     setIsModalOpen(false);
     // Navigate to track page
+
+    sessionStorage.setItem("artworkData", JSON.stringify(artworkData));
     router.push("/track");
   };
 
