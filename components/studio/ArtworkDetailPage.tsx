@@ -1,12 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { ArrowLeft, Check, X } from "phosphor-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
-import { studioArtworks } from "@/data/studio-artworks";
-import { artworkDetails } from "@/data/artwork-details";
+import { StudioArtwork } from "@/data/studio-artworks";
+import { ArtworkDetails } from "@/data/artwork-details";
 
 interface ArtworkDetailPageProps {
   artworkId: string;
@@ -16,10 +18,50 @@ export default function ArtworkDetailPage({
   artworkId,
 }: ArtworkDetailPageProps) {
   const router = useRouter();
-  const artwork = studioArtworks.find((art) => art.id === artworkId);
-  const details = artworkDetails.find(
-    (detail) => detail.artworkId === artworkId,
-  );
+
+  const [studioArtwork, setStudioArtwork] = useState<StudioArtwork | null>(null);
+  const [artworkDetail, setArtworkDetail] = useState<ArtworkDetails | null>(null);
+
+  console.log('studioArtwork', studioArtwork);
+  console.log('artworkDetail', artworkDetail);
+
+  useEffect(() => {
+    if (!artworkId) return;
+
+    const fetchArtworkDetail = async () => {
+      try {
+        const res = await fetch('/api/artwork-details');
+        console.log('/api/artwork-details', res);
+        if (!res.ok) throw new Error('Failed to fetch artwork details');
+        const data: ArtworkDetails[] = await res.json();
+
+        console.log('artwork-details 응답:', data);
+        const result = data.find((art) => art.artworkId === artworkId) ?? null;
+        setArtworkDetail(result);
+      } catch (err) {
+        console.error('Error fetching artwork details:', err);
+      }
+    };
+
+    const fetchStudioArtworks = async () => {
+      try {
+        const res = await fetch('/api/studio-artworks');
+        console.log('/api/studio-artworks', res);
+        if (!res.ok) throw new Error('Failed to fetch studio artworks');
+        const data: StudioArtwork[] = await res.json();
+
+        console.log('studio-artworks 응답:', data);
+        const result = data.find((art) => art.id === artworkId) ?? null;
+        setStudioArtwork(result);
+      } catch (err) {
+        console.error('Error fetching studio artworks:', err);
+      }
+    };
+
+    fetchArtworkDetail();
+    fetchStudioArtworks();
+  }, [artworkId]);
+
 
   const handleBack = () => {
     router.back();
@@ -30,7 +72,7 @@ export default function ArtworkDetailPage({
     router.push("/cart");
   };
 
-  if (!artwork || !details) {
+  if (!studioArtwork || !artworkDetail) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <p className="text-muted-foreground">Artwork not found</p>
@@ -47,7 +89,7 @@ export default function ArtworkDetailPage({
             <button onClick={handleBack} className="-ml-2 p-2">
               <ArrowLeft size={24} className="text-foreground" />
             </button>
-            <h1 className="truncate text-lg font-semibold">{artwork.title}</h1>
+            <h1 className="truncate text-lg font-semibold">{studioArtwork.title}</h1>
           </div>
 
           <div className="mx-auto max-w-7xl px-6 py-6 lg:px-12">
@@ -57,8 +99,8 @@ export default function ArtworkDetailPage({
               <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
                 <div className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden rounded-2xl bg-muted lg:mx-0 lg:h-[480px] lg:w-96">
                   <img
-                    src={artwork.image}
-                    alt={artwork.title}
+                    src={studioArtwork.image}
+                    alt={studioArtwork.title}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -69,27 +111,27 @@ export default function ArtworkDetailPage({
                 {/* Basic Info */}
                 <div>
                   <h2 className="mb-2 text-2xl font-bold text-foreground lg:text-3xl">
-                    {artwork.title}
+                    {studioArtwork.title}
                   </h2>
                   <p className="mb-4 text-2xl font-bold text-foreground lg:text-3xl">
-                    ${artwork.price}
+                    ${studioArtwork.price}
                   </p>
 
                   <div className="space-y-1 text-muted-foreground">
                     <p>
-                      {details.year} | {details.artist}
+                      {artworkDetail.year} | {artworkDetail.artist}
                     </p>
                     <p>
-                      {details.dimensions} | {details.medium}
+                      {artworkDetail.dimensions} | {artworkDetail.medium}
                     </p>
-                    <p>{details.edition}</p>
+                    <p>{artworkDetail.edition}</p>
                   </div>
                 </div>
 
                 {/* Description */}
                 <div>
                   <p className="text-base leading-relaxed text-foreground lg:text-lg">
-                    {details.description}
+                    {artworkDetail.description}
                   </p>
                 </div>
 
@@ -100,10 +142,10 @@ export default function ArtworkDetailPage({
                   </h3>
                   <Card className="rounded-2xl border-border bg-secondary p-6">
                     <p className="mb-4 text-foreground">
-                      {details.artistBio.title}
+                      {artworkDetail.artistBio.title}
                     </p>
                     <ul className="space-y-2 text-muted-foreground">
-                      {details.artistBio.highlights.map((highlight, index) => (
+                      {artworkDetail.artistBio.highlights.map((highlight, index) => (
                         <li key={index} className="flex items-start gap-2">
                           <span className="mt-1 text-primary">•</span>
                           <span>{highlight}</span>
@@ -120,10 +162,10 @@ export default function ArtworkDetailPage({
                   </h3>
                   <Card className="rounded-2xl border-border bg-secondary p-6">
                     <div className="mb-2 text-2xl font-bold text-foreground">
-                      ${details.royalty.pricePerUse.toFixed(2)} / use
+                      ${artworkDetail.royalty.pricePerUse.toFixed(2)} / use
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {details.royalty.description}
+                      {artworkDetail.royalty.description}
                     </p>
                   </Card>
                 </div>
@@ -135,7 +177,7 @@ export default function ArtworkDetailPage({
                   </h3>
                   <Card className="rounded-2xl border-border bg-secondary p-6">
                     <div className="space-y-3">
-                      {details.license.permissions.map((permission, index) => (
+                      {artworkDetail.license.permissions.map((permission, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <Check
                             size={20}
@@ -144,7 +186,7 @@ export default function ArtworkDetailPage({
                           <span className="text-foreground">{permission}</span>
                         </div>
                       ))}
-                      {details.license.restrictions.map(
+                      {artworkDetail.license.restrictions.map(
                         (restriction, index) => (
                           <div key={index} className="flex items-center gap-3">
                             <X
@@ -172,31 +214,31 @@ export default function ArtworkDetailPage({
                         <span className="font-medium text-foreground">
                           Format:
                         </span>{" "}
-                        {details.fileDetails.format}
+                        {artworkDetail.fileDetails.format}
                       </p>
                       <p>
                         <span className="font-medium text-foreground">
                           Dimensions:
                         </span>{" "}
-                        {details.fileDetails.dimensions}
+                        {artworkDetail.fileDetails.dimensions}
                       </p>
                       <p>
                         <span className="font-medium text-foreground">
                           Size:
                         </span>{" "}
-                        {details.fileDetails.size}
+                        {artworkDetail.fileDetails.size}
                       </p>
                       <p>
                         <span className="font-medium text-foreground">
                           Uploaded:
                         </span>{" "}
-                        {details.fileDetails.uploaded}
+                        {artworkDetail.fileDetails.uploaded}
                       </p>
                       <p>
                         <span className="font-medium text-foreground">
                           Version:
                         </span>{" "}
-                        {details.fileDetails.version}
+                        {artworkDetail.fileDetails.version}
                       </p>
                     </div>
                   </Card>
