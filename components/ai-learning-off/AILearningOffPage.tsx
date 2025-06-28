@@ -1,12 +1,20 @@
 "use client";
 
-import { ArrowLeft, Stamp, GridFour, Eye, Crown, CloudArrowUp, X } from "phosphor-react";
+import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import TopNavbar from "@/components/shared/TopNavbar";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useCallback } from "react";
+import {
+  ArrowLeft,
+  CloudArrowUp,
+  Crown,
+  GridFour,
+  Stamp,
+  X,
+} from "phosphor-react";
+import { useCallback, useRef, useState } from "react";
 
 interface ProtectionOption {
   id: string;
@@ -48,7 +56,8 @@ const protectionOptions: ProtectionOption[] = [
 export default function AILearningOffPage() {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState("full-protection");
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedArtwork, setUploadedArtwork] = useState<string | null>(null);
+  const [artworkFormData, setArtworkFormData] = useState<FormData | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,15 +68,6 @@ export default function AILearningOffPage() {
 
   const handleOptionSelect = (optionId: string) => {
     setSelectedOption(optionId);
-  };
-
-  const handleConfirm = () => {
-    if (!uploadedImage) {
-      setUploadError("Please upload an image before proceeding.");
-      return;
-    }
-    // Navigate to processing page
-    router.push("/processing");
   };
 
   const validateFile = (file: File): boolean => {
@@ -94,12 +94,21 @@ export default function AILearningOffPage() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
-      setUploadedImage(result);
+      setUploadedArtwork(result);
     };
     reader.readAsDataURL(file);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      setArtworkFormData(formData);
+    } catch (error) {}
   }, []);
 
-  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       handleFileUpload(file);
@@ -116,27 +125,56 @@ export default function AILearningOffPage() {
     setIsDragOver(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
 
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      handleFileUpload(files[0]);
-    }
-  }, [handleFileUpload]);
+      const files = Array.from(e.dataTransfer.files);
+      if (files.length > 0) {
+        handleFileUpload(files[0]);
+      }
+    },
+    [handleFileUpload],
+  );
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
   const handleRemoveImage = () => {
-    setUploadedImage(null);
+    setUploadedArtwork(null);
     setUploadError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
+
+  const handleConfirm = useCallback(async () => {
+    if (!uploadedArtwork || !artworkFormData) {
+      setUploadError("Please upload an image before proceeding.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: artworkFormData,
+      });
+
+      console.log("response", response);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Upload failed");
+      }
+    } catch (error) {
+      // image upload failed dialog
+    }
+
+    // Navigate to processing page
+    router.push("/processing");
+  }, [artworkFormData, router, uploadedArtwork]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -158,12 +196,13 @@ export default function AILearningOffPage() {
             {/* Artwork Preview/Upload */}
             <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
               <div className="relative mx-auto aspect-square w-full max-w-sm lg:mx-0 lg:h-96 lg:w-96">
-                {uploadedImage ? (
+                {uploadedArtwork ? (
                   // Uploaded Image Display
                   <div className="relative h-full w-full overflow-hidden rounded-2xl bg-muted">
-                    <img
-                      src={uploadedImage}
+                    <Image
+                      src={uploadedArtwork}
                       alt="Uploaded artwork"
+                      fill={true}
                       className="h-full w-full object-cover"
                     />
                     {/* Grid overlay to simulate protection visualization */}
