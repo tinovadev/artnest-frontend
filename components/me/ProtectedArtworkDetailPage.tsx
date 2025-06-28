@@ -34,7 +34,7 @@ export default function ProtectedArtworkDetailPage({
   };
 
   const handleConvertToForSale = () => {
-    console.log("Put on Sale:", artworkId);
+    router.push(`/me/for-sale/${artworkId}/edit`);
   };
 
   if (!artwork || !details) {
@@ -129,7 +129,7 @@ export default function ProtectedArtworkDetailPage({
                     </Button>
                   </div>
 
-                  {/* For Sale Button - Desktop */}
+                  {/* For Sale Button - TODO: 클릭시 해당 이미지 For Sale Edit 화면으로 전환, 등록 후 Me page에서 Protected->For Sale로 이동 @gawon */}
                   <div className="hidden pt-4 lg:block">
                     <Button
                       onClick={handleConvertToForSale}

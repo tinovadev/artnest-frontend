@@ -10,7 +10,7 @@ export interface ForSaleArtwork {
 export const forSaleArtworks: ForSaleArtwork[] = [
   {
     id: "1",
-    title: "Stars in the Nigh",
+    title: "Stars in the Night",
     price: 10,
     image:
       "https://images.unsplash.com/photo-1533208087231-c3618eab623c?q=80&w=2370&auto=format&fit=crop",
