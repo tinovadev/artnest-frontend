@@ -31,7 +31,7 @@ export default function CompletedPage() {
     description: "",
   });
 
-  const artworkUrl = searchParams.get("artworkUrl");
+  const artworkUrl = searchParams?.get("artworkUrl");
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({

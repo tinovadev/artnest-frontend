@@ -10,7 +10,7 @@ export default function ProcessingPage() {
   const searchParams = useSearchParams();
   const [progress, setProgress] = useState(0);
 
-  const artworkUrl = decodeURIComponent(searchParams.get("artworkUrl") || "");
+  const artworkUrl = decodeURIComponent(searchParams?.get("artworkUrl") || "");
 
   useEffect(() => {
     // Simulate processing progress
