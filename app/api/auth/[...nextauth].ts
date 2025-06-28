@@ -1,11 +1,10 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { query } from "../../../lib/db";
+import { query } from "@/lib/db";
 import { createWallet } from "@/lib/rpc";
+import type { NextAuthOptions } from "next-auth";
 
-
-// DELETE FROM users WHERE id = (SELECT id FROM users WHERE email = 'troublesome.dev@gmail.com');
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -26,27 +25,23 @@ export default NextAuth({
               id, email, username, fullname, created_at, updated_at
             ) VALUES (
               gen_random_uuid(), $1, $2, $3, NOW(), NOW()
-              ) RETURNING id
-              `;
-            const res = await query(insertText, [user.email, username, fullname]);
-            const returnUserId = res.rows[0].id;
+            ) RETURNING id;
+          `;
+          const inserted = await query(insertText, [user.email, username, fullname]);
+          const userId = inserted.rows[0].id;
 
-            const {address, privateKey} = await createWallet();
+          const { address, privateKey } = await createWallet();
 
-            const updateText = `
+          const updateText = `
             UPDATE users SET
-                algo_address = $1,
-                algo_private_key = $2,
-                updated_at = NOW()
-            WHERE id = $3
-            `;
-            await query(updateText, [
-                address,
-                privateKey,
-                returnUserId,
-            ]);
-
+              algo_address = $1,
+              algo_private_key = $2,
+              updated_at = NOW()
+            WHERE id = $3;
+          `;
+          await query(updateText, [address, privateKey, userId]);
         }
+
         return true;
       } catch (e) {
         console.error("DB error in signIn callback:", e);
@@ -54,11 +49,15 @@ export default NextAuth({
       }
     },
 
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
       }
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
