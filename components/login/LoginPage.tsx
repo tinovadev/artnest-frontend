@@ -10,6 +10,10 @@ import { signIn } from "next-auth/react";
 export default function LoginPage() {
   const router = useRouter();
   const [agreed, setAgreed] = useState(false);
+  
+  const handleSubmit = () => {
+    return router.push("/");
+  }
 
   const handleGoogleLogin = async () => {
     if (!agreed) {
@@ -17,7 +21,6 @@ export default function LoginPage() {
       return;
     }
 
-    // NextAuth 구글 로그인 호출
     try {
       await signIn("google", { callbackUrl: "/" });
       // signIn 호출 후 자동 리다이렉트 되므로 아래 코드가 실행 안 될 수도 있음
@@ -37,9 +40,10 @@ export default function LoginPage() {
             <div className="mb-16">
               <div className="mb-8">
                 <img
+                  onClick={handleSubmit}
                   src="/artnest-logo.svg"
                   alt="ArtNest Logo"
-                  className="h-12 w-auto"
+                  className="h-12 w-auto mouse-hover"
                 />
               </div>
 
@@ -126,9 +130,10 @@ export default function LoginPage() {
               {/* ArtNest Logo */}
               <div className="mb-16">
                 <img
+                  onClick={handleSubmit}
                   src="/artnest-logo.svg"
                   alt="ArtNest Logo"
-                  className="h-20 w-auto xl:h-24"
+                  className="h-20 w-auto xl:h-24 mouse-hover"
                 />
               </div>
 

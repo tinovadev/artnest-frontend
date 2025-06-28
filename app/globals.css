@@ -98,3 +98,4 @@
     animation: scanPingPong 3s ease-in-out infinite;
   }
 }
+.mouse-hover { cursor: pointer;  }
