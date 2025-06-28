@@ -1,20 +1,24 @@
-'use client';
+"use client";
 
-import { ArrowLeft, PencilSimple } from 'phosphor-react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRouter } from 'next/navigation';
-import { protectedArtworks } from '@/data/protected-artworks';
-import { protectedArtworkDetails } from '@/data/protected-artwork-details';
+import { ArrowLeft, PencilSimple } from "phosphor-react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRouter } from "next/navigation";
+import { protectedArtworks } from "@/data/protected-artworks";
+import { protectedArtworkDetails } from "@/data/protected-artwork-details";
 
 interface ProtectedArtworkDetailPageProps {
   artworkId: string;
 }
 
-export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtworkDetailPageProps) {
+export default function ProtectedArtworkDetailPage({
+  artworkId,
+}: ProtectedArtworkDetailPageProps) {
   const router = useRouter();
-  const artwork = protectedArtworks.find(art => art.id === artworkId);
-  const details = protectedArtworkDetails.find(detail => detail.artworkId === artworkId);
+  const artwork = protectedArtworks.find((art) => art.id === artworkId);
+  const details = protectedArtworkDetails.find(
+    (detail) => detail.artworkId === artworkId,
+  );
 
   const handleBack = () => {
     router.back();
@@ -26,12 +30,16 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
 
   const handleStartTracking = () => {
     // Navigate to tracking or implement tracking logic
-    console.log('Start tracking artwork:', artworkId);
+    console.log("Start tracking artwork:", artworkId);
+  };
+
+  const handleConvertToForSale = () => {
+    router.push(`/me/for-sale/${artworkId}/edit`);
   };
 
   if (!artwork || !details) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <p className="text-muted-foreground">Artwork not found</p>
       </div>
     );
@@ -40,40 +48,42 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
   return (
     <div className="min-h-screen bg-background text-foreground">
       <ScrollArea className="h-screen">
-        <div className="pb-32 lg:pb-8">
+        <div className="pb-48 lg:pb-8">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 lg:px-12 py-4 border-b border-border max-w-7xl mx-auto lg:mt-20">
+          <div className="mx-auto flex max-w-7xl items-center justify-between border-b border-border px-6 py-4 lg:mt-20 lg:px-12">
             <div className="flex items-center gap-4">
-              <button onClick={handleBack} className="p-2 -ml-2">
+              <button onClick={handleBack} className="-ml-2 p-2">
                 <ArrowLeft size={24} className="text-foreground" />
               </button>
-              <h1 className="text-lg font-semibold truncate">{artwork.title}</h1>
+              <h1 className="truncate text-lg font-semibold">
+                {artwork.title}
+              </h1>
             </div>
-            
-            <button 
+
+            <button
               onClick={handleEdit}
-              className="p-2 hover:bg-muted rounded-lg transition-colors"
+              className="rounded-lg p-2 transition-colors hover:bg-muted"
             >
               <PencilSimple size={24} className="text-foreground" />
             </button>
           </div>
 
-          <div className="px-6 lg:px-12 py-6 max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl px-6 py-6 lg:px-12">
             {/* Responsive Layout */}
-            <div className="lg:flex lg:gap-12 lg:items-start">
+            <div className="lg:flex lg:items-start lg:gap-12">
               {/* Artwork Image - Left Side on Desktop */}
-              <div className="lg:flex-shrink-0 mb-8 lg:mb-0">
-                <div className="relative rounded-3xl overflow-hidden bg-muted aspect-[4/5] w-full max-w-md mx-auto lg:mx-0 lg:w-96 lg:h-[480px]">
-                  <img 
+              <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
+                <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl bg-muted lg:mx-0 lg:h-[480px] lg:w-96">
+                  <img
                     src={artwork.image}
                     alt={artwork.title}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                   />
-                  
+
                   {/* Grid overlay to show protection */}
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
                     <div className="absolute inset-0 opacity-20">
-                      <div className="grid grid-cols-8 grid-rows-10 h-full w-full">
+                      <div className="grid-rows-10 grid h-full w-full grid-cols-8">
                         {Array.from({ length: 80 }).map((_, i) => (
                           <div key={i} className="border border-white/10" />
                         ))}
@@ -84,9 +94,9 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
               </div>
 
               {/* Content - Right Side on Desktop */}
-              <div className="lg:flex-1 space-y-6">
+              <div className="space-y-6 lg:flex-1">
                 {/* Title */}
-                <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+                <h2 className="text-2xl font-bold text-foreground lg:text-3xl">
                   {artwork.title}
                 </h2>
 
@@ -98,26 +108,37 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
                   <p className="text-base">
                     {details.dimensions} | {details.medium}
                   </p>
-                  <p className="text-base">
-                    {details.edition}
-                  </p>
+                  <p className="text-base">{details.edition}</p>
                 </div>
 
                 {/* Description */}
                 <div>
-                  <p className="text-foreground leading-relaxed text-base lg:text-lg">
+                  <p className="text-base leading-relaxed text-foreground lg:text-lg">
                     {details.description}
                   </p>
                 </div>
 
-                {/* Start Tracking Button - Desktop */}
-                <div className="hidden lg:block pt-4">
-                  <Button 
-                    onClick={handleStartTracking}
-                    className="w-full  bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-                  >
-                    Start Tracking
-                  </Button>
+                <div className="flex w-full gap-4">
+                  {/* Start Tracking Button - Desktop */}
+                  <div className="hidden pt-4 lg:block">
+                    <Button
+                      onClick={handleStartTracking}
+                      className="w-[240px] rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
+                    >
+                      Start Tracking
+                    </Button>
+                  </div>
+
+                  {/* For Sale Button - TODO: 클릭시 해당 이미지 For Sale Edit 화면으로 전환, 등록 후 Me page에서 Protected->For Sale로 이동 @gawon */}
+                  <div className="hidden pt-4 lg:block">
+                    <Button
+                      onClick={handleConvertToForSale}
+                      className="w-[240px] rounded-2xl border border-primary py-4 text-lg font-semibold text-primary hover:bg-secondary"
+                      variant="outline"
+                    >
+                      Put on Sale
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -125,14 +146,24 @@ export default function ProtectedArtworkDetailPage({ artworkId }: ProtectedArtwo
         </div>
       </ScrollArea>
 
-      {/* Fixed Start Tracking Button - Mobile Only */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-background border-t border-border lg:hidden">
-        <Button 
-          onClick={handleStartTracking}
-          className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-        >
-          Start Tracking
-        </Button>
+      {/* Fixed For Sale & Start Tracking Button - Mobile Only */}
+      <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background p-6 lg:hidden">
+        <div className="flex flex-col gap-3">
+          <Button
+            onClick={handleStartTracking}
+            className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
+          >
+            Start Tracking
+          </Button>
+
+          <Button
+            onClick={handleConvertToForSale}
+            className="w-full rounded-2xl border border-primary py-4 text-lg font-semibold text-primary"
+            variant="outline"
+          >
+            Put on Sale
+          </Button>
+        </div>
       </div>
     </div>
   );
