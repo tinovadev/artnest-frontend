@@ -1,4 +1,3 @@
-import { forSaleArtworks } from '@/data/for-sale-artworks';
 import { query } from '@/lib/db';
 import { User } from '@/lib/ddl.type';
 import { camelToSnake } from '@/lib/utils';
@@ -34,7 +33,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// body : { artist_name, description, profile_url }
 export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });

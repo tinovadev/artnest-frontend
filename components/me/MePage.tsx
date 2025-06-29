@@ -22,7 +22,7 @@ import Navbar from "@/components/shared/Navbar";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { protectedArtworks } from "@/data/protected-artworks";
 import { forSaleArtworks } from "@/data/for-sale-artworks";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 
 type TabType = "protected" | "for-sale";
@@ -31,6 +31,36 @@ export default function MePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("protected");
   const [isVerifiedArtist, setIsVerifiedArtist] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    fullName: "",
+    artistName: "",
+    description: "",
+    portfolioLink: "",
+    algo_address: "",
+  });
+
+    useEffect(() => {
+    // Check if the user is already verified
+    const getUserInfo = async () => {
+      const me = await fetch("/api/me");
+      if (me.ok) {
+        const data = await me.json();
+        setUserInfo(() => ({
+          ...data,
+          fullName: data.fullname || "",
+          artistName: data.artist_name || "",
+          description: data.description || "",
+          portfolioLink: data.portfolio_link || "",
+          algo_address: data.algo_address || "",
+        }));
+      } else {
+        throw new Error("Failed to fetch user info");
+      }
+    };
+
+    getUserInfo();
+  }, []);
+
 
   // Check verification status on component mount
   useEffect(() => {
@@ -60,9 +90,13 @@ export default function MePage() {
     router.push("/artist-verification");
   };
 
-  const handleWalletClick = () => {
-    // Handle wallet navigation
-    console.log("My NFT Wallet clicked");
+  const handleWalletClick = async () => {
+    await navigator.clipboard.writeText(userInfo.algo_address);
+    alert(`Wallet address copied: ${userInfo.algo_address}`);
+    window.open(
+      'https://dispenser.testnet.aws.algodev.network/',
+      '_blank'
+    );
   };
 
   const handleArtistBadgeClick = () => {
@@ -157,7 +191,7 @@ export default function MePage() {
                     <div className="space-y-6">
                       {/* Artist Name */}
                       <h2 className="font-pixel text-3xl font-bold text-foreground lg:text-4xl">
-                        Aria Solen
+                        {userInfo.artistName || userInfo.fullName || "Your Name"}
                       </h2>
 
                       {/* NFT Wallet Link */}
@@ -329,14 +363,12 @@ export default function MePage() {
                       <div className="flex-1 pt-2">
                         {/* Artist Name */}
                         <h2 className="mb-3 font-pixel text-2xl font-bold text-foreground lg:text-3xl">
-                          Aria Solen
+                          {userInfo.artistName || userInfo.fullName || "Your Name"}
                         </h2>
 
                         {/* Artist Description */}
                         <p className="mb-4 text-sm leading-relaxed text-muted-foreground lg:text-base">
-                          I'm a digital illustrator exploring the
-                          <br />
-                          intersection of nature and imagination.
+                          {userInfo.description}
                         </p>
                       </div>
                     </div>
