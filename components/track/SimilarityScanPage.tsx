@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DetectionResult } from "@/data/detection-results";
 import { ImageSimilarityReport, TrackingArtwork } from "@/lib/types/track";
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "phosphor-react";
@@ -29,6 +29,7 @@ export default function SimilarityScanPage({
     null,
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [reportLoading, setReportLoading] = useState(false);
 
   useEffect(() => {
     const handler = async () => {
@@ -55,9 +56,6 @@ export default function SimilarityScanPage({
           return;
         }
 
-        console.log("artworkHistoryParsed", artworkHistoryParsed);
-        console.log("detectionParsed", detectionParsed);
-
         const response = await fetch(
           `/api/tracking/${detectionParsed.artworkId}/similarity/${detectionParsed.detections[0].detectionId}`,
           {
@@ -73,8 +71,6 @@ export default function SimilarityScanPage({
         }
 
         const parsedResponse = await response.json();
-
-        console.log("parsedResponse", parsedResponse);
 
         const artwork = artworkHistoryParsed.find(
           (value) => value.artworkId === detectionParsed.artworkId,
@@ -101,8 +97,12 @@ export default function SimilarityScanPage({
   };
 
   const handleDownloadReport = () => {
-    // Use the reportUrl from the similarity report
-    window.open(imageSimilarity?.reportUrl, "_blank");
+    setReportLoading(true);
+
+    setTimeout(() => {
+      window.open(imageSimilarity?.reportUrl, "_blank");
+      setReportLoading(false);
+    }, 1000);
   };
 
   if (isLoading) {
@@ -363,8 +363,17 @@ export default function SimilarityScanPage({
                     onClick={handleDownloadReport}
                     className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
                   >
-                    <Download size={20} className="mr-2" />
-                    Download Full Report
+                    {reportLoading ? (
+                      <>
+                        <Loader2 size={20} className="mr-2 animate-spin" />
+                        Preparing Report...
+                      </>
+                    ) : (
+                      <>
+                        <Download size={20} className="mr-2" />
+                        Download Full Report
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>
