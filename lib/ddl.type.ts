@@ -33,3 +33,13 @@ export type Artwork = {
   deleted_at: string | null;    // timestamp
 };
 
+export type ArtworkCard = {
+  id: string;
+  title: string;
+  price: number;
+  image: string;
+  artist: string;
+  category: string;
+};
+
+

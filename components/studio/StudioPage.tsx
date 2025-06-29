@@ -1,19 +1,21 @@
 "use client";
 
-import { Plus, ShoppingCart } from "phosphor-react";
+import { Plus, ShoppingCart, Minus } from "phosphor-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Navbar from "@/components/shared/Navbar";
 import TopNavbar from "@/components/shared/TopNavbar";
-import { studioArtworks } from "@/data/studio-artworks";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArtworkCard } from "@/lib/ddl.type";
 
 export default function StudioPage() {
+  const CART_KEY = 'artCart';
   const router = useRouter();
   const [cart, setCart] = useState<string[]>([]);
-  const [studioArtworks, setStudioArtworks] = useState([]);
+
+  const [studioArtworks, setStudioArtworks] = useState<ArtworkCard[]>([]);
 
   useEffect(() => {
     const getStudioArtworks = async () => {
@@ -30,15 +32,35 @@ export default function StudioPage() {
         return [];
       }
     };
-    getStudioArtworks();    
+    const storedCart = sessionStorage.getItem(CART_KEY);
+    if (storedCart) {
+      try {
+        setCart(JSON.parse(storedCart));
+      } catch (e) {
+        console.error("Invalid cart data in sessionStorage");
+      }
+    }
+    getStudioArtworks();  
   }, []);
 
+    useEffect(() => {
+      if (cart.length > 0) {
+        sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
+        return;
+      }
+    }, [cart]);
 
-  const handleAddToCart = (artworkId: string) => {
+
+  const handleAddOrRemoveToCart = (artworkId: string) => {
+    if (cart.includes(artworkId)) {
+      setCart((prev) => prev.filter((id) => id !== artworkId));
+      return;
+    }
+
     setCart((prev) => [...prev, artworkId]);
-    // Add visual feedback or toast notification here
   };
 
+  
   const handleArtworkClick = (artworkId: string) => {
     router.push(`/studio/${artworkId}`);
   };
@@ -77,8 +99,11 @@ export default function StudioPage() {
           <div className="mx-auto max-w-7xl px-6 lg:px-12">
             {/* Artwork Grid */}
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
-              {studioArtworks.map((artwork) => (
-                <Card
+              {studioArtworks.map((artwork) => {
+                // artiwork.id 가 cart 에 있는지 확인하고, 있으면 remove 버튼을 보여주고, 없으면 add 버튼을 보여줌
+                const isInCart = cart.includes(artwork.id);
+                
+                return <Card
                   key={artwork.id}
                   className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
                   onClick={() => handleArtworkClick(artwork.id)}
@@ -110,16 +135,17 @@ export default function StudioPage() {
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleAddToCart(artwork.id);
+                          handleAddOrRemoveToCart(artwork.id);
                         }}
                         className="ml-2 h-8 w-8 flex-shrink-0 rounded-full bg-primary p-0 text-white hover:bg-primary/90 lg:h-10 lg:w-10"
                       >
-                        <Plus size={16} weight="bold" />
+                        {/* subtraction */}
+                        {isInCart ? <Minus size={16} weight="bold" /> : <Plus size={16} weight="bold" />}
                       </Button>
                     </div>
                   </div>
                 </Card>
-              ))}
+            })} 
             </div>
           </div>
         </div>
