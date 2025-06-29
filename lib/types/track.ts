@@ -8,3 +8,19 @@ export interface TrackingArtwork {
   latestDate: string;
   status: TrackingArtworkStatus;
 }
+
+export interface ImageSimilarityReport {
+  id: string;
+  artworkId: string;
+  lpipsScore: number;
+  distsScore: number;
+  cosineSimilarity: number;
+  originalImageUrl: string;
+  suspectedImageUrl: string;
+  gradcamOverlayUrl: string;
+  // suspectedWebsiteLink: string;
+  // similarityScore: string;
+  reportUrl: string;
+  createdAt: string;
+  // updatedAt: string;
+}

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DetectionResult, detectionResults } from "@/data/detection-results";
+import { DetectionResult } from "@/data/detection-results";
 import { ApiSuccess } from "@/lib/types/global";
 import { TrackingArtwork } from "@/lib/types/track";
 import { useRouter } from "next/navigation";
@@ -26,11 +26,6 @@ export default function ArtworkDetailPage({
     null,
   );
   const [detection, setDetection] = useState<DetectionResult | null>(null);
-
-  // const artwork = trackingArtworks.find((art) => art.id === artworkId);
-  const results = detectionResults.find(
-    (result) => result.artworkId === artworkId,
-  );
 
   useEffect(() => {
     const handler = async () => {
@@ -74,10 +69,10 @@ export default function ArtworkDetailPage({
     router.back();
   };
 
-  const handleViewDetails = (detectionIndex: number) => {
+  const handleViewDetails = (detectionId: string) => {
     sessionStorage.setItem("detection", JSON.stringify(detection));
 
-    router.push(`/track/${artworkId}/similarity/${detectionIndex}`);
+    router.push(`/track/${artworkId}/similarity/${detectionId}`);
   };
 
   const handleTrackNow = (artworkId: string, e: React.MouseEvent) => {
@@ -257,7 +252,9 @@ export default function ArtworkDetailPage({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => handleViewDetails(index)}
+                                  onClick={() =>
+                                    handleViewDetails(detection.detectionId)
+                                  }
                                   className="h-8 rounded-xl border-border bg-transparent px-3 py-1 text-xs text-foreground hover:bg-muted"
                                 >
                                   View Details
