@@ -62,9 +62,8 @@ export async function GET(req: NextRequest) {
       artworks.deleted_at IS NULL;
   `, [artworkId]);
 
-  console.log('artworkDetails data:', data);
   if (!data || data.rows.length === 0) {
-    return NextResponse.json({ error: 'Artwork not found' }, { status: 404 });
+    return NextResponse.json({ error: 'Artwork not found' }, { status: 400 });
   }
   const artworkDetails = data.rows[0];
   const parsed: ArtworkDetails = toArtworkDetails(artworkDetails);

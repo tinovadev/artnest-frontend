@@ -70,6 +70,17 @@ export default function ArtworkDetailPage({
 
   const handleGoToCart = () => {
     // Navigate to cart page
+    const cart = sessionStorage.getItem("artCart");
+    let cartList = null;
+    if (cart) {
+      cartList = JSON.parse(cart);
+    }
+
+    if (cartList.includes(artworkId) === false) {
+      cartList.push(artworkId);
+    }
+
+    sessionStorage.setItem("artCart", JSON.stringify(cartList));
     router.push("/cart");
   };
 
