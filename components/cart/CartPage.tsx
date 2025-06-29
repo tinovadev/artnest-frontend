@@ -19,19 +19,35 @@ export default function CartPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
+  const cartList = sessionStorage.getItem('CART_KEY')
+
   useEffect(() => {
     // Load cart items from localStorage or state management
     // For demo purposes, we'll show "Song of the Wind" as an example
-    const sampleItem = studioArtworks.find(artwork => artwork.id === '2');
-    if (sampleItem) {
-      setCartItems([{
-        id: sampleItem.id,
-        title: sampleItem.title,
-        price: sampleItem.price,
-        image: sampleItem.image,
-        artist: 'Aria Solen'
-      }]);
-    }
+    const getStudioArtworks = async () => {
+        try {
+          const studioArtworkData = await fetch("/api/studio-artworks");
+        if (!studioArtworkData.ok) {
+          console.error("Failed to fetch studio artworks");
+          return [];
+        }
+
+        const artworks: CartItem[] = await studioArtworkData.json();
+
+        const cartItems = artworks.filter((artwork) => {
+          if (cartList && cartList.includes(artwork.id)) {
+            return true;
+          }
+          return false;
+        });
+
+        setCartItems(cartItems); 
+      } catch (err) {
+        console.error("Error fetching studio artworks:", err);
+        return [];
+      }
+    };
+    getStudioArtworks();
   }, []);
 
   const handleBack = () => {

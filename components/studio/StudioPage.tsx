@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { ArtworkCard } from "@/lib/ddl.type";
 
 export default function StudioPage() {
-  const CART_KEY = 'artCart';
+  const CART_KEY = 'CART_KEY';
   const router = useRouter();
   const [cart, setCart] = useState<string[]>([]);
 
