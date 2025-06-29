@@ -13,7 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { ArtworkForm } from "@/lib/types/ai-learning-off";
+import { CreateArtworkDto } from "@/lib/dto/ai-learning-off/post";
+import { ArtworkBody, ArtworkForm } from "@/lib/types/ai-learning-off";
+import { ApiArraySuccess } from "@/lib/types/global";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -32,7 +34,9 @@ export default function CompletedPage() {
     description: "",
   });
 
-  const [artworkData, setArtworkData] = useState<ArtworkForm | null>(null);
+  const [artworkData, setArtworkData] = useState<CreateArtworkDto[] | null>(
+    null,
+  );
 
   const artworkUrl = searchParams?.get("artworkUrl");
 
@@ -46,10 +50,19 @@ export default function CompletedPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    if (!artworkUrl) {
+      return;
+    }
+
+    const body: ArtworkBody = {
+      imageUrl: artworkUrl,
+      ...formData,
+    };
+
     const response = await fetch("/api/protected-artwork-details", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -57,7 +70,9 @@ export default function CompletedPage() {
       throw new Error(errorData.error || "Artwork formData upload failed");
     }
 
-    const parsedResponse = await response.json();
+    const parsedResponse =
+      (await response.json()) as ApiArraySuccess<CreateArtworkDto>;
+
     setArtworkData(parsedResponse.result);
 
     setIsModalOpen(true);
