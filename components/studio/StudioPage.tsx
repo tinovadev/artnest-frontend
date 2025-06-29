@@ -7,12 +7,32 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Navbar from "@/components/shared/Navbar";
 import TopNavbar from "@/components/shared/TopNavbar";
 import { studioArtworks } from "@/data/studio-artworks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function StudioPage() {
   const router = useRouter();
   const [cart, setCart] = useState<string[]>([]);
+  const [studioArtworks, setStudioArtworks] = useState([]);
+
+  useEffect(() => {
+    const getStudioArtworks = async () => {
+        try {
+          const studioArtworkData = await fetch("/api/studio-artworks");
+        if (!studioArtworkData.ok) {
+          console.error("Failed to fetch studio artworks");
+          return [];
+        }
+        const artworks = await studioArtworkData.json();
+        setStudioArtworks(artworks); 
+      } catch (err) {
+        console.error("Error fetching studio artworks:", err);
+        return [];
+      }
+    };
+    getStudioArtworks();    
+  }, []);
+
 
   const handleAddToCart = (artworkId: string) => {
     setCart((prev) => [...prev, artworkId]);

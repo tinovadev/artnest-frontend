@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     const { artistName: artist_name, description: description } = body;
 
     if (!artist_name || !description) {
-      return NextResponse.json({ error: 'Invalid input1' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
 
     const res = await query(
