@@ -1,6 +1,4 @@
 export interface ArtworkForm {
-  id?: string;
-  userId?: string;
   title: string;
   artist: string;
   year: string;
@@ -8,7 +6,8 @@ export interface ArtworkForm {
   dimensions: string;
   edition: string;
   description: string;
-  imageUrl?: string;
-  unitPrice?: number;
-  currency?: string;
+}
+
+export interface ArtworkBody extends ArtworkForm {
+  imageUrl: string;
 }

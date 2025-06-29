@@ -4,22 +4,13 @@ import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { detectionResults } from "@/data/detection-results";
-import { trackingArtworks } from "@/data/tracking";
+import { DetectionResult } from "@/data/detection-results";
+import { ImageSimilarityReport, TrackingArtwork } from "@/lib/types/track";
+import { Download, Loader2 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Download } from "phosphor-react";
-
-interface ImageSimilarityReport {
-  id: string;
-  lpipsScore: number;
-  distsScore: number;
-  cosineSimilarity: number;
-  originalImageUrl: string;
-  suspectedImageUrl: string;
-  gradcamOverlayUrl: string;
-  reportUrl: string;
-  createdAt: string;
-}
+import { ArrowLeft } from "phosphor-react";
+import { useEffect, useState } from "react";
 
 interface SimilarityScanPageProps {
   artworkId: string;
@@ -31,47 +22,111 @@ export default function SimilarityScanPage({
   detectionId,
 }: SimilarityScanPageProps) {
   const router = useRouter();
-  const artwork = trackingArtworks.find((art) => art.id === artworkId);
-  const results = detectionResults.find(
-    (result) => result.artworkId === artworkId,
-  );
-  const detection = results?.detections[parseInt(detectionId)];
 
-  // Mock data for the new structure - in real app this would come from API
-  const similarityReport: ImageSimilarityReport = {
-    id: "similarity_001",
-    lpipsScore: 0.234,
-    distsScore: 0.156,
-    cosineSimilarity: 0.892,
-    originalImageUrl: artwork?.image || "",
-    suspectedImageUrl: detection?.image || "",
-    gradcamOverlayUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
-    reportUrl: "/reports/similarity_001.pdf",
-    createdAt: detection?.detectedDate || "2025.01.15",
-  };
+  const [imageSimilarity, setImageSimilarity] =
+    useState<ImageSimilarityReport | null>(null);
+  const [artworkHistory, setArtworkHistory] = useState<TrackingArtwork | null>(
+    null,
+  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [reportLoading, setReportLoading] = useState(false);
+
+  useEffect(() => {
+    const handler = async () => {
+      setIsLoading(true);
+
+      try {
+        const detectionStored = sessionStorage.getItem("detection");
+        const artworkHistoryStored = sessionStorage.getItem(
+          "artworkTrackingHistory",
+        );
+
+        if (!detectionStored || !artworkHistoryStored) {
+          console.log("No session data");
+          return;
+        }
+
+        const detectionParsed = JSON.parse(detectionStored) as DetectionResult;
+        const artworkHistoryParsed = JSON.parse(
+          artworkHistoryStored,
+        ) as TrackingArtwork[];
+
+        if (!detectionParsed || !artworkHistoryParsed) {
+          console.log("No session data");
+          return;
+        }
+
+        const response = await fetch(
+          `/api/tracking/${detectionParsed.artworkId}/similarity/${detectionParsed.detections[0].detectionId}`,
+          {
+            method: "GET",
+          },
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.error || "Artworks tracking detail page upload failed",
+          );
+        }
+
+        const parsedResponse = await response.json();
+
+        const artwork = artworkHistoryParsed.find(
+          (value) => value.artworkId === detectionParsed.artworkId,
+        );
+
+        if (!artwork) {
+          return;
+        }
+
+        setImageSimilarity(parsedResponse.result);
+        setArtworkHistory(artwork);
+      } catch (error) {
+        console.error("Error in handler:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void handler();
+  }, [artworkId, detectionId]);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleDownloadReport = () => {
-    // Use the reportUrl from the similarity report
-    window.open(similarityReport.reportUrl, '_blank');
+    setReportLoading(true);
+
+    setTimeout(() => {
+      window.open(imageSimilarity?.reportUrl, "_blank");
+      setReportLoading(false);
+    }, 1000);
   };
 
-  if (!artwork || !detection) {
+  if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
-        <p className="text-muted-foreground">Detection not found</p>
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground">로딩 중입니다...</p>
+      </div>
+    );
+  }
+
+  if (!imageSimilarity || !artworkHistory) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-muted-foreground">데이터를 불러올 수 없습니다.</p>
       </div>
     );
   }
 
   // Calculate overall similarity percentage from multiple metrics
   const overallSimilarity = Math.round(
-    (similarityReport.cosineSimilarity * 100 + 
-     (1 - similarityReport.lpipsScore) * 100 + 
-     (1 - similarityReport.distsScore) * 100) / 3
+    (imageSimilarity.cosineSimilarity * 100 +
+      (1 - imageSimilarity.lpipsScore) * 100 +
+      (1 - imageSimilarity.distsScore) * 100) /
+      3,
   );
 
   return (
@@ -101,45 +156,50 @@ export default function SimilarityScanPage({
                       <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
                         Original Artwork
                       </div>
-                      <div className="aspect-square bg-muted">
-                        <img
-                          src={similarityReport.originalImageUrl}
+                      <div className="relative aspect-square bg-muted">
+                        <Image
+                          src={imageSimilarity.originalImageUrl}
                           alt="Original artwork"
-                          className="h-full w-full object-cover"
+                          className="z-0 h-full w-full object-cover"
+                          fill={true}
+                          priority={true}
                         />
                       </div>
                     </div>
-
-                    {/* Suspected Artwork */}
                     <div className="relative">
                       <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
                         Suspected Artwork
                       </div>
-                      <div className="aspect-square bg-muted">
-                        <img
-                          src={similarityReport.suspectedImageUrl}
-                          alt="Suspected artwork"
+                      <div className="relative aspect-square bg-muted">
+                        <Image
+                          src={imageSimilarity.suspectedImageUrl}
+                          alt="Matched artwork"
                           className="h-full w-full object-cover"
+                          fill={true}
+                          priority={true}
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* GradCAM Overlay Section */}
-                  <div className="rounded-2xl overflow-hidden">
+                  <div className="overflow-hidden rounded-2xl">
                     <div className="bg-success py-2 text-center text-xs font-medium text-black lg:text-sm">
                       GradCAM Overlay Analysis
                     </div>
-                    <div className="aspect-square bg-muted">
-                      <img
-                        src={similarityReport.gradcamOverlayUrl}
-                        alt="GradCAM overlay showing similarity heatmap"
+                    <div className="relative aspect-square bg-muted">
+                      <Image
+                        src={imageSimilarity?.gradcamOverlayUrl}
+                        alt="Matched artwork"
                         className="h-full w-full object-cover"
+                        fill={true}
+                        priority={true}
                       />
                     </div>
                     <div className="bg-secondary p-3">
                       <p className="text-xs text-muted-foreground lg:text-sm">
-                        Heat map highlighting the most similar regions between images
+                        Heat map highlighting the most similar regions between
+                        images
                       </p>
                     </div>
                   </div>
@@ -157,8 +217,36 @@ export default function SimilarityScanPage({
                     {overallSimilarity}%
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Detected on {similarityReport.createdAt}
+                    Detected on {imageSimilarity?.createdAt}
                   </p>
+                </div>
+
+                {/* Artwork Details */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="mb-2 text-lg font-semibold">
+                      Original Artwork
+                    </h3>
+                    <p className="text-muted-foreground">
+                      &quot;{artworkHistory.title}&quot; by @linalee
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="mb-2 text-lg font-semibold">
+                      Suspected Artwork
+                    </h3>
+                    <p className="text-muted-foreground">
+                      &quot;
+                      {imageSimilarity.suspectedImageUrl &&
+                        imageSimilarity.suspectedImageUrl.split("/").pop()}
+                      &quot; found on{" "}
+                      {imageSimilarity.suspectedImageUrl &&
+                        new URL(
+                          imageSimilarity.suspectedImageUrl,
+                        ).hostname.split(".")[0]}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Detailed Metrics */}
@@ -170,64 +258,48 @@ export default function SimilarityScanPage({
                   <div className="space-y-4">
                     {/* Cosine Similarity */}
                     <Card className="rounded-2xl border-border bg-secondary p-6">
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="mb-2 flex items-center justify-between">
                         <h4 className="font-semibold">Cosine Similarity</h4>
                         <span className="text-lg font-bold text-primary">
-                          {(similarityReport.cosineSimilarity * 100).toFixed(1)}%
+                          {(imageSimilarity.cosineSimilarity * 100).toFixed(1)}%
                         </span>
                       </div>
                       <p className="text-sm leading-relaxed text-muted-foreground">
-                        Measures the cosine of the angle between feature vectors. Higher values indicate greater similarity in overall composition and style.
+                        Measures the cosine of the angle between feature
+                        vectors. Higher values indicate greater similarity in
+                        overall composition and style.
                       </p>
                     </Card>
 
                     {/* LPIPS Score */}
                     <Card className="rounded-2xl border-border bg-secondary p-6">
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="mb-2 flex items-center justify-between">
                         <h4 className="font-semibold">LPIPS Distance</h4>
                         <span className="text-lg font-bold text-primary">
-                          {similarityReport.lpipsScore.toFixed(3)}
+                          {imageSimilarity.lpipsScore}
                         </span>
                       </div>
                       <p className="text-sm leading-relaxed text-muted-foreground">
-                        Learned Perceptual Image Patch Similarity. Lower values indicate images that are more perceptually similar to humans.
+                        Learned Perceptual Image Patch Similarity. Lower values
+                        indicate images that are more perceptually similar to
+                        humans.
                       </p>
                     </Card>
 
                     {/* DISTS Score */}
                     <Card className="rounded-2xl border-border bg-secondary p-6">
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="mb-2 flex items-center justify-between">
                         <h4 className="font-semibold">DISTS Score</h4>
                         <span className="text-lg font-bold text-primary">
-                          {similarityReport.distsScore.toFixed(3)}
+                          {imageSimilarity.distsScore}
                         </span>
                       </div>
                       <p className="text-sm leading-relaxed text-muted-foreground">
-                        Deep Image Structure and Texture Similarity. Lower values indicate better structural and textural similarity.
+                        Deep Image Structure and Texture Similarity. Lower
+                        values indicate better structural and textural
+                        similarity.
                       </p>
                     </Card>
-                  </div>
-                </div>
-
-                {/* Artwork Details */}
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="mb-2 text-lg font-semibold">
-                      Original Artwork
-                    </h3>
-                    <p className="text-muted-foreground">
-                      "{artwork.title}" by @linalee
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="mb-2 text-lg font-semibold">
-                      Suspected Artwork
-                    </h3>
-                    <p className="text-muted-foreground">
-                      "{detection.source}" found on{" "}
-                      {detection.platform.toLowerCase()}
-                    </p>
                   </div>
                 </div>
 
@@ -240,28 +312,43 @@ export default function SimilarityScanPage({
                   <Card className="rounded-2xl border-border bg-secondary p-6">
                     <div className="space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${
-                          similarityReport.cosineSimilarity > 0.8 ? 'bg-red-400' : 
-                          similarityReport.cosineSimilarity > 0.6 ? 'bg-yellow-400' : 'bg-green-400'
-                        }`}></div>
+                        <div
+                          className={`h-3 w-3 rounded-full ${
+                            imageSimilarity.cosineSimilarity > 0.8
+                              ? "bg-red-400"
+                              : imageSimilarity.cosineSimilarity > 0.6
+                                ? "bg-yellow-400"
+                                : "bg-green-400"
+                          }`}
+                        ></div>
                         <span className="text-foreground">
                           High compositional similarity detected
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${
-                          similarityReport.lpipsScore < 0.3 ? 'bg-red-400' : 
-                          similarityReport.lpipsScore < 0.5 ? 'bg-yellow-400' : 'bg-green-400'
-                        }`}></div>
+                        <div
+                          className={`h-3 w-3 rounded-full ${
+                            imageSimilarity.lpipsScore < 0.3
+                              ? "bg-red-400"
+                              : imageSimilarity.lpipsScore < 0.5
+                                ? "bg-yellow-400"
+                                : "bg-green-400"
+                          }`}
+                        ></div>
                         <span className="text-foreground">
                           Perceptual similarity analysis completed
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${
-                          similarityReport.distsScore < 0.2 ? 'bg-red-400' : 
-                          similarityReport.distsScore < 0.4 ? 'bg-yellow-400' : 'bg-green-400'
-                        }`}></div>
+                        <div
+                          className={`h-3 w-3 rounded-full ${
+                            imageSimilarity.distsScore < 0.2
+                              ? "bg-red-400"
+                              : imageSimilarity.distsScore < 0.4
+                                ? "bg-yellow-400"
+                                : "bg-green-400"
+                          }`}
+                        ></div>
                         <span className="text-foreground">
                           Structural and textural analysis completed
                         </span>
@@ -276,8 +363,17 @@ export default function SimilarityScanPage({
                     onClick={handleDownloadReport}
                     className="w-full rounded-2xl bg-primary py-4 text-lg font-semibold text-white hover:bg-primary/90"
                   >
-                    <Download size={20} className="mr-2" />
-                    Download Full Report
+                    {reportLoading ? (
+                      <>
+                        <Loader2 size={20} className="mr-2 animate-spin" />
+                        Preparing Report...
+                      </>
+                    ) : (
+                      <>
+                        <Download size={20} className="mr-2" />
+                        Download Full Report
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>

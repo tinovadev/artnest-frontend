@@ -49,7 +49,7 @@ export async function uploadImageToGCS(
     const formattedDate = `${mm}-${dd}-${yyyy}`;
 
     const userId = crypto.randomUUID();
-    const uniqueFileName = `artworks/${userId}/${fileName}-${formattedDate}`;
+    const uniqueFileName = `artworks/${process.env.USERID}/${fileName}-${formattedDate}`;
 
     const fileUpload = bucket.file(uniqueFileName);
 
