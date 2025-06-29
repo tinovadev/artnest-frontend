@@ -1,6 +1,5 @@
 import { Pool } from "pg";
 
-
 const pool = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -11,6 +10,5 @@ const pool = new Pool({
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000
 });
-
 
 export const query = (text: string, params?: any[]) => pool.query(text, params);
