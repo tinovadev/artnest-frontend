@@ -22,22 +22,23 @@ export default function ArtworkDetailPage({
   const [studioArtwork, setStudioArtwork] = useState<StudioArtwork | null>(null);
   const [artworkDetail, setArtworkDetail] = useState<ArtworkDetails | null>(null);
 
-  console.log('studioArtwork', studioArtwork);
-  console.log('artworkDetail', artworkDetail);
-
   useEffect(() => {
     if (!artworkId) return;
 
     const fetchArtworkDetail = async () => {
       try {
-        const res = await fetch('/api/artwork-details');
-        console.log('/api/artwork-details', res);
-        if (!res.ok) throw new Error('Failed to fetch artwork details');
-        const data: ArtworkDetails[] = await res.json();
+        const res = await fetch('/api/artwork-details?artworkId=' + artworkId);
+        if (!res.ok) {
+          throw new Error('Failed to fetch artwork details')
+        };
 
-        console.log('artwork-details 응답:', data);
-        const result = data.find((art) => art.artworkId === artworkId) ?? null;
-        setArtworkDetail(result);
+        const data: ArtworkDetails = await res.json();
+        if (!data) {
+          console.error('Artwork not found for ID:', artworkId);
+          return;
+        }
+
+        setArtworkDetail(data);
       } catch (err) {
         console.error('Error fetching artwork details:', err);
       }
@@ -45,12 +46,12 @@ export default function ArtworkDetailPage({
 
     const fetchStudioArtworks = async () => {
       try {
-        const res = await fetch('/api/studio-artworks');
-        console.log('/api/studio-artworks', res);
-        if (!res.ok) throw new Error('Failed to fetch studio artworks');
-        const data: StudioArtwork[] = await res.json();
+        const res = await fetch('/api/studio-artworks?artworkId=' + artworkId);
+        if (!res.ok) {
+          throw new Error('Failed to fetch studio artworks')
+        };
 
-        console.log('studio-artworks 응답:', data);
+        const data: StudioArtwork[] = await res.json();
         const result = data.find((art) => art.id === artworkId) ?? null;
         setStudioArtwork(result);
       } catch (err) {
