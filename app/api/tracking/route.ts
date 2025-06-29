@@ -1,8 +1,8 @@
 import { query } from "@/lib/db";
-import { ApiResponse } from "@/lib/types";
+import { ApiResponse } from "@/lib/types/global";
 import {
   ArtworksTrackingHistoryResponse,
-  TrackingArtwork,
+  TrackingArtwork2,
   TrackingArtworkDB,
 } from "@/lib/types/track";
 import { formatDateToDotFormat } from "@/lib/utils";
@@ -12,7 +12,7 @@ import { QueryResult } from "pg";
 
 export async function GET(
   request: NextRequest,
-): Promise<NextResponse<ApiResponse<TrackingArtwork>>> {
+): Promise<NextResponse<ApiResponse<TrackingArtwork2>>> {
   try {
     const searchText = `
     SELECT DISTINCT ON (ah.artwork_id)
@@ -32,7 +32,7 @@ export async function GET(
       process.env.USERID,
     ]);
 
-    const results: TrackingArtwork[] = response.rows.map((row) => ({
+    const results: TrackingArtwork2[] = response.rows.map((row) => ({
       artworkId: row.artwork_id,
       image: row.image_url,
       latestDate: formatDateToDotFormat(row.created_at),
