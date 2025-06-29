@@ -75,6 +75,8 @@ export default function ArtworkDetailPage({
   };
 
   const handleViewDetails = (detectionIndex: number) => {
+    sessionStorage.setItem("detection", JSON.stringify(detection));
+
     router.push(`/track/${artworkId}/similarity/${detectionIndex}`);
   };
 

@@ -58,12 +58,16 @@ export async function GET(
       totalDetections: historyResponse.rows[0].count - 1,
       verifiedThefts: imageSimilarityResponse2.rows[0].count,
       detections: imageSimilarityResponse1.rows.map((value) => {
-        const { hostname } = new URL(value.suspected_image_url);
-        const parts = hostname.split(".");
+        const url = new URL(value.suspected_image_url);
+        const platform = url.hostname.split(".");
+
+        const segments = url.pathname.split("/");
+        const filename = segments[segments.length - 1];
 
         return {
-          source: value.suspected_image_url.toString(),
-          platform: parts[1],
+          detectionId: value.id,
+          source: filename,
+          platform: platform[1],
           similarity: parseInt(value.similarity_score),
           detectedDate: formatDateToDotFormat(value.created_at.toString()),
           image: value.suspected_image_url,

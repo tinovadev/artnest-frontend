@@ -4,10 +4,15 @@ import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { detectionResults } from "@/data/detection-results";
-import { trackingArtworks } from "@/data/tracking";
+import {
+  Detection,
+  DetectionResult,
+  detectionResults,
+} from "@/data/detection-results";
+import { TrackingArtwork } from "@/lib/types/track";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Download } from "phosphor-react";
+import { ArrowLeft } from "phosphor-react";
+import { useEffect, useState } from "react";
 
 interface ImageSimilarityReport {
   id: string;
@@ -31,24 +36,62 @@ export default function SimilarityScanPage({
   detectionId,
 }: SimilarityScanPageProps) {
   const router = useRouter();
-  const artwork = trackingArtworks.find((art) => art.id === artworkId);
+
   const results = detectionResults.find(
     (result) => result.artworkId === artworkId,
   );
-  const detection = results?.detections[parseInt(detectionId)];
 
-  // Mock data for the new structure - in real app this would come from API
-  const similarityReport: ImageSimilarityReport = {
-    id: "similarity_001",
-    lpipsScore: 0.234,
-    distsScore: 0.156,
-    cosineSimilarity: 0.892,
-    originalImageUrl: artwork?.image || "",
-    suspectedImageUrl: detection?.image || "",
-    gradcamOverlayUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
-    reportUrl: "/reports/similarity_001.pdf",
-    createdAt: detection?.detectedDate || "2025.01.15",
-  };
+  const [similarity, setSimilarity] = useState<Detection | null>(null);
+  const [artworkHistory, setArtworkHistory] = useState<TrackingArtwork | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const handler = async () => {
+      const detectionStored = sessionStorage.getItem("detection");
+      const artworkHistoryStored = sessionStorage.getItem(
+        "artworkTrackingHistory",
+      );
+
+      if (!detectionStored || !artworkHistoryStored) {
+        console.log("No session data");
+        return;
+      }
+
+      const detectionParsed = JSON.parse(detectionStored) as DetectionResult;
+      const artworkHistoryParsed = JSON.parse(
+        artworkHistoryStored,
+      ) as TrackingArtwork[];
+
+      console.log(artworkHistoryParsed);
+
+      if (!detectionParsed || !artworkHistoryParsed) {
+        console.log("No session data");
+        return;
+      }
+
+      const response = await fetch(
+        `/api/tracking/${detectionParsed.artworkId}/similarity/${detectionParsed.detections[parseInt(detectionId)]}`, {
+          method: 'GET'
+        }
+      );
+
+      const artwork = artworkHistoryParsed.find(
+        (value) => (value.artworkId = detectionParsed.artworkId),
+      );
+
+      if (!artwork) {
+        return;
+      }
+
+      console.log(artworkId);
+
+      setSimilarity(detectionParsed.detections[parseInt(detectionId)]);
+      setArtworkHistory(artwork);
+    };
+
+    void handler();
+  }, [artworkId, detectionId]);
 
   const handleBack = () => {
     router.back();
@@ -59,7 +102,7 @@ export default function SimilarityScanPage({
     window.open(similarityReport.reportUrl, '_blank');
   };
 
-  if (!artwork || !detection) {
+  if (!artworkHistory || !similarity) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <p className="text-muted-foreground">Detection not found</p>
@@ -109,19 +152,12 @@ export default function SimilarityScanPage({
                         />
                       </div>
                     </div>
-
-                    {/* Suspected Artwork */}
-                    <div className="relative">
-                      <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
-                        Suspected Artwork
-                      </div>
-                      <div className="aspect-square bg-muted">
-                        <img
-                          src={similarityReport.suspectedImageUrl}
-                          alt="Suspected artwork"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
+                    <div className="aspect-square bg-muted">
+                      <img
+                        src={artworkHistory.image}
+                        alt="Original artwork"
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                   </div>
 
@@ -132,8 +168,8 @@ export default function SimilarityScanPage({
                     </div>
                     <div className="aspect-square bg-muted">
                       <img
-                        src={similarityReport.gradcamOverlayUrl}
-                        alt="GradCAM overlay showing similarity heatmap"
+                        src={similarity.image}
+                        alt="Matched artwork"
                         className="h-full w-full object-cover"
                       />
                     </div>
@@ -154,7 +190,7 @@ export default function SimilarityScanPage({
                     Overall Similarity
                   </h2>
                   <div className="mb-2 font-pixel text-4xl font-bold text-primary lg:text-6xl">
-                    {overallSimilarity}%
+                    {similarity.similarity}%
                   </div>
                   <p className="text-sm text-muted-foreground">
                     Detected on {similarityReport.createdAt}
@@ -216,7 +252,7 @@ export default function SimilarityScanPage({
                       Original Artwork
                     </h3>
                     <p className="text-muted-foreground">
-                      "{artwork.title}" by @linalee
+                      "{artworkHistory.title}" by @linalee
                     </p>
                   </div>
 
@@ -225,8 +261,8 @@ export default function SimilarityScanPage({
                       Suspected Artwork
                     </h3>
                     <p className="text-muted-foreground">
-                      "{detection.source}" found on{" "}
-                      {detection.platform.toLowerCase()}
+                      "{similarity.source}" found on{" "}
+                      {similarity.platform.toLowerCase()}
                     </p>
                   </div>
                 </div>
