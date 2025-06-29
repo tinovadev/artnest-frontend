@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DetectionResult, detectionResults } from "@/data/detection-results";
 import { ApiSuccess } from "@/lib/types/global";
-import { TrackingArtwork2 } from "@/lib/types/track";
+import { TrackingArtwork } from "@/lib/types/track";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Calendar, Download, Eye, MapPin } from "phosphor-react";
 
@@ -22,7 +22,7 @@ export default function ArtworkDetailPage({
 }: ArtworkDetailPageProps) {
   const router = useRouter();
   const [loadingArtworkId, setLoadingArtworkId] = useState<string | null>(null);
-  const [artworkHistory, setArtWorkHistory] = useState<TrackingArtwork2 | null>(
+  const [artworkHistory, setArtWorkHistory] = useState<TrackingArtwork | null>(
     null,
   );
   const [detection, setDetection] = useState<DetectionResult | null>(null);
@@ -41,7 +41,7 @@ export default function ArtworkDetailPage({
         return;
       }
 
-      const parsed = JSON.parse(stored) as TrackingArtwork2[];
+      const parsed = JSON.parse(stored) as TrackingArtwork[];
 
       const artwork = parsed.find((art) => art.artworkId === artworkId);
 

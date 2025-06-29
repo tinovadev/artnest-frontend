@@ -22,10 +22,10 @@ export async function GET(
   select 
     id, 
     artwork_id,
-    suspected_image_link as platform,
+    suspected_image_url,
+    suspected_website_link,
     similarity_score, 
-    created_at as detectedDate,
-    suspected_image_url
+    created_at
   from image_similarity 
   where artwork_id = $1
   `;
@@ -46,7 +46,7 @@ export async function GET(
     //
     const searchHistoryText = `
   SELECT count(*)
-  from artworks_tracking_history
+  from artwork_tracking_history
   where artwork_id = $1
   `;
 

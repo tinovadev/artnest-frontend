@@ -19,12 +19,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { TrackingArtworkHistoryDto } from "@/lib/dto/tracking/get";
+import { TrackingArtworkStatus } from "@/lib/model/artwork-tracking-history.model";
 import { ApiArraySuccess, ApiSuccess } from "@/lib/types/global";
-import {
-  ArtworksTrackingHistoryResponse,
-  TrackingArtwork2,
-  TrackingArtworkStatus,
-} from "@/lib/types/track";
+import { TrackingArtwork } from "@/lib/types/track";
 import { useRouter } from "next/navigation";
 import {
   DotsThree,
@@ -42,7 +40,7 @@ export default function TrackPage() {
   const router = useRouter();
   // const [artworks, setArtworks] = useState(trackingArtworks);
   const [artworksTrackingHistory, setArtworkTrackingHistory] = useState<
-    TrackingArtwork2[]
+    TrackingArtwork[]
   >([]);
   const [mode, setMode] = useState<Mode>("normal");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -61,7 +59,7 @@ export default function TrackPage() {
       }
 
       const parsedResponse =
-        (await response.json()) as ApiArraySuccess<TrackingArtwork2>;
+        (await response.json()) as ApiArraySuccess<TrackingArtwork>;
 
       sessionStorage.setItem(
         "artworkTrackingHistory",
@@ -136,7 +134,7 @@ export default function TrackPage() {
     }
 
     const parsedResponse =
-      (await response.json()) as ApiSuccess<ArtworksTrackingHistoryResponse>;
+      (await response.json()) as ApiSuccess<TrackingArtworkHistoryDto>;
     console.log(parsedResponse);
 
     setArtworkTrackingHistory((prev) =>

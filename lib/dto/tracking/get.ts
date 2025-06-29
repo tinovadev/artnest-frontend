@@ -1,7 +1,25 @@
-import { ImageSimilarityDB } from "@/lib/types/track";
+import { TrackingArtworkStatus } from "@/lib/model/artwork-tracking-history.model";
+import { ImageSimilarityModel } from "@/lib/model/image-similarity.model";
+
+export interface TrackingArtworkDto {
+  id: string;
+  artwork_id: string;
+  title: string;
+  image_url: string;
+  created_at: string;
+  status: TrackingArtworkStatus;
+}
+
+export interface TrackingArtworkHistoryDto {
+  id?: string;
+  user_id: string;
+  artwork_id: string;
+  status: TrackingArtworkStatus;
+  created_at: Date;
+}
 
 export type ImageSimilarityDetailDto = Pick<
-  ImageSimilarityDB,
+  ImageSimilarityModel,
   | "id"
   | "artwork_id"
   | "suspected_image_url"
