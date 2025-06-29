@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { detectionResults } from "@/data/detection-results";
 import { trackingArtworks } from "@/data/tracking";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Download, Eye } from "phosphor-react";
+import { ArrowLeft, Download } from "phosphor-react";
 
 interface ImageSimilarityReport {
   id: string;
@@ -59,11 +59,6 @@ export default function SimilarityScanPage({
     window.open(similarityReport.reportUrl, '_blank');
   };
 
-  const handleViewGradCAM = () => {
-    // Open GradCAM overlay in a new window
-    window.open(similarityReport.gradcamOverlayUrl, '_blank');
-  };
-
   if (!artwork || !detection) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
@@ -98,46 +93,56 @@ export default function SimilarityScanPage({
             <div className="lg:flex lg:items-start lg:gap-12">
               {/* Comparison Images - Left Side on Desktop */}
               <div className="mb-8 lg:mb-0 lg:w-[50%] lg:flex-shrink-0">
-                <div className="mx-auto grid grid-cols-2 gap-[1px] overflow-hidden rounded-2xl lg:mx-0">
-                  {/* Original Artwork */}
-                  <div className="relative">
-                    <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
-                      Original Artwork
+                <div className="space-y-4">
+                  {/* Original vs Suspected Comparison */}
+                  <div className="mx-auto grid grid-cols-2 gap-[1px] overflow-hidden rounded-2xl lg:mx-0">
+                    {/* Original Artwork */}
+                    <div className="relative">
+                      <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
+                        Original Artwork
+                      </div>
+                      <div className="aspect-square bg-muted">
+                        <img
+                          src={similarityReport.originalImageUrl}
+                          alt="Original artwork"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
                     </div>
-                    <div className="aspect-square bg-muted">
-                      <img
-                        src={similarityReport.originalImageUrl}
-                        alt="Original artwork"
-                        className="h-full w-full object-cover"
-                      />
+
+                    {/* Suspected Artwork */}
+                    <div className="relative">
+                      <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
+                        Suspected Artwork
+                      </div>
+                      <div className="aspect-square bg-muted">
+                        <img
+                          src={similarityReport.suspectedImageUrl}
+                          alt="Suspected artwork"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Suspected Artwork */}
-                  <div className="relative">
-                    <div className="bg-primary py-2 text-center text-xs font-medium text-white lg:text-sm">
-                      Suspected Artwork
+                  {/* GradCAM Overlay Section */}
+                  <div className="rounded-2xl overflow-hidden">
+                    <div className="bg-success py-2 text-center text-xs font-medium text-black lg:text-sm">
+                      GradCAM Overlay Analysis
                     </div>
                     <div className="aspect-square bg-muted">
                       <img
-                        src={similarityReport.suspectedImageUrl}
-                        alt="Suspected artwork"
+                        src={similarityReport.gradcamOverlayUrl}
+                        alt="GradCAM overlay showing similarity heatmap"
                         className="h-full w-full object-cover"
                       />
                     </div>
+                    <div className="bg-secondary p-3">
+                      <p className="text-xs text-muted-foreground lg:text-sm">
+                        Heat map highlighting the most similar regions between images
+                      </p>
+                    </div>
                   </div>
-                </div>
-
-                {/* GradCAM Overlay Button */}
-                <div className="mt-4">
-                  <Button
-                    onClick={handleViewGradCAM}
-                    variant="outline"
-                    className="w-full rounded-xl border-border bg-transparent text-foreground hover:bg-muted"
-                  >
-                    <Eye size={16} className="mr-2" />
-                    View GradCAM Overlay
-                  </Button>
                 </div>
               </div>
 
