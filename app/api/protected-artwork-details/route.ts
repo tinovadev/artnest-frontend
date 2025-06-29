@@ -1,6 +1,6 @@
 import { protectedArtworkDetails } from "@/data/protected-artwork-details";
 import { query } from "@/lib/db";
-import { CreateArtworkDto } from '@/lib/dto/ai-learning-off/post';
+import { CreateArtworkDto } from "@/lib/dto/ai-learning-off/post";
 import { ArtworksModel } from "@/lib/model/artworks.model";
 import { ArtworkBody } from "@/lib/types/ai-learning-off";
 import { ApiResponse } from "@/lib/types/global";
@@ -36,6 +36,21 @@ export async function POST(
       body.description,
       body.imageUrl,
     ]);
+
+    const insertArtworkHistoryText = `
+      INSERT INTO artwork_tracking_history (
+        id, user_id, artwork_id, created_at 
+      ) VALUES (
+        gen_random_uuid(), $1, $2, NOW()
+      ) RETURNING *
+    `;
+
+    const artworkHistoryResponse = await query(insertArtworkHistoryText, [
+      process.env.USERID,
+      response.rows[0].id,
+    ]);
+
+    console.log(artworkHistoryResponse);
 
     return NextResponse.json({ success: true, result: response.rows });
   } catch (error) {

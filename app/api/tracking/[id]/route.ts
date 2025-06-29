@@ -55,7 +55,7 @@ export async function GET(
 
     const result: DetectionResult = {
       artworkId: id,
-      totalDetections: historyResponse.rows[0].count,
+      totalDetections: historyResponse.rows[0].count - 1,
       verifiedThefts: imageSimilarityResponse2.rows[0].count,
       detections: imageSimilarityResponse1.rows.map((value) => {
         const { hostname } = new URL(value.suspected_image_url);
