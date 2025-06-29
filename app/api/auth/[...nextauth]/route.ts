@@ -22,9 +22,9 @@ const authOptions: NextAuthOptions = {
 
           const insertText = `
             INSERT INTO users (
-              id, email, username, fullname, created_at, updated_at
+              id, email, username, fullname, artist_name, created_at, updated_at
             ) VALUES (
-              gen_random_uuid(), $1, $2, $3, NOW(), NOW()
+              gen_random_uuid(), $1, $2, $3, $3, NOW(), NOW()
             ) RETURNING id;
           `;
           const inserted = await query(insertText, [user.email, username, fullname]);

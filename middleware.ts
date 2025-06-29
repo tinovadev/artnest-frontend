@@ -20,7 +20,6 @@ export async function middleware(req: NextRequest) {
 
   // JWT 토큰 확인
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log('Token:', token);
 
   if (!token) {
     const loginUrl = new URL('/login', req.url);

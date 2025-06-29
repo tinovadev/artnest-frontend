@@ -7,33 +7,65 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    artistName: "Aria Solen",
-    description:
-      "I'm a digital illustrator exploring the intersection of nature and imagination.",
-  });
+  const [formData, setFormData] = useState({artistName: "", description: "", profile_url: ""});
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await fetch("/api/me");
+        if (!res.ok) throw new Error("Failed to fetch user data");
+
+        const data = await res.json();
+
+        setFormData({
+          artistName: data.artist_name ?? "",
+          description: data.description ?? "",
+          profile_url: data.profile_url ?? "",
+        });
+      } catch (err) {
+        console.error("Failed to load user:", err);
+        router.push("/login"); // 혹은 오류 핸들링
+      }
+    };
+
+    getUser();
+  }, [router]);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleInputChange = (field: string, value: string) => {
+    // 내 정보 업데이트
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleConfirm = () => {
-    // Handle form submission - update profile
-    console.log("Updated profile:", formData);
+  const handleConfirm = async () => {
+    try {
+      await fetch("/api/me", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      // reload
+      // 수정되었습니다. 알려주기
+      alert("Profile updated successfully!");
 
-    // Navigate back to Me page
-    router.push("/me");
+      router.refresh();
+    } catch (error) {
+      if (error) {
+        throw new Error("Failed to update profile");
+      }
+    }
   };
 
   return (
@@ -57,7 +89,7 @@ export default function EditProfilePage() {
               <div className="mb-8 text-center lg:mb-0 lg:w-80 lg:flex-shrink-0 lg:text-left">
                 <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full bg-gray-100 lg:mx-0 lg:h-32 lg:w-32">
                   <img
-                    src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+                    src={formData.profile_url || "/default-profile.png"}
                     alt="Aria Solen"
                     className="h-full w-full object-cover"
                   />
