@@ -1,5 +1,5 @@
 export interface User {
-  id: string;              // UUID
+  id: string;
   email: string;
   username: string;
   fullname: string;
@@ -16,21 +16,21 @@ export interface User {
 }
 
 export type Artwork = {
-  id: string;                    // uuid
-  user_id: string;              // uuid
-  title: string;                // varchar(50)
-  artist: string;               // varchar(50)
-  year: number;                 // integer
-  medium: string;               // varchar(100)
-  dimensions: string;           // varchar(100)
-  edition: string | null;       // varchar(20)
-  description: string | null;   // text
-  image_url: string | null;     // text
-  unit_price: number | null;    // double precision
-  currency: string | null;      // varchar(50)
-  created_at: string;           // timestamp (ISO format string)
-  updated_at: string;           // timestamp
-  deleted_at: string | null;    // timestamp
+  id: string;
+  user_id: string;
+  title: string;
+  artist: string;
+  year: number;
+  medium: string;
+  dimensions: string;
+  edition: string | null;
+  description: string | null;
+  image_url: string | null;
+  unit_price: number | null;
+  currency: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 };
 
 export type ArtworkCard = {
@@ -42,4 +42,9 @@ export type ArtworkCard = {
   category: string;
 };
 
-
+export type AlgorandBalance = {
+  id: string;
+  user_id: string;
+  balance: string;
+  checked_at: string;
+};

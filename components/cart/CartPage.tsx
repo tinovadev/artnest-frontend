@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { studioArtworks } from '@/data/studio-artworks';
+import { Purchases }  from '@revenuecat/purchases-js';
 
 interface CartItem {
   id: string;
@@ -18,12 +18,20 @@ interface CartItem {
 export default function CartPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [walletAddress, setWalletAddress] = useState<{
+    address: string;
+    network: string;
+    balance: string;
+  }>({
+    address: '',
+    network: 'Algorand',
+    balance: '0',
+  });
 
-  const cartList = sessionStorage.getItem('CART_KEY')
+  const REVENUECAT_PUBLIC_API_KEY = process.env.NEXT_PUBLIC_REVENUECAT_PUBLIC_API_KEY as string;
+  const REVENUECAT_APP_USER_ID = process.env.NEXT_PUBLIC_REVENUECAT_APP_USER_ID as string;
 
   useEffect(() => {
-    // Load cart items from localStorage or state management
-    // For demo purposes, we'll show "Song of the Wind" as an example
     const getStudioArtworks = async () => {
         try {
           const studioArtworkData = await fetch("/api/studio-artworks");
@@ -33,6 +41,7 @@ export default function CartPage() {
         }
 
         const artworks: CartItem[] = await studioArtworkData.json();
+        const cartList = sessionStorage.getItem('CART_KEY');
 
         const cartItems = artworks.filter((artwork) => {
           if (cartList && cartList.includes(artwork.id)) {
@@ -47,6 +56,19 @@ export default function CartPage() {
         return [];
       }
     };
+    const getMyWallet = async () => {
+      try {
+        const walletData = await fetch('/api/me/wallet'); 
+        const jsonData = await walletData.json();
+        console.log('My Wallet Data:', jsonData);
+        
+        setWalletAddress(jsonData);
+      } catch (error) {
+        console.error('Error fetching wallet address:', error);
+      }
+    };
+
+    getMyWallet();
     getStudioArtworks();
   }, []);
 
@@ -58,10 +80,22 @@ export default function CartPage() {
     setCartItems(prev => prev.filter(item => item.id !== itemId));
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     // Navigate to payment success page
+    // await purchase();
     router.push('/payment-success');
   };
+
+    const [copied, setCopied] = useState(false);
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(walletAddress);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy wallet address:', err);
+      }
+    };
 
   const total = cartItems.reduce((sum, item) => sum + item.price, 0);
 
@@ -111,7 +145,7 @@ export default function CartPage() {
                           {item.title}
                         </h3>
                         <p className="text-lg lg:text-2xl font-bold text-primary mb-1">
-                          ${item.price}
+                          ALGO {item.price}
                         </p>
                         <p className="text-sm lg:text-base text-gray-500">
                           {item.artist}
@@ -128,9 +162,35 @@ export default function CartPage() {
                     </div>
                   ))}
                 </div>
-
-                {/* Order Summary - Right Side on Desktop */}
                 <div className="lg:w-80 lg:flex-shrink-0">
+                  <div className="bg-gray-50 lg:bg-white lg:border lg:border-gray-200 rounded-2xl p-6 lg:p-8">
+                    <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">My Wallet</h2>
+
+                    {/* Wallet Address + Copy */}
+                    <div className="flex items-center justify-between mb-4">
+                      <p className="text-sm break-all text-gray-700">{walletAddress}</p>
+                      <button
+                        onClick={handleCopy}
+                        className="ml-2 text-sm text-blue-600 hover:underline"
+                      >
+                        {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-gray-200 my-6"></div>
+
+                    {/* My Wallet Total */}
+                    <div className="flex items-center justify-between mb-8">
+                      <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Total</h3>
+                      <p className="text-xl lg:text-2xl font-bold text-gray-900">ALGO {total}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-200 my-6"></div>
+                {/* Order Summary - Right Side on Desktop */}
+                <div className="lg:flex-1 space-y-6 mb-8 lg:mb-0">
                   <div className="bg-gray-50 lg:bg-white lg:border lg:border-gray-200 rounded-2xl p-6 lg:p-8">
                     <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
                     
@@ -139,7 +199,7 @@ export default function CartPage() {
                       {cartItems.map((item) => (
                         <div key={item.id} className="flex justify-between items-center">
                           <span className="text-gray-600 truncate pr-2">{item.title}</span>
-                          <span className="font-semibold text-gray-900">${item.price}</span>
+                          <span className="font-semibold text-gray-900">ALGO {item.price}</span>
                         </div>
                       ))}
                     </div>
@@ -150,7 +210,7 @@ export default function CartPage() {
                     {/* Total */}
                     <div className="flex items-center justify-between mb-8">
                       <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Total</h3>
-                      <p className="text-xl lg:text-2xl font-bold text-gray-900">${total}</p>
+                      <p className="text-xl lg:text-2xl font-bold text-gray-900">ALGO {total}</p>
                     </div>
 
                     {/* Checkout Button - Desktop */}
