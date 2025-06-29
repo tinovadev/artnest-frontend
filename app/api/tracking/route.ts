@@ -33,10 +33,12 @@ export async function GET(
     ]);
 
     const results: TrackingArtwork2[] = response.rows.map((row) => ({
+      id: row.id,
       artworkId: row.artwork_id,
+      title: row.title,
       image: row.image_url,
       latestDate: formatDateToDotFormat(row.created_at),
-      ...row,
+      status: row.status,
     }));
 
     return NextResponse.json({ success: true, result: results });

@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { ArrowLeft, Eye, Calendar, MapPin, Download } from "phosphor-react";
+import TopNavbar from "@/components/shared/TopNavbar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import TopNavbar from "@/components/shared/TopNavbar";
+import { DetectionResult, detectionResults } from "@/data/detection-results";
+import { ApiSuccess } from "@/lib/types/global";
+import { TrackingArtwork2 } from "@/lib/types/track";
 import { useRouter } from "next/navigation";
-import { trackingArtworks } from "@/data/tracking";
-import { detectionResults } from "@/data/detection-results";
+import { ArrowLeft, Calendar, Download, Eye, MapPin } from "phosphor-react";
 
 interface ArtworkDetailPageProps {
   artworkId: string;
@@ -21,10 +22,53 @@ export default function ArtworkDetailPage({
 }: ArtworkDetailPageProps) {
   const router = useRouter();
   const [loadingArtworkId, setLoadingArtworkId] = useState<string | null>(null);
-  const artwork = trackingArtworks.find((art) => art.id === artworkId);
+  const [artworkHistory, setArtWorkHistory] = useState<TrackingArtwork2 | null>(
+    null,
+  );
+  const [detection, setDetection] = useState<DetectionResult | null>(null);
+
+  // const artwork = trackingArtworks.find((art) => art.id === artworkId);
   const results = detectionResults.find(
     (result) => result.artworkId === artworkId,
   );
+
+  useEffect(() => {
+    const handler = async () => {
+      const stored = sessionStorage.getItem("artworkTrackingHistory");
+
+      if (!stored) {
+        console.log("No session data");
+        return;
+      }
+
+      const parsed = JSON.parse(stored) as TrackingArtwork2[];
+
+      const artwork = parsed.find((art) => art.artworkId === artworkId);
+
+      if (!artwork) {
+        return;
+      }
+
+      const response = await fetch(`/api/tracking/${artworkId}`, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || "Artworks tracking detail page upload failed",
+        );
+      }
+
+      const parsedResponse =
+        (await response.json()) as ApiSuccess<DetectionResult>;
+
+      setArtWorkHistory(artwork);
+      setDetection(parsedResponse.result);
+    };
+
+    void handler();
+  }, [artworkId]);
 
   const handleBack = () => {
     router.back();
@@ -45,7 +89,7 @@ export default function ArtworkDetailPage({
     }, 2000);
   };
 
-  if (!artwork) {
+  if (!artworkHistory) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <p className="text-muted-foreground">Artwork not found</p>
@@ -64,7 +108,9 @@ export default function ArtworkDetailPage({
             <button onClick={handleBack} className="-ml-2 p-2">
               <ArrowLeft size={24} className="text-foreground" />
             </button>
-            <h1 className="truncate text-lg font-semibold">{artwork.title}</h1>
+            <h1 className="truncate text-lg font-semibold">
+              {artworkHistory.title}
+            </h1>
           </div>
 
           <div className="mx-auto max-w-7xl px-6 py-6 lg:px-12">
@@ -74,8 +120,8 @@ export default function ArtworkDetailPage({
               <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
                 <div className="relative mx-auto aspect-square max-w-md overflow-hidden rounded-2xl bg-muted lg:mx-0 lg:h-96 lg:w-96">
                   <img
-                    src={artwork.image}
-                    alt={artwork.title}
+                    src={artworkHistory.image}
+                    alt={artworkHistory.title}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -87,24 +133,26 @@ export default function ArtworkDetailPage({
                 <div>
                   <div className="mb-4 flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-foreground lg:text-3xl">
-                      {artwork.title}
+                      {artworkHistory.title}
                     </h2>
                     <Badge
                       variant="secondary"
                       className={`rounded-full px-3 py-1 text-sm font-medium ${
-                        artwork.status === "tracking"
+                        artworkHistory.status === "tracking"
                           ? "border-primary/30 bg-primary/20 text-primary"
                           : "border-border bg-muted text-muted-foreground"
                       }`}
                     >
-                      {artwork.status === "tracking" ? "Tracking" : "Stopped"}
+                      {artworkHistory.status === "tracking"
+                        ? "Tracking"
+                        : "Stopped"}
                     </Badge>
                   </div>
 
                   <div className="mb-6 flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Calendar size={16} />
-                      <span>Latest: {artwork.latestDate}</span>
+                      <span>Latest: {artworkHistory.latestDate}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Eye size={16} />
@@ -115,9 +163,9 @@ export default function ArtworkDetailPage({
                   <Button
                     onClick={(e) => handleTrackNow(artworkId, e)}
                     className="w-full rounded-xl bg-primary py-3 font-semibold text-white hover:bg-primary/90"
-                    disabled={loadingArtworkId === artwork.id}
+                    disabled={loadingArtworkId === artworkHistory.id}
                   >
-                    {loadingArtworkId === artwork.id ? (
+                    {loadingArtworkId === artworkHistory.id ? (
                       <div className="flex items-center gap-2">
                         <span className="loader h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
                         Tracking...
@@ -129,7 +177,7 @@ export default function ArtworkDetailPage({
                 </div>
 
                 {/* Detection Results */}
-                {results && (
+                {detection && (
                   <div className="space-y-6">
                     <h3 className="text-xl font-bold text-foreground lg:text-2xl">
                       Detection Results
@@ -140,7 +188,7 @@ export default function ArtworkDetailPage({
                       <div className="grid grid-cols-2 gap-4 text-center">
                         <div>
                           <div className="mb-1 text-2xl font-bold text-primary lg:text-3xl">
-                            {results.totalDetections}
+                            {detection.totalDetections}
                           </div>
                           <div className="text-sm text-muted-foreground lg:text-base">
                             Total Detections
@@ -148,7 +196,7 @@ export default function ArtworkDetailPage({
                         </div>
                         <div>
                           <div className="mb-1 text-2xl font-bold text-success lg:text-3xl">
-                            {results.verifiedThefts}
+                            {detection.verifiedThefts}
                           </div>
                           <div className="text-sm text-muted-foreground lg:text-base">
                             Verified Thefts
@@ -159,7 +207,7 @@ export default function ArtworkDetailPage({
 
                     {/* Detection List */}
                     <div className="space-y-4">
-                      {results.detections.map((detection, index) => (
+                      {detection.detections.map((detection, index) => (
                         <Card
                           key={index}
                           className="rounded-2xl border-border bg-secondary p-6"
