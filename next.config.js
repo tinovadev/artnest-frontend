@@ -6,8 +6,9 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  images: { unoptimized: true },
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  images: {
+    unoptimized: true,
+  },
 };
 
 module.exports = nextConfig;
