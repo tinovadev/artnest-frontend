@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Purchases }  from '@revenuecat/purchases-js';
+import BigNumber from 'bignumber.js';
 
 interface CartItem {
   id: string;
@@ -18,6 +18,8 @@ interface CartItem {
 export default function CartPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isEnough, setIsEnough] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(0);
   const [walletAddress, setWalletAddress] = useState<{
     address: string;
     network: string;
@@ -28,10 +30,7 @@ export default function CartPage() {
     balance: '0',
   });
 
-  const REVENUECAT_PUBLIC_API_KEY = process.env.NEXT_PUBLIC_REVENUECAT_PUBLIC_API_KEY as string;
-  const REVENUECAT_APP_USER_ID = process.env.NEXT_PUBLIC_REVENUECAT_APP_USER_ID as string;
-
-  useEffect(() => {
+    useEffect(() => {
     const getStudioArtworks = async () => {
         try {
           const studioArtworkData = await fetch("/api/studio-artworks");
@@ -72,12 +71,29 @@ export default function CartPage() {
     getStudioArtworks();
   }, []);
 
+  useEffect(() => {
+    const calcTotalAndCheckBalance = () => {
+      const totalAmount = cartItems.reduce((acc, item) => acc.plus(item.price), new BigNumber(0));
+      setTotal(totalAmount.toNumber());
+
+      const balanceBN = new BigNumber(walletAddress.balance ?? '0');
+      setIsEnough(balanceBN.gte(totalAmount));
+    };
+
+    calcTotalAndCheckBalance();
+  }, [cartItems, walletAddress.balance]);
+
   const handleBack = () => {
     router.back();
   };
 
   const handleRemoveItem = (itemId: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== itemId));
+    const cartItmeNumbers = cartItems.map((item) => item.id);
+    if (cartItmeNumbers.includes(itemId)) {
+      setCartItems((prev) => prev.filter((cart) => cart.id !== itemId));
+      sessionStorage.setItem('CART_KEY', JSON.stringify(cartItmeNumbers.filter((cart) => cart !== itemId)));
+    }
+    sessionStorage.setItem('CART_KEY', JSON.stringify(cartItmeNumbers.filter((cart) => cart !== itemId)));
   };
 
   const handleCheckout = async () => {
@@ -89,7 +105,7 @@ export default function CartPage() {
     const [copied, setCopied] = useState(false);
     const handleCopy = async () => {
       try {
-        await navigator.clipboard.writeText(walletAddress);
+        await navigator.clipboard.writeText(walletAddress.address);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       } catch (err) {
@@ -97,7 +113,6 @@ export default function CartPage() {
       }
     };
 
-  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -168,7 +183,7 @@ export default function CartPage() {
 
                     {/* Wallet Address + Copy */}
                     <div className="flex items-center justify-between mb-4">
-                      <p className="text-sm break-all text-gray-700">{walletAddress}</p>
+                      <p className="text-sm break-all text-gray-700">{walletAddress.address}</p>
                       <button
                         onClick={handleCopy}
                         className="ml-2 text-sm text-blue-600 hover:underline"
@@ -183,7 +198,7 @@ export default function CartPage() {
                     {/* My Wallet Total */}
                     <div className="flex items-center justify-between mb-8">
                       <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Total</h3>
-                      <p className="text-xl lg:text-2xl font-bold text-gray-900">ALGO {total}</p>
+                      <p className="text-xl lg:text-2xl font-bold text-gray-900">ALGO {walletAddress.balance}</p>
                     </div>
                   </div>
                 </div>
@@ -214,14 +229,21 @@ export default function CartPage() {
                     </div>
 
                     {/* Checkout Button - Desktop */}
-                    <div className="hidden lg:block">
-                      <Button 
-                        onClick={handleCheckout}
-                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-                      >
-                        Checkout
-                      </Button>
-                    </div>
+                    {cartItems.length > 0 && (
+                      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:hidden">
+                        <Button 
+                          onClick={handleCheckout}
+                          disabled={!isEnough}
+                          className={`w-full font-semibold py-4 rounded-2xl text-lg ${
+                            isEnough
+                              ? 'bg-primary hover:bg-primary/90 text-white'
+                              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          }`}
+                        >
+                          {isEnough ? 'Checkout' : 'Insufficient Balance'}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
