@@ -21,9 +21,14 @@ export default function LoginPage() {
       return;
     }
 
+    const searchParams = new URLSearchParams(window.location.search);
+    let callbackUrl = searchParams.get("callbackUrl");
+    if (!callbackUrl) {
+      callbackUrl = "/";
+    }
+
     try {
-      await signIn("google", { callbackUrl: "/" });
-      // signIn 호출 후 자동 리다이렉트 되므로 아래 코드가 실행 안 될 수도 있음
+      await signIn("google", { callbackUrl });
     } catch (error) {
       console.error("Google login error:", error);
     }
