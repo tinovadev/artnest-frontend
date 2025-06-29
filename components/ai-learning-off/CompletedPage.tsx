@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { Artwork } from "@/lib/types";
+import { ArtworkForm } from "@/lib/types/ai-learning-off";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export default function CompletedPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState<Artwork>({
+  const [formData, setFormData] = useState<ArtworkForm>({
     title: "",
     artist: "Aria Solen",
     year: "",
@@ -32,7 +32,7 @@ export default function CompletedPage() {
     description: "",
   });
 
-  const [artworkData, setArtworkData] = useState<Artwork | null>(null);
+  const [artworkData, setArtworkData] = useState<ArtworkForm | null>(null);
 
   const artworkUrl = searchParams?.get("artworkUrl");
 

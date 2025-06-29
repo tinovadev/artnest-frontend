@@ -1,4 +1,4 @@
-export interface Artwork {
+export interface ArtworkForm {
   id?: string;
   userId?: string;
   title: string;
@@ -12,16 +12,3 @@ export interface Artwork {
   unitPrice?: number;
   currency?: string;
 }
-
-//
-export interface ApiSuccess<T> {
-  success: boolean;
-  result: T[];
-}
-
-export interface ApiError {
-  success: boolean;
-  error: string;
-}
-
-export type ApiResponse<T> = ApiSuccess<T> | ApiError;

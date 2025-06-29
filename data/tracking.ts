@@ -1,4 +1,4 @@
-export interface TrackingArtwork {
+export interface PrevTrackingArtwork {
   id: string;
   title: string;
   image: string;
@@ -6,7 +6,7 @@ export interface TrackingArtwork {
   status: "tracking" | "stopped";
 }
 
-export const trackingArtworks: TrackingArtwork[] = [
+export const trackingArtworks: PrevTrackingArtwork[] = [
   {
     id: "1",
     title: "Sunny Garden",
@@ -16,7 +16,7 @@ export const trackingArtworks: TrackingArtwork[] = [
     status: "tracking",
   },
   {
-    id: "2",
+    id: "",
     title: "Memories of Spring",
     image:
       "https://images.unsplash.com/photo-1579009615313-c951b4023427?q=80&w=2270&auto=format&fit=crop",

@@ -19,12 +19,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ApiSuccess } from "@/lib/types";
-import {
-  ArtworksTrackingHistoryResponse,
-  TrackingArtwork,
-  TrackingArtworkStatus,
-} from "@/lib/types/track";
+import { TrackingArtworkHistoryDto } from "@/lib/dto/tracking/get";
+import { TrackingArtworkStatus } from "@/lib/model/artwork-tracking-history.model";
+import { ApiArraySuccess, ApiSuccess } from "@/lib/types/global";
+import { TrackingArtwork } from "@/lib/types/track";
 import { useRouter } from "next/navigation";
 import {
   DotsThree,
@@ -42,8 +40,8 @@ export default function TrackPage() {
   const router = useRouter();
   // const [artworks, setArtworks] = useState(trackingArtworks);
   const [artworksTrackingHistory, setArtworkTrackingHistory] = useState<
-    TrackingArtwork[] | null
-  >(null);
+    TrackingArtwork[]
+  >([]);
   const [mode, setMode] = useState<Mode>("normal");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showNoTheftModal, setShowNoTheftModal] = useState(false);
@@ -61,7 +59,12 @@ export default function TrackPage() {
       }
 
       const parsedResponse =
-        (await response.json()) as ApiSuccess<TrackingArtwork>;
+        (await response.json()) as ApiArraySuccess<TrackingArtwork>;
+
+      sessionStorage.setItem(
+        "artworkTrackingHistory",
+        JSON.stringify(parsedResponse.result),
+      );
 
       setArtworkTrackingHistory(parsedResponse.result);
     };
@@ -72,9 +75,10 @@ export default function TrackPage() {
   const handleArtworkClick = (artworkId: string) => {
     if (mode !== "normal") return;
 
+    router.push(`/track/${artworkId}`);
+
     if (artworkId === "1") {
       // Navigate to Sunny Garden detail page
-      router.push(`/track/${artworkId}`);
     } else {
       // Show no theft history modal for other artworks
       setShowNoTheftModal(true);
@@ -130,7 +134,7 @@ export default function TrackPage() {
     }
 
     const parsedResponse =
-      (await response.json()) as ApiSuccess<ArtworksTrackingHistoryResponse>;
+      (await response.json()) as ApiSuccess<TrackingArtworkHistoryDto>;
     console.log(parsedResponse);
 
     setArtworkTrackingHistory((prev) =>
@@ -275,7 +279,7 @@ export default function TrackPage() {
                       ? "cursor-pointer transition-colors hover:bg-secondary/80"
                       : ""
                   }`}
-                  onClick={() => handleArtworkClick(history.id)}
+                  onClick={() => handleArtworkClick(history.artworkId)}
                 >
                   <div className="flex items-center gap-4">
                     {/* Checkbox for Delete Mode */}

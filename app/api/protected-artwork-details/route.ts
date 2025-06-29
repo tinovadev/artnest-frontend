@@ -10,8 +10,6 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
-  const userId = "37b5571d-1049-4f7a-b8a1-486c5bcacbe6";
-
   try {
     const result = await query(
       `
@@ -21,7 +19,7 @@ export async function POST(request: NextRequest) {
       ) RETURNING *
       `,
       [
-        userId,
+        process.env.USERID,
         body.title,
         body.artist,
         body.year,

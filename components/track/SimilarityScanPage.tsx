@@ -1,13 +1,13 @@
 "use client";
 
-import { ArrowLeft, Download } from "phosphor-react";
+import TopNavbar from "@/components/shared/TopNavbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import TopNavbar from "@/components/shared/TopNavbar";
-import { useRouter } from "next/navigation";
-import { trackingArtworks } from "@/data/tracking";
 import { detectionResults } from "@/data/detection-results";
+import { trackingArtworks } from "@/data/tracking";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "phosphor-react";
 
 interface SimilarityScanPageProps {
   artworkId: string;
