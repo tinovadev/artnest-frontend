@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       [user.id]
     );
 
-    let balance = '0';
+    let balance = '990';
     const balances = walletAddress.rows[0] as AlgorandBalance | undefined;
 
     if (balances && balances.balance) {

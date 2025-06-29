@@ -19,7 +19,7 @@ export default function CartPage() {
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isEnough, setIsEnough] = useState<boolean>(false);
-  const [total, setTotal] = useState<number>(0);
+  const [total, setTotal] = useState<string>('0');
   const [walletAddress, setWalletAddress] = useState<{
     address: string;
     network: string;
@@ -59,7 +59,6 @@ export default function CartPage() {
       try {
         const walletData = await fetch('/api/me/wallet'); 
         const jsonData = await walletData.json();
-        console.log('My Wallet Data:', jsonData);
         
         setWalletAddress(jsonData);
       } catch (error) {
@@ -74,7 +73,7 @@ export default function CartPage() {
   useEffect(() => {
     const calcTotalAndCheckBalance = () => {
       const totalAmount = cartItems.reduce((acc, item) => acc.plus(item.price), new BigNumber(0));
-      setTotal(totalAmount.toNumber());
+      setTotal(totalAmount.toString());
 
       const balanceBN = new BigNumber(walletAddress.balance ?? '0');
       setIsEnough(balanceBN.gte(totalAmount));
@@ -97,21 +96,58 @@ export default function CartPage() {
   };
 
   const handleCheckout = async () => {
-    // Navigate to payment success page
-    // await purchase();
-    router.push('/payment-success');
-  };
-
-    const [copied, setCopied] = useState(false);
-    const handleCopy = async () => {
+    if (!isEnough) {
+      alert('Insufficient balance in your wallet');
+      return;
+    }
+    const purchase = async () => {
       try {
-        await navigator.clipboard.writeText(walletAddress.address);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error('Failed to copy wallet address:', err);
+        const response = await fetch('/api/purchase', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: cartItems,
+            myInfo: {
+              address: walletAddress.address,
+              network: walletAddress.network,
+              balance: walletAddress.balance,
+            },
+            total: total,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to process purchase');
+        }
+
+        const data = await response.json();
+        return true;
+      } catch (error) {
+        console.error('Error during purchase:', error);
+        return false;
       }
     };
+
+    const result = await purchase();
+    if (result) {
+      router.push('/payment-success');
+      return;
+    } 
+    alert('Purchase Failed!');
+  };
+
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(walletAddress.address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy wallet address:', err);
+    }
+  };
 
 
   return (
@@ -177,6 +213,8 @@ export default function CartPage() {
                     </div>
                   ))}
                 </div>
+
+                {/* Order Summary - Right Side on Desktop */}
                 <div className="lg:w-80 lg:flex-shrink-0">
                   <div className="bg-gray-50 lg:bg-white lg:border lg:border-gray-200 rounded-2xl p-6 lg:p-8">
                     <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">My Wallet</h2>
@@ -201,11 +239,8 @@ export default function CartPage() {
                       <p className="text-xl lg:text-2xl font-bold text-gray-900">ALGO {walletAddress.balance}</p>
                     </div>
                   </div>
-                </div>
+                  <div className="border-t border-gray-200 my-6"></div>
 
-                <div className="border-t border-gray-200 my-6"></div>
-                {/* Order Summary - Right Side on Desktop */}
-                <div className="lg:flex-1 space-y-6 mb-8 lg:mb-0">
                   <div className="bg-gray-50 lg:bg-white lg:border lg:border-gray-200 rounded-2xl p-6 lg:p-8">
                     <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
                     
@@ -229,21 +264,19 @@ export default function CartPage() {
                     </div>
 
                     {/* Checkout Button - Desktop */}
-                    {cartItems.length > 0 && (
-                      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:hidden">
-                        <Button 
-                          onClick={handleCheckout}
-                          disabled={!isEnough}
-                          className={`w-full font-semibold py-4 rounded-2xl text-lg ${
-                            isEnough
-                              ? 'bg-primary hover:bg-primary/90 text-white'
-                              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          }`}
-                        >
-                          {isEnough ? 'Checkout' : 'Insufficient Balance'}
-                        </Button>
-                      </div>
-                    )}
+                    <div className="hidden lg:block">
+                      <Button 
+                        onClick={handleCheckout}
+                        disabled={!isEnough}
+                        className={`w-full text-white font-semibold py-4 rounded-2xl text-lg ${
+                          isEnough
+                            ? 'bg-primary hover:bg-primary/90 text-white'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                      >
+                        {isEnough ? 'Checkout' : 'Insufficient Balance'}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -253,16 +286,19 @@ export default function CartPage() {
       </ScrollArea>
 
       {/* Fixed Checkout Button - Mobile Only */}
-      {cartItems.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:hidden">
-          <Button 
-            onClick={handleCheckout}
-            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl text-lg"
-          >
-            Checkout
-          </Button>
-        </div>
-      )}
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:hidden">
+        <Button 
+          onClick={handleCheckout}
+          disabled={!isEnough}
+          className={`w-full font-semibold py-4 rounded-2xl text-lg ${
+            isEnough
+              ? 'bg-primary hover:bg-primary/90 text-white'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          {isEnough ? 'Checkout' : 'Insufficient Balance'}
+        </Button>
+      </div>
     </div>
   );
 }
