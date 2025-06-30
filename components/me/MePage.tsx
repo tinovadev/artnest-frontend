@@ -438,12 +438,10 @@ export default function MePage() {
                     {/* Profile Photo and Info */}
                     <div className="flex items-start gap-4">
                       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-muted">
-                        <Image
+                        <img
                           src="https://images.unsplash.com/photo-1664482017668-91158897414c?q=80&w=2342&auto=format&fit=crop"
                           alt={session?.user?.name || ""}
                           className="h-full w-full object-cover"
-                          fill={true}
-                          priority={true}
                         />
                       </div>
 
@@ -552,7 +550,7 @@ export default function MePage() {
                   </div>
                 )}
 
-                {activeTab === "for-sale" && (
+                {activeTab === "for-sale" && forSaleArtworks.length > 0 && (
                   <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                     {forSaleArtworks.length > 0 && forSaleArtworks.map((forSaleArtwork, index) => (
                       <Card
