@@ -6,14 +6,27 @@ import {
 import { ApiResponse } from "@/lib/types/global";
 import { TrackingArtwork } from "@/lib/types/track";
 import { formatDateToDotFormat } from "@/lib/utils";
+import { getServerSession } from "next-auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { QueryResult } from "pg";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<TrackingArtwork>>> {
   try {
+    const session = await getServerSession(authOptions);
+
+    const userId = session?.user?.dbId;
+
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+
     const searchText = `
     SELECT DISTINCT ON (ah.artwork_id)
       ah.id,
@@ -29,7 +42,7 @@ export async function GET(
     `;
 
     const response: QueryResult<TrackingArtworkDto> = await query(searchText, [
-      process.env.USERID,
+      userId,
     ]);
 
     const results: TrackingArtwork[] = response.rows.map((row) => ({
@@ -55,6 +68,17 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<TrackingArtworkHistoryDto>>> {
   try {
+    const session = await getServerSession(authOptions);
+
+    const userId = session?.user?.dbId;
+
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+
     const body = await request.json();
 
     const insertText = `
@@ -67,7 +91,7 @@ export async function POST(
 
     const response: QueryResult<TrackingArtworkHistoryDto> = await query(
       insertText,
-      [process.env.USERID, body.artworkId, body.newStatus],
+      [userId, body.artworkId, body.newStatus],
     );
 
     return NextResponse.json({ success: true, result: response.rows });

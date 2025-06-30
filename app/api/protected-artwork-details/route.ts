@@ -4,9 +4,11 @@ import { CreateArtworkDto } from "@/lib/dto/ai-learning-off/post";
 import { ArtworksModel } from "@/lib/model/artworks.model";
 import { ArtworkBody } from "@/lib/types/ai-learning-off";
 import { ApiResponse } from "@/lib/types/global";
+import { getServerSession } from "next-auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { QueryResult } from "pg";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET(request: NextRequest) {
   return NextResponse.json(protectedArtworkDetails);
@@ -15,6 +17,18 @@ export async function GET(request: NextRequest) {
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<ArtworksModel>>> {
+  const session = await getServerSession(authOptions);
+
+  const userId = session?.user?.dbId;
+
+  if (!userId) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized" },
+      { status: 401 },
+    );
+  }
+
+  //
   const body: ArtworkBody = await request.json();
 
   try {
@@ -26,7 +40,7 @@ export async function POST(
     `;
 
     const response: QueryResult<CreateArtworkDto> = await query(insertText, [
-      process.env.USERID,
+      userId,
       body.title,
       body.artist,
       body.year,
@@ -46,11 +60,9 @@ export async function POST(
     `;
 
     const artworkHistoryResponse = await query(insertArtworkHistoryText, [
-      process.env.USERID,
+      userId,
       response.rows[0].id,
     ]);
-
-    console.log(artworkHistoryResponse);
 
     return NextResponse.json({ success: true, result: response.rows });
   } catch (error) {

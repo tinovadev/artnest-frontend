@@ -1,6 +1,8 @@
 "use server";
 
 import { Storage } from "@google-cloud/storage";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../app/api/auth/[...nextauth]/route";
 
 // Initialize Google Cloud Storage
 const storage = new Storage({
@@ -17,9 +19,8 @@ const storage = new Storage({
     : undefined,
 });
 
-const bucketName =
-  process.env.GOOGLE_CLOUD_STORAGE_BUCKET || "your-bucket-name";
-const bucket = storage.bucket(bucketName);
+const bucketName = process.env.GOOGLE_CLOUD_STORAGE_BUCKET;
+const bucket = storage.bucket(bucketName!);
 
 export async function uploadImageToGCS(
   file: Buffer,
@@ -27,6 +28,8 @@ export async function uploadImageToGCS(
   contentType: string,
 ): Promise<string> {
   try {
+    const session = await getServerSession(authOptions);
+
     // Validate required environment variables
     if (
       !process.env.GOOGLE_CLOUD_PROJECT_ID ||
@@ -48,8 +51,7 @@ export async function uploadImageToGCS(
 
     const formattedDate = `${mm}-${dd}-${yyyy}`;
 
-    const userId = crypto.randomUUID();
-    const uniqueFileName = `artworks/${process.env.USERID}/${fileName}-${formattedDate}`;
+    const uniqueFileName = `artworks/${session?.user?.dbId}/${fileName}-${formattedDate}`;
 
     const fileUpload = bucket.file(uniqueFileName);
 
@@ -58,7 +60,7 @@ export async function uploadImageToGCS(
         contentType,
         cacheControl: "public, max-age=31536000",
         metadata: {
-          userId: userId,
+          userId: session?.user?.dbId,
         },
       },
       // public: true,
