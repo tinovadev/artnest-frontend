@@ -1,33 +1,34 @@
 "use client";
 
-import Navbar from "@/components/shared/Navbar";
-import TopNavbar from "@/components/shared/TopNavbar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { forSaleArtworks } from "@/data/for-sale-artworks";
-import { ProtectedArtworksGetDto } from "@/lib/dto/protected-artworks/get";
-import { ApiArraySuccess } from "@/lib/types/global";
-import { fallbackImageUrl } from "@/lib/utils";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import {
-  ArrowUpRight,
   DotsThree,
+  ArrowUpRight,
   PencilSimple,
   Plus,
   SignOut,
 } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import Navbar from "@/components/shared/Navbar";
+import { ProtectedArtworksGetDto } from "@/lib/dto/protected-artworks/get";
+import { ApiArraySuccess } from "@/lib/types/global";
+import TopNavbar from "@/components/shared/TopNavbar";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ProtectedArtwork } from "@/data/protected-artworks";
+import { ForSaleArtwork } from "@/data/for-sale-artworks";
+import { fallbackImageUrl } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 type TabType = "protected" | "for-sale";
 
@@ -37,9 +38,9 @@ export default function MePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("protected");
   const [isVerifiedArtist, setIsVerifiedArtist] = useState(false);
-  const [protectedArtworks, setProtectedArtworks] = useState<
-    ProtectedArtworksGetDto[]
-  >([]);
+  // const [protectedArtworks, setProtectedArtworks] = useState<
+  //   ProtectedArtworksGetDto[]
+  // >([]);
   const [protectedArtworks, setProtectedArtworks] = useState<ProtectedArtwork[]>([]);
   const [forSaleArtworks, setForSaleArtworks] = useState<ForSaleArtwork[]>([]);
   const [userInfo, setUserInfo] = useState({
@@ -50,7 +51,7 @@ export default function MePage() {
     algo_address: "",
   });
 
-  useEffect(() => {
+    useEffect(() => {
     const handler = async () => {
       const response = await fetch("/api/protected-artworks", {
         method: "GET",
@@ -68,7 +69,8 @@ export default function MePage() {
 
       console.log(parsedResponse);
 
-      setProtectedArtworks(parsedResponse.result);
+      // NOTE: 
+      // setProtectedArtworks(parsedResponse.result);
     };
 
     void handler();
@@ -294,26 +296,22 @@ export default function MePage() {
                   {/* Single Artwork - Initial State */}
                   {activeTab === "protected" && protectedArtworks.length > 0 && (
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
+                      {protectedArtworks.map((protectedArtwork) => (
                       <Card
                         className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
-                        onClick={() => handleProtectedArtworkClick("1")}
+                        onClick={() => handleProtectedArtworkClick(protectedArtwork.id)}
                       >
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          {protectedArtworks.length > 0 && (
-                            <Image
-                              alt={protectedArtworks[0].title}
-                              src={
-                                protectedArtworks[0].imageUrl ||
-                                fallbackImageUrl
-                              }
-                              fill={true}
+                          <Image
+                            alt={protectedArtwork.title || 'Untitled'}
+                            src={protectedArtwork.image || fallbackImageUrl}
+                            fill={true}
                               priority={true}
-                            />
-                          )}
-
+                          />
                           <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </div>
                       </Card>
+                      ))}
                     </div>
                   )}
                   {activeTab === "protected" && protectedArtworks.length === 0 && (
@@ -331,21 +329,23 @@ export default function MePage() {
 
                   {activeTab === "for-sale" && forSaleArtworks.length > 0 && (
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
-                      <Card
-                        className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
-                        onClick={() => handleProtectedArtworkClick("1")}
-                      >
-                        <div className="relative aspect-[4/5] overflow-hidden">
-                          <img
-                            alt={forSaleArtworks[0]?.title ?? 'Untitled'}
-                            src={forSaleArtworks[0]?.image ?? 'https://via.placeholder.com/300'}
-                          />
-                          <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-                        </div>
-                      </Card>
+                      {forSaleArtworks.map((forSaleArtwork) =>
+                        <Card
+                          className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
+                          onClick={() => handleProtectedArtworkClick(forSaleArtwork.id)}
+                        >
+                          <div className="relative aspect-[4/5] overflow-hidden">
+                            <img
+                              alt={forSaleArtwork.title ?? 'Untitled'}
+                              src={forSaleArtwork.image ?? 'https://via.placeholder.com/300'}
+                            />
+                            <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                          </div>
+                        </Card>
+                      )}
                     </div>
                   )}
-                  {activeTab === "for-sale" && (
+                  {activeTab === "for-sale" && forSaleArtworks.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-20">
                       <div className="text-center">
                         <h3 className="mb-2 text-xl font-semibold text-foreground">
@@ -502,26 +502,25 @@ export default function MePage() {
                 </div>
 
                 {/* Content based on active tab */}
-                {activeTab === "protected" && (
+                {activeTab === "protected" && protectedArtworks.length > 0 && (
                   <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
-                    {protectedArtworks.map((artwork, index) => (
+                    {protectedArtworks.map((protectedArtwork, index) => (
                       <Card
-                        key={artwork.id}
+                        key={protectedArtwork.id}
                         className="group relative cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
-                        onClick={() => handleProtectedArtworkClick(artwork.id)}
+                        onClick={() => handleProtectedArtworkClick(protectedArtwork.id)}
                       >
                         {/* Artwork Image */}
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          {artwork.imageUrl && (
-                            <Image
-                              src={artwork.imageUrl}
-                              alt={artwork.title}
-                              className="h-full w-full object-cover"
-                              fill={true}
-                              priority={true}
-                            />
+                        {protectedArtwork.image && (
+                          <Image
+                            src={protectedArtwork.image}
+                            alt={protectedArtwork.title}
+                            className="h-full w-full object-cover"
+                            fill={true}
+                            priority={true}
+                          />
                           )}
-
                           {/* Tracking Badge - Only on first artwork */}
                           {index === 0 && (
                             <div className="absolute bottom-3 left-3">
@@ -553,21 +552,30 @@ export default function MePage() {
 
                 {activeTab === "for-sale" && (
                   <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
-                    {forSaleArtworks.length > 0 && forSaleArtworks.map((artwork) => (
+                    {forSaleArtworks.length > 0 && forSaleArtworks.map((forSaleArtwork, index) => (
                       <Card
-                        key={artwork.id}
+                        key={forSaleArtwork.id}
                         className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
-                        onClick={() => handleForSaleArtworkClick(artwork.id)}
+                        onClick={() => handleForSaleArtworkClick(forSaleArtwork.id)}
                       >
                         {/* Artwork Image */}
                         <div className="relative aspect-[4/5] overflow-hidden">
                           <Image
-                            src={artwork.image}
-                            alt={artwork.title}
+                            src={forSaleArtwork.image}
+                            alt={forSaleArtwork.title}
                             className="h-full w-full object-cover"
                             fill={true}
                             priority={true}
                           />
+
+                          {/* Tracking Badge - Only on first artwork */}
+                          {index === 0 && (
+                            <div className="absolute bottom-3 left-3">
+                              <Badge className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
+                                Tracking
+                              </Badge>
+                            </div>
+                          )}
 
                           {/* Overlay on hover */}
                           <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
