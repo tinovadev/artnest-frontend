@@ -16,17 +16,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { CreateArtworkDto } from "@/lib/dto/ai-learning-off/post";
 import { ArtworkBody, ArtworkForm } from "@/lib/types/ai-learning-off";
 import { ApiArraySuccess } from "@/lib/types/global";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function CompletedPage() {
+  const { data: session } = useSession();
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<ArtworkForm>({
     title: "",
-    artist: "Aria Solen",
+    artist: session?.user?.name || "",
     year: "",
     medium: "",
     dimensions: "",

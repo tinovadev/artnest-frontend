@@ -15,14 +15,17 @@ export function formatDateToDotFormat(dateString: string): string {
 
 export function camelToSnake(obj: any): any {
   if (Array.isArray(obj)) {
-    return obj.map(v => camelToSnake(v));
-  } else if (obj !== null && typeof obj === 'object') {
+    return obj.map((v) => camelToSnake(v));
+  } else if (obj !== null && typeof obj === "object") {
     return Object.fromEntries(
       Object.entries(obj).map(([key, value]) => [
-        key.replace(/([A-Z])/g, letter => `_${letter.toLowerCase()}`),
+        key.replace(/([A-Z])/g, (letter) => `_${letter.toLowerCase()}`),
         camelToSnake(value),
-      ])
+      ]),
     );
   }
   return obj;
 }
+
+export const fallbackImageUrl =
+  "https://images.unsplash.com/photo-1578321709315-d0dc844abfe5?q=80&w=1362&auto=format&fit=crop";

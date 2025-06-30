@@ -35,3 +35,5 @@ export interface ArtworkTrackingHistoryCountDto {
 export interface ImageSimilarityCountDto {
   count: number;
 }
+
+export type ImageSimilarityScanDto = ImageSimilarityModel;

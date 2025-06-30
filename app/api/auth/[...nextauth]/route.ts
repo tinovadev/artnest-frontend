@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import { query } from "@/lib/db";
 import { createWallet } from "@/lib/rpc";
 import type { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_SSO_CLIENT_ID!,
@@ -14,7 +14,10 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       try {
-        const res = await query(`SELECT * FROM users WHERE email = $1 LIMIT 1;`, [user.email]);
+        const res = await query(
+          `SELECT * FROM users WHERE email = $1 LIMIT 1;`,
+          [user.email],
+        );
 
         if (res.rows.length === 0) {
           const username = user?.email?.split("@")[0] ?? "user";
@@ -27,7 +30,11 @@ const authOptions: NextAuthOptions = {
               gen_random_uuid(), $1, $2, $3, $3, NOW(), NOW()
             ) RETURNING id;
           `;
-          const inserted = await query(insertText, [user.email, username, fullname]);
+          const inserted = await query(insertText, [
+            user.email,
+            username,
+            fullname,
+          ]);
           const userId = inserted.rows[0].id;
 
           const { address, privateKey } = await createWallet();
@@ -49,10 +56,30 @@ const authOptions: NextAuthOptions = {
       }
     },
 
+    async jwt({ token, user }) {
+      if (user?.email) {
+        const res = await query(
+          `SELECT id FROM users WHERE email = $1 LIMIT 1;`,
+          [user.email],
+        );
+
+        if (res.rows.length > 0) {
+          token.dbId = res.rows[0].id;
+        }
+      }
+
+      return token;
+    },
+
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
       }
+
+      if (session.user && token.dbId) {
+        session.user.dbId = token.dbId as string;
+      }
+
       return session;
     },
   },

@@ -50,12 +50,15 @@ export default function ProcessingPage() {
                 </div>
 
                 <div className="relative h-80 w-80 overflow-hidden rounded-2xl bg-muted lg:h-96 lg:w-96">
-                  <Image
-                    src={artworkUrl ?? ""}
-                    alt="Artwork being processed"
-                    className="h-full w-full object-cover"
-                    fill={true}
-                  />
+                  {artworkUrl ? (
+                    <Image
+                      src={artworkUrl}
+                      alt="Protected artwork"
+                      className="h-full w-full object-cover"
+                      fill={true}
+                      priority={true}
+                    />
+                  ) : null}
 
                   {/* Grid overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10">
