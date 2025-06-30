@@ -59,10 +59,7 @@ export async function POST(
       ) RETURNING *
     `;
 
-    const artworkHistoryResponse = await query(insertArtworkHistoryText, [
-      userId,
-      response.rows[0].id,
-    ]);
+    await query(insertArtworkHistoryText, [userId, response.rows[0].id]);
 
     return NextResponse.json({ success: true, result: response.rows });
   } catch (error) {
