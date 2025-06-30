@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package wallet;
+
+service WalletService {
+  rpc CreateWallet (Empty) returns (WalletResponse);
+  rpc GetAccountInformation (AddressRequest) returns (NFTListResponse);
+  rpc GetAssetByID (AssetRequest) returns (AssetURLResponse);
+  rpc CreateNFT (CreateNFTRequest) returns (TxResponse);
+  rpc SendNFT (SendNFTRequest) returns (TxResponse);
+}
+
+message Empty {}
+
+message WalletResponse {
+  string address = 1;
+  string privateKey = 2;
+}
+
+message AddressRequest {
+  string address = 1;
+}
+
+message NFTListResponse {
+  repeated uint64 nftIds = 1;
+}
+
+message AssetRequest {
+  uint64 assetId = 1;
+}
+
+message AssetURLResponse {
+  string url = 1;
+}
+
+message CreateNFTRequest {
+  string senderAddress = 1;
+  string senderPrivateKey = 2;
+  string assetName = 3;
+  string unitName = 4;
+  string assetURL = 5;
+}
+
+message SendNFTRequest {
+  string senderAddress = 1;
+  string senderPrivateKey = 2;
+  string receiverAddress = 3;
+  uint64 nftAssetId = 4;
+}
+
+message TxResponse {
+  string txId = 1;
+}
+
+
