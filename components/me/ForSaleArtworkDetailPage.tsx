@@ -44,10 +44,12 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
       };
 
       const data: ArtworkDetails = await res.json();
+      console.log('Fetched artwork details:', data);
       if (!data) {
         console.error('Artwork not found for ID:', artworkId);
         return;
       } else {
+        console.log('Artwork details fetched:', data);
         setArtworkDetail(data);
       }
 
@@ -64,6 +66,7 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
 
       const result2 = protectedArtworksData.find((artwork: any) => artwork.id === artworkId);
       if (result2) {
+        console.log('Protected artwork found:', result2);
         setProtectedArtwork(result2);
       } else {
         console.error('Protected artwork not found for ID:', artworkId);

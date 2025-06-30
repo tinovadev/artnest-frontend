@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
       artworks.id AS artwork_id,
       artworks.title AS title,
       artworks.unit_price AS price,
+      artworks.image_url AS image,
       artworks.year::TEXT,
       artworks.artist,
       artworks.dimensions,
@@ -54,16 +55,17 @@ export async function GET(req: NextRequest) {
       'v1.0' AS file_version
 
     FROM artworks AS artworks
-    LEFT JOIN copyright_protection AS copyright_protection ON copyright_protection.artwork_id = artworks.id
-    LEFT JOIN users AS users ON users.id = artworks.user_id
-    LEFT JOIN image_similarity AS image_similarity ON image_similarity.artwork_id = artworks.id
-    LEFT JOIN artwork_license AS artwork_license ON artwork_license.artwork_id = artworks.id
-
+      FULL OUTER JOIN copyright_protection AS copyright_protection ON copyright_protection.artwork_id = artworks.id
+      FULL OUTER JOIN users AS users ON users.id = artworks.user_id
+      FULL OUTER JOIN image_similarity AS image_similarity ON image_similarity.artwork_id = artworks.id
+      FULL OUTER JOIN artwork_license AS artwork_license ON artwork_license.artwork_id = artworks.id
     WHERE 
-      artworks.id = $1 AND 
+      artworks.id = 'c287ef23-5af6-4379-809e-0c514d87119f' AND 
       artworks.deleted_at IS NULL;
   `, [artworkId]);
+  console.log('data', artworkId);
 
+  console.log('data.rows', data.rows);
   if (!data || data.rows.length === 0) {
     return NextResponse.json({ error: 'Artwork not found' }, { status: 400 });
   }
@@ -84,6 +86,7 @@ function toArtworkDetails(raw: any): ArtworkDetails {
     artworkId: raw.artwork_id,
     title: raw.title || 'NO TITLE',
     price: raw.price || '0.00',
+    image: raw.image,
     year: raw.year,
     artist: raw.artist,
     dimensions: raw.dimensions,

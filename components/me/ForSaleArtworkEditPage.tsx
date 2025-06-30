@@ -17,6 +17,26 @@ interface ForSaleArtworkEditPageProps {
   artworkId: string;
 }
 
+type ArtworkForm = {
+  title: string;
+  price: number;
+  image: string; // URL of the artwork image
+  year: string;
+  artist: string;
+  dimensions: string;
+  medium: string;
+  edition: string;
+  description: string;
+  artistBio: string;
+  royaltyPerUse: number;
+  permissions: {
+    commercialTraining: boolean;
+    resaleNotPermitted: boolean;
+    derivativeGeneration: boolean;
+  };
+};
+
+
 export default function ForSaleArtworkEditPage({
   artworkId,
 }: ForSaleArtworkEditPageProps) {
@@ -26,31 +46,7 @@ export default function ForSaleArtworkEditPage({
     (detail) => detail.artworkId === artworkId,
   );
 
-  const [formData, setFormData] = useState({
-    title: artwork?.title || "",
-    price: artwork?.price || 10,
-    year: details?.year || "",
-    artist: details?.artist || "Aria Solen",
-    dimensions: details?.dimensions || "",
-    medium: details?.medium || "",
-    edition: details?.edition || "",
-    description: details?.description || "",
-    artistBio: details?.artistBio.title || "",
-    royaltyPerUse: details?.royalty.pricePerUse || 0.08,
-    permissions: {
-      commercialTraining:
-        details?.license.permissions.includes("Commercial training allowed") ||
-        false,
-      resaleNotPermitted:
-        details?.license.restrictions.includes(
-          "Resale of image not permitted",
-        ) || false,
-      derivativeGeneration:
-        details?.license.permissions.includes(
-          "Derivative generation permitted",
-        ) || false,
-    },
-  });
+  const [formData, setFormData] = useState<ArtworkForm>();
   useEffect(() => {
     const generateStaticParams = async () => {
     const data = await fetch("/api/artwork-details?artworkId=" + artworkId);
@@ -66,9 +62,10 @@ export default function ForSaleArtworkEditPage({
 
       console.log("For Sale Artwork Data:", forSaleArtworksData);
 
-      if (artwork && details) {
+      if (forSaleArtworksData) {
         setFormData({
           title: forSaleArtworksData.title,
+          image: forSaleArtworksData.image,
           price: Number(forSaleArtworksData.price),
           year: forSaleArtworksData.year || "",
           artist: forSaleArtworksData.artist || "Aria Solen",
@@ -94,27 +91,27 @@ export default function ForSaleArtworkEditPage({
     };
 
     generateStaticParams();
-  }, [artwork, details]);
+  }, []);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleInputChange = (field: string, value: string | number) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    // setFormData((prev) => ({
+    //   ...prev,
+    //   [field]: value,
+    // }));
   };
 
   const handlePermissionChange = (permission: string, checked: boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      permissions: {
-        ...prev.permissions,
-        [permission]: checked,
-      },
-    }));
+    // setFormData((prev) => ({
+    //   ...prev,
+    //   permissions: {
+    //     ...prev.permissions,
+    //     [permission]: checked,
+    //   },
+    // }));
   };
 
   const handleConfirm = () => {
@@ -125,7 +122,7 @@ export default function ForSaleArtworkEditPage({
     router.push(`/me/for-sale/${artworkId}`);
   };
 
-  if (!artwork) {
+  if (!formData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <p className="text-muted-foreground">Artwork not found</p>
@@ -143,7 +140,7 @@ export default function ForSaleArtworkEditPage({
               <ArrowLeft size={24} className="text-gray-900" />
             </button>
             <h1 className="truncate text-lg font-semibold text-gray-900">
-              {artwork.title}
+              {formData.title}
             </h1>
           </div>
 
@@ -154,8 +151,9 @@ export default function ForSaleArtworkEditPage({
               <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
                 <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl bg-gray-100 lg:mx-0 lg:h-[480px] lg:w-96">
                   <img
-                    src={artwork.image}
-                    alt={artwork.title}
+                    // TODO: 이미지
+                    src={formData.image} 
+                    alt={formData.title}
                     className="h-full w-full object-cover"
                   />
                 </div>
