@@ -196,7 +196,7 @@ export default function CartPage() {
                           {item.title}
                         </h3>
                         <p className="text-lg lg:text-2xl font-bold text-primary mb-1">
-                          ALGO {item.price}
+                          $ {item.price}
                         </p>
                         <p className="text-sm lg:text-base text-gray-500">
                           {item.artist}
@@ -236,7 +236,7 @@ export default function CartPage() {
                     {/* My Wallet Total */}
                     <div className="flex items-center justify-between mb-8">
                       <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Total</h3>
-                      <p className="text-xl lg:text-2xl font-bold text-gray-900">ALGO {walletAddress.balance}</p>
+                      <p className="text-xl lg:text-2xl font-bold text-gray-900">$ {walletAddress.balance}</p>
                     </div>
                   </div>
                   <div className="border-t border-gray-200 my-6"></div>
@@ -249,7 +249,7 @@ export default function CartPage() {
                       {cartItems.map((item) => (
                         <div key={item.id} className="flex justify-between items-center">
                           <span className="text-gray-600 truncate pr-2">{item.title}</span>
-                          <span className="font-semibold text-gray-900">ALGO {item.price}</span>
+                          <span className="font-semibold text-gray-900">$ {item.price}</span>
                         </div>
                       ))}
                     </div>
@@ -260,7 +260,7 @@ export default function CartPage() {
                     {/* Total */}
                     <div className="flex items-center justify-between mb-8">
                       <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Total</h3>
-                      <p className="text-xl lg:text-2xl font-bold text-gray-900">ALGO {total}</p>
+                      <p className="text-xl lg:text-2xl font-bold text-gray-900">$ {total}</p>
                     </div>
 
                     {/* Checkout Button - Desktop */}
