@@ -1,36 +1,45 @@
 "use client";
 
-import {
-  DotsThree,
-  ArrowUpRight,
-  PencilSimple,
-  Plus,
-  SignOut,
-} from "phosphor-react";
+import Navbar from "@/components/shared/Navbar";
+import TopNavbar from "@/components/shared/TopNavbar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Navbar from "@/components/shared/Navbar";
-import TopNavbar from "@/components/shared/TopNavbar";
-import { useState, useEffect } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { forSaleArtworks } from "@/data/for-sale-artworks";
+import { ProtectedArtworksGetDto } from "@/lib/dto/protected-artworks/get";
+import { ApiArraySuccess } from "@/lib/types/global";
+import { fallbackImageUrl } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ProtectedArtwork } from "@/data/protected-artworks";
-import { ForSaleArtwork } from "@/data/for-sale-artworks";
+import {
+  ArrowUpRight,
+  DotsThree,
+  PencilSimple,
+  Plus,
+  SignOut,
+} from "phosphor-react";
+import { useEffect, useState } from "react";
 
 type TabType = "protected" | "for-sale";
 
 export default function MePage() {
+  const { data: session } = useSession();
+
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("protected");
   const [isVerifiedArtist, setIsVerifiedArtist] = useState(false);
+  const [protectedArtworks, setProtectedArtworks] = useState<
+    ProtectedArtworksGetDto[]
+  >([]);
   const [protectedArtworks, setProtectedArtworks] = useState<ProtectedArtwork[]>([]);
   const [forSaleArtworks, setForSaleArtworks] = useState<ForSaleArtwork[]>([]);
   const [userInfo, setUserInfo] = useState({
@@ -40,6 +49,30 @@ export default function MePage() {
     portfolioLink: "",
     algo_address: "",
   });
+
+  useEffect(() => {
+    const handler = async () => {
+      const response = await fetch("/api/protected-artworks", {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || "Failed to fetch protected artworks",
+        );
+      }
+
+      const parsedResponse =
+        (await response.json()) as ApiArraySuccess<ProtectedArtworksGetDto>;
+
+      console.log(parsedResponse);
+
+      setProtectedArtworks(parsedResponse.result);
+    };
+
+    void handler();
+  }, []);
 
     useEffect(() => {
     // Check if the user is already verified
@@ -266,10 +299,18 @@ export default function MePage() {
                         onClick={() => handleProtectedArtworkClick("1")}
                       >
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          <img
-                            alt={protectedArtworks[0]?.title ?? 'Untitled'}
-                            src={protectedArtworks[0]?.image ?? 'https://via.placeholder.com/300'}
-                          />
+                          {protectedArtworks.length > 0 && (
+                            <Image
+                              alt={protectedArtworks[0].title}
+                              src={
+                                protectedArtworks[0].imageUrl ||
+                                fallbackImageUrl
+                              }
+                              fill={true}
+                              priority={true}
+                            />
+                          )}
+
                           <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </div>
                       </Card>
@@ -395,10 +436,12 @@ export default function MePage() {
                     {/* Profile Photo and Info */}
                     <div className="flex items-start gap-4">
                       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full bg-muted">
-                        <img
+                        <Image
                           src="https://images.unsplash.com/photo-1664482017668-91158897414c?q=80&w=2342&auto=format&fit=crop"
-                          alt="Aria Solen"
+                          alt={session?.user?.name || ""}
                           className="h-full w-full object-cover"
+                          fill={true}
+                          priority={true}
                         />
                       </div>
 
@@ -469,11 +512,15 @@ export default function MePage() {
                       >
                         {/* Artwork Image */}
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          <img
-                            src={artwork.image}
-                            alt={artwork.title}
-                            className="h-full w-full object-cover"
-                          />
+                          {artwork.imageUrl && (
+                            <Image
+                              src={artwork.imageUrl}
+                              alt={artwork.title}
+                              className="h-full w-full object-cover"
+                              fill={true}
+                              priority={true}
+                            />
+                          )}
 
                           {/* Tracking Badge - Only on first artwork */}
                           {index === 0 && (
@@ -514,10 +561,12 @@ export default function MePage() {
                       >
                         {/* Artwork Image */}
                         <div className="relative aspect-[4/5] overflow-hidden">
-                          <img
+                          <Image
                             src={artwork.image}
                             alt={artwork.title}
                             className="h-full w-full object-cover"
+                            fill={true}
+                            priority={true}
                           />
 
                           {/* Overlay on hover */}
