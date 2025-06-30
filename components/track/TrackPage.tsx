@@ -94,9 +94,29 @@ export default function TrackPage() {
     }
   };
 
-  const handleTrackNow = (artworkId: string, e: React.MouseEvent) => {
+  const handleTrackNow = async (
+    historyId: string,
+    artworkId: string,
+    e: React.MouseEvent,
+  ) => {
     e.stopPropagation();
-    setLoadingArtworkId(artworkId);
+    setLoadingArtworkId(historyId);
+
+    const response = await fetch("/api/tracking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        artworkId,
+        newStatus: TrackingArtworkStatus.Tracking,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Tracking artworks failed");
+    }
 
     // Simulate tracking logic with a timeout
     setTimeout(() => {
@@ -346,7 +366,9 @@ export default function TrackPage() {
                       <div className="flex items-center gap-3">
                         {mode === "normal" && (
                           <Button
-                            onClick={(e) => handleTrackNow(history.id, e)}
+                            onClick={(e) =>
+                              handleTrackNow(history.id, history.artworkId, e)
+                            }
                             className="rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-white hover:bg-primary/90"
                             disabled={loadingArtworkId === history.id}
                           >
