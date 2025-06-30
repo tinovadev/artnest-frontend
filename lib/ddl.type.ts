@@ -48,3 +48,32 @@ export type AlgorandBalance = {
   balance: string;
   checked_at: string;
 };
+
+protectedArtworks: {
+
+}
+forSaleArtworks: {
+
+}
+export type ABC = {
+  id: string;
+  title: string;
+  image: string;
+  date: string;
+  status: "protected" | "processing";
+  price: string;
+  artist: string;
+  currency: string;
+  year: string;
+  medium: string;
+  dimensions: string;
+  edition: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ProtectedSaleArtWorks = {
+  protectedArtworks: ABC[];
+  forSaleArtworks: ABC[];
+}

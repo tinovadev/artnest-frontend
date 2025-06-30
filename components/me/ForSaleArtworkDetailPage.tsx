@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { forSaleArtworks } from '@/data/for-sale-artworks';
 import { forSaleArtworkDetails } from '@/data/for-sale-artwork-details';
 import TotalRoyaltyDrawer from './TotalRoyaltyDrawer';
+import { ArtworkDetails } from '@/data/artwork-details';
 
 interface ForSaleArtworkDetailPageProps {
   artworkId: string;
@@ -18,7 +19,9 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
   const router = useRouter();
   const [isRoyaltyDrawerOpen, setIsRoyaltyDrawerOpen] = useState(false);
   const artwork = forSaleArtworks.find(art => art.id === artworkId);
-  const details = forSaleArtworkDetails.find(detail => detail.artworkId === artworkId);
+  // const details = forSaleArtworkartworkDetail.find(detail => detail.artworkId === artworkId);
+  const [artworkDetail, setArtworkDetail] = useState<ArtworkDetails | null>(null);
+  const [protectedArtwork, setProtectedArtwork] = useState<any>(null);
 
   const handleBack = () => {
     router.back();
@@ -29,10 +32,47 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
   };
 
   const handleCheckTotalRoyalty = () => {
+    console.log("Checking total royalty for artwork:", artworkDetail);
     setIsRoyaltyDrawerOpen(true);
   };
 
-  if (!artwork || !details) {
+  useEffect(() => {
+    const generateStaticParams = async () => {
+      const res = await fetch('/api/artwork-details?artworkId=' + artworkId);
+      if (!res.ok) {
+        throw new Error('Failed to fetch artwork details')
+      };
+
+      const data: ArtworkDetails = await res.json();
+      if (!data) {
+        console.error('Artwork not found for ID:', artworkId);
+        return;
+      } else {
+        setArtworkDetail(data);
+      }
+
+      const res2 = await fetch('/api/protected-artworks');
+      if (!res2.ok) {
+        console.error('Failed to fetch protected artworks');
+        return;
+      }
+      const protectedArtworksData = await res2.json();
+      if (!protectedArtworksData) {
+        console.error('Protected artworks data not found');
+        return;
+      }
+
+      const result2 = protectedArtworksData.find((artwork: any) => artwork.id === artworkId);
+      if (result2) {
+        setProtectedArtwork(result2);
+      } else {
+        console.error('Protected artwork not found for ID:', artworkId);
+      }
+    }
+    generateStaticParams();
+  }, [artworkId, artwork]);
+
+  if (!artworkDetail || !protectedArtwork) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <p className="text-muted-foreground">Artwork not found</p>
@@ -50,7 +90,7 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
               <button onClick={handleBack} className="p-2 -ml-2">
                 <ArrowLeft size={24} className="text-foreground" />
               </button>
-              <h1 className="text-lg font-semibold truncate">{artwork.title}</h1>
+              <h1 className="text-lg font-semibold truncate">{protectedArtwork.title}</h1>
             </div>
             
             <button 
@@ -68,8 +108,8 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
               <div className="lg:flex-shrink-0 mb-8 lg:mb-0">
                 <div className="relative rounded-3xl overflow-hidden bg-muted aspect-[4/5] w-full max-w-md mx-auto lg:mx-0 lg:w-96 lg:h-[480px]">
                   <img 
-                    src={artwork.image}
-                    alt={artwork.title}
+                    src={protectedArtwork.image}
+                    alt={protectedArtwork.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -80,23 +120,23 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
                 {/* Basic Info */}
                 <div>
                   <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
-                    {artwork.title}
+                    {protectedArtwork.title}
                   </h2>
                   <p className="text-2xl lg:text-3xl font-bold text-foreground mb-4">
-                    ${artwork.price}
+                    ${protectedArtwork.price}
                   </p>
                   
                   <div className="space-y-1 text-muted-foreground">
-                    <p>{details.year} | {details.artist}</p>
-                    <p>{details.dimensions} | {details.medium}</p>
-                    <p>{details.edition}</p>
+                    <p>{artworkDetail.year} | {artworkDetail.artist}</p>
+                    <p>{artworkDetail.dimensions} | {artworkDetail.medium}</p>
+                    <p>{artworkDetail.edition}</p>
                   </div>
                 </div>
 
                 {/* Description */}
                 <div>
                   <p className="text-foreground leading-relaxed text-base lg:text-lg">
-                    {details.description}
+                    {artworkDetail.description}
                   </p>
                 </div>
 
@@ -104,9 +144,9 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
                 <div>
                   <h3 className="text-lg lg:text-xl font-semibold text-foreground mb-4">About the Artist</h3>
                   <Card className="bg-secondary border-border rounded-2xl p-6">
-                    <p className="text-foreground mb-4">{details.artistBio.title}</p>
+                    <p className="text-foreground mb-4">{artworkDetail.artistBio.title}</p>
                     <ul className="space-y-2 text-muted-foreground">
-                      {details.artistBio.highlights.map((highlight, index) => (
+                      {artworkDetail.artistBio.highlights.map((highlight, index) => (
                         <li key={index} className="flex items-start gap-2">
                           <span className="text-primary mt-1">•</span>
                           <span>{highlight}</span>
@@ -121,10 +161,10 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
                   <h3 className="text-lg lg:text-xl font-semibold text-foreground mb-4">Royalty per Use</h3>
                   <Card className="bg-secondary border-border rounded-2xl p-6">
                     <div className="text-2xl font-bold text-foreground mb-2">
-                      ${details.royalty.pricePerUse.toFixed(2)} / use
+                      ${artworkDetail.royalty.pricePerUse.toFixed(2)} / use
                     </div>
                     <p className="text-muted-foreground text-sm mb-4">
-                      {details.royalty.description}
+                      {artworkDetail.royalty.description}
                     </p>
                     
                     <Button 
@@ -141,13 +181,13 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
                   <h3 className="text-lg lg:text-xl font-semibold text-foreground mb-4">AI Usage License</h3>
                   <Card className="bg-secondary border-border rounded-2xl p-6">
                     <div className="space-y-3">
-                      {details.license.permissions.map((permission, index) => (
+                      {artworkDetail.license.permissions.map((permission, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <div className="w-2 h-2 bg-success rounded-full flex-shrink-0"></div>
                           <span className="text-foreground">{permission}</span>
                         </div>
                       ))}
-                      {details.license.restrictions.map((restriction, index) => (
+                      {artworkDetail.license.restrictions.map((restriction, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <div className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0"></div>
                           <span className="text-foreground">{restriction}</span>
@@ -162,11 +202,11 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
                   <h3 className="text-lg lg:text-xl font-semibold text-foreground mb-4">File Details</h3>
                   <Card className="bg-secondary border-border rounded-2xl p-6">
                     <div className="space-y-2 text-muted-foreground">
-                      <p><span className="text-foreground font-medium">Format:</span> {details.fileDetails.format}</p>
-                      <p><span className="text-foreground font-medium">Dimensions:</span> {details.fileDetails.dimensions}</p>
-                      <p><span className="text-foreground font-medium">Size:</span> {details.fileDetails.size}</p>
-                      <p><span className="text-foreground font-medium">Uploaded:</span> {details.fileDetails.uploaded}</p>
-                      <p><span className="text-foreground font-medium">Version:</span> {details.fileDetails.version}</p>
+                      <p><span className="text-foreground font-medium">Format:</span> {artworkDetail.fileDetails.format}</p>
+                      <p><span className="text-foreground font-medium">Dimensions:</span> {artworkDetail.fileDetails.dimensions}</p>
+                      <p><span className="text-foreground font-medium">Size:</span> {artworkDetail.fileDetails.size}</p>
+                      <p><span className="text-foreground font-medium">Uploaded:</span> {artworkDetail.fileDetails.uploaded}</p>
+                      <p><span className="text-foreground font-medium">Version:</span> {artworkDetail.fileDetails.version}</p>
                     </div>
                   </Card>
                 </div>
@@ -180,8 +220,8 @@ export default function ForSaleArtworkDetailPage({ artworkId }: ForSaleArtworkDe
       <TotalRoyaltyDrawer 
         isOpen={isRoyaltyDrawerOpen}
         onClose={() => setIsRoyaltyDrawerOpen(false)}
-        artwork={artwork}
-        details={details}
+        artwork={protectedArtwork}
+        details={artworkDetail}
       />
     </div>
   );

@@ -51,30 +51,30 @@ export default function MePage() {
     algo_address: "",
   });
 
-    useEffect(() => {
-    const handler = async () => {
-      const response = await fetch("/api/protected-artworks", {
-        method: "GET",
-      });
+  //   useEffect(() => {
+  //   const handler = async () => {
+  //     const response = await fetch("/api/protected-artworks", {
+  //       method: "GET",
+  //     });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error || "Failed to fetch protected artworks",
-        );
-      }
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(
+  //         errorData.error || "Failed to fetch protected artworks",
+  //       );
+  //     }
 
-      const parsedResponse =
-        (await response.json()) as ApiArraySuccess<ProtectedArtworksGetDto>;
+  //     const parsedResponse =
+  //       (await response.json()) as ApiArraySuccess<ProtectedArtworksGetDto>;
 
-      console.log(parsedResponse);
+  //     console.log(parsedResponse);
 
-      // NOTE: 
-      // setProtectedArtworks(parsedResponse.result);
-    };
+  //     // NOTE: 
+  //     // setProtectedArtworks(parsedResponse.result);
+  //   };
 
-    void handler();
-  }, []);
+  //   void handler();
+  // }, []);
 
     useEffect(() => {
     // Check if the user is already verified
@@ -332,7 +332,7 @@ export default function MePage() {
                       {forSaleArtworks.map((forSaleArtwork) =>
                         <Card
                           className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
-                          onClick={() => handleProtectedArtworkClick(forSaleArtwork.id)}
+                          onClick={() => handleForSaleArtworkClick(forSaleArtwork.id)}
                         >
                           <div className="relative aspect-[4/5] overflow-hidden">
                             <img

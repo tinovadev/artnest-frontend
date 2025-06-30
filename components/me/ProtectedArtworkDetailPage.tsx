@@ -4,8 +4,8 @@ import { ArrowLeft, PencilSimple } from "phosphor-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
-import { protectedArtworks } from "@/data/protected-artworks";
-import { protectedArtworkDetails } from "@/data/protected-artwork-details";
+import { useEffect, useState } from "react";
+import { ABC, ProtectedSaleArtWorks } from "@/lib/ddl.type";
 
 interface ProtectedArtworkDetailPageProps {
   artworkId: string;
@@ -15,10 +15,35 @@ export default function ProtectedArtworkDetailPage({
   artworkId,
 }: ProtectedArtworkDetailPageProps) {
   const router = useRouter();
-  const artwork = protectedArtworks.find((art) => art.id === artworkId);
-  const details = protectedArtworkDetails.find(
-    (detail) => detail.artworkId === artworkId,
-  );
+  const [protectedArtwork, setProtectedArtwork] = useState<ABC>();
+  // const artwork = protectedArtworks.find((art) => art.id === artworkId);
+  // const details = protectedArtworkDetails.find(
+  //   (detail) => detail.artworkId === artworkId,
+  // );
+
+  useEffect(() => {
+    const generateStaticParams = async () => {
+      const protectedArtworks = await fetch('/api/me/protected-sale-artworks');
+     
+      if (!protectedArtworks.ok) {
+        console.error('Failed to fetch protected artworks');
+        return [];
+      }
+      const protectedArtworksData = await protectedArtworks.json() as ProtectedSaleArtWorks;
+
+      if (!protectedArtworksData) {
+        return [];
+      }
+
+      const result = protectedArtworksData.protectedArtworks.find((artwork) => artwork.id === artworkId);
+      if (result) {
+        setProtectedArtwork(result);
+      } else {
+        console.error('Artwork not found');
+      }
+    }
+    generateStaticParams();
+    }, []);
 
   const handleBack = () => {
     router.back();
@@ -37,7 +62,7 @@ export default function ProtectedArtworkDetailPage({
     router.push(`/me/for-sale/${artworkId}/edit`);
   };
 
-  if (!artwork || !details) {
+  if (!protectedArtwork) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <p className="text-muted-foreground">Artwork not found</p>
@@ -56,7 +81,7 @@ export default function ProtectedArtworkDetailPage({
                 <ArrowLeft size={24} className="text-foreground" />
               </button>
               <h1 className="truncate text-lg font-semibold">
-                {artwork.title}
+                {protectedArtwork.title}
               </h1>
             </div>
 
@@ -75,8 +100,8 @@ export default function ProtectedArtworkDetailPage({
               <div className="mb-8 lg:mb-0 lg:flex-shrink-0">
                 <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl bg-muted lg:mx-0 lg:h-[480px] lg:w-96">
                   <img
-                    src={artwork.image}
-                    alt={artwork.title}
+                    src={protectedArtwork.image}
+                    alt={protectedArtwork.title}
                     className="h-full w-full object-cover"
                   />
 
@@ -97,24 +122,24 @@ export default function ProtectedArtworkDetailPage({
               <div className="space-y-6 lg:flex-1">
                 {/* Title */}
                 <h2 className="text-2xl font-bold text-foreground lg:text-3xl">
-                  {artwork.title}
+                  {protectedArtwork.title}
                 </h2>
 
                 {/* Details */}
                 <div className="space-y-2 text-muted-foreground">
                   <p className="text-base">
-                    {details.year} | {details.artist}
+                    {protectedArtwork.year} | {protectedArtwork.artist}
                   </p>
                   <p className="text-base">
-                    {details.dimensions} | {details.medium}
+                    {protectedArtwork.dimensions} | {protectedArtwork.medium}
                   </p>
-                  <p className="text-base">{details.edition}</p>
+                  <p className="text-base">{protectedArtwork.edition}</p>
                 </div>
 
                 {/* Description */}
                 <div>
                   <p className="text-base leading-relaxed text-foreground lg:text-lg">
-                    {details.description}
+                    {protectedArtwork.description}
                   </p>
                 </div>
 
