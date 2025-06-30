@@ -15,12 +15,12 @@ export async function GET(req: NextRequest) {
       artworks.title AS title,
       artworks.unit_price AS price,
       artworks.image_url AS image,
-      artworks.year::TEXT,
-      artworks.artist,
-      artworks.dimensions,
-      artworks.medium,
-      artworks.edition,
-      artworks.description,
+      artworks.year::TEXT AS year,
+      artworks.artist AS artist,
+      artworks.dimensions AS dimensions,
+      artworks.medium AS medium,
+      artworks.edition AS edition,
+      artworks.description AS description,
       
       -- Artist Bio
       users.artist_name AS bio_title,
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
       FULL OUTER JOIN image_similarity AS image_similarity ON image_similarity.artwork_id = artworks.id
       FULL OUTER JOIN artwork_license AS artwork_license ON artwork_license.artwork_id = artworks.id
     WHERE 
-      artworks.id = 'c287ef23-5af6-4379-809e-0c514d87119f' AND 
+      artworks.id = $1 AND 
       artworks.deleted_at IS NULL;
   `, [artworkId]);
   console.log('data', artworkId);
