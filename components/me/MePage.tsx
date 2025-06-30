@@ -294,7 +294,7 @@ export default function MePage() {
                   </div>
 
                   {/* Single Artwork - Initial State */}
-                  {activeTab === "protected" && protectedArtworks.length > 0 && (
+                  {/* activeTab === "protected" && protectedArtworks.length > 0 && (
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                       {protectedArtworks.map((protectedArtwork) => (
                       <Card
@@ -314,8 +314,8 @@ export default function MePage() {
                       </Card>
                       ))}
                     </div>
-                  )}
-                  {activeTab === "protected" && protectedArtworks.length === 0 && (
+                  )*/ }
+                  {activeTab === "protected" /* && protectedArtworks.length === 0 */ && (
                     <div className="flex flex-col items-center justify-center py-20">
                       <div className="text-center">
                         <h3 className="mb-2 text-xl font-semibold text-foreground">
@@ -328,7 +328,7 @@ export default function MePage() {
                     </div>
                     )}
 
-                  {activeTab === "for-sale" && forSaleArtworks.length > 0 && (
+                  {/* activeTab === "for-sale" && forSaleArtworks.length > 0 && (
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                       {forSaleArtworks.map((forSaleArtwork) =>
                         <Card
@@ -346,8 +346,8 @@ export default function MePage() {
                         </Card>
                       )}
                     </div>
-                  )}
-                  {activeTab === "for-sale" && forSaleArtworks.length === 0 && (
+                  )*/ }
+                  {activeTab === "for-sale"/* && forSaleArtworks.length === 0 */ && (
                     <div className="flex flex-col items-center justify-center py-20">
                       <div className="text-center">
                         <h3 className="mb-2 text-xl font-semibold text-foreground">

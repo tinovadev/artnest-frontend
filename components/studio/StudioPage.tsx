@@ -44,10 +44,7 @@ export default function StudioPage() {
   }, []);
 
     useEffect(() => {
-      if (cart.length > 0) {
-        sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
-        return;
-      }
+      sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
     }, [cart]);
 
 

@@ -67,7 +67,7 @@ export const studioArtworks: StudioArtwork[] = [
     title: "Urban Dreams",
     price: 15,
     image:
-      "https://images.unsplash.com/photo-1579762593155-42faee39d0b4?q=80&w=2458&auto=format&fit=crop",
+      "https://storage.googleapis.com/artnest/artworks/76212565-6f9e-413e-abf7-59499196dfd8/mywork1.png-06-30-2025",
     artist: "City Artist",
     category: "Urban",
   },
