@@ -20,10 +20,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Navbar from "@/components/shared/Navbar";
 import TopNavbar from "@/components/shared/TopNavbar";
-import { protectedArtworks } from "@/data/protected-artworks";
-import { forSaleArtworks } from "@/data/for-sale-artworks";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ProtectedArtwork } from "@/data/protected-artworks";
+import { ForSaleArtwork } from "@/data/for-sale-artworks";
 
 type TabType = "protected" | "for-sale";
 
@@ -31,6 +31,50 @@ export default function MePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("protected");
   const [isVerifiedArtist, setIsVerifiedArtist] = useState(false);
+  const [protectedArtworks, setProtectedArtworks] = useState<ProtectedArtwork[]>([]);
+  const [forSaleArtworks, setForSaleArtworks] = useState<ForSaleArtwork[]>([]);
+  const [userInfo, setUserInfo] = useState({
+    fullName: "",
+    artistName: "",
+    description: "",
+    portfolioLink: "",
+    algo_address: "",
+  });
+
+    useEffect(() => {
+    // Check if the user is already verified
+    const getUserInfo = async () => {
+      const me = await fetch("/api/me");
+      if (me.ok) {
+        const data = await me.json();
+        setUserInfo(() => ({
+          ...data,
+          fullName: data.fullname || "",
+          artistName: data.artist_name || "",
+          description: data.description || "",
+          portfolioLink: data.portfolio_link || "",
+          algo_address: data.algo_address || "",
+        }));
+      } else {
+        throw new Error("Failed to fetch user info");
+      }
+    };
+
+    const getProtectedAndSaleArtworks = async () => {
+      const protectedResponse = await fetch("/api/me/protected-sale-artworks");
+      if (protectedResponse.ok) {
+        const data = await protectedResponse.json();
+
+        setProtectedArtworks(data.protectedArtworks);
+        setForSaleArtworks(data.forSaleArtworks);
+      } else {
+        throw new Error("Failed to fetch artworks");
+      }
+    }
+    getProtectedAndSaleArtworks();
+    getUserInfo();
+  }, []);
+
 
   // Check verification status on component mount
   useEffect(() => {
@@ -60,9 +104,13 @@ export default function MePage() {
     router.push("/artist-verification");
   };
 
-  const handleWalletClick = () => {
-    // Handle wallet navigation
-    console.log("My NFT Wallet clicked");
+  const handleWalletClick = async () => {
+    await navigator.clipboard.writeText(userInfo.algo_address);
+    alert(`Wallet address copied: ${userInfo.algo_address}`);
+    window.open(
+      'https://dispenser.testnet.aws.algodev.network/',
+      '_blank'
+    );
   };
 
   const handleArtistBadgeClick = () => {
@@ -157,7 +205,7 @@ export default function MePage() {
                     <div className="space-y-6">
                       {/* Artist Name */}
                       <h2 className="font-pixel text-3xl font-bold text-foreground lg:text-4xl">
-                        Aria Solen
+                        {userInfo.artistName || userInfo.fullName || "Your Name"}
                       </h2>
 
                       {/* NFT Wallet Link */}
@@ -211,7 +259,7 @@ export default function MePage() {
                   </div>
 
                   {/* Single Artwork - Initial State */}
-                  {activeTab === "protected" && (
+                  {activeTab === "protected" && protectedArtworks.length > 0 && (
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                       <Card
                         className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
@@ -219,15 +267,43 @@ export default function MePage() {
                       >
                         <div className="relative aspect-[4/5] overflow-hidden">
                           <img
-                            alt={protectedArtworks[0].title}
-                            src={protectedArtworks[0].image}
+                            alt={protectedArtworks[0]?.title ?? 'Untitled'}
+                            src={protectedArtworks[0]?.image ?? 'https://via.placeholder.com/300'}
                           />
                           <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </div>
                       </Card>
                     </div>
                   )}
+                  {activeTab === "protected" && protectedArtworks.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-20">
+                      <div className="text-center">
+                        <h3 className="mb-2 text-xl font-semibold text-foreground">
+                          No artworks for protected
+                        </h3>
+                        <p className="text-muted-foreground">
+                          Your artworks available for purchase will appear here
+                        </p>
+                      </div>
+                    </div>
+                    )}
 
+                  {activeTab === "for-sale" && forSaleArtworks.length > 0 && (
+                    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
+                      <Card
+                        className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
+                        onClick={() => handleProtectedArtworkClick("1")}
+                      >
+                        <div className="relative aspect-[4/5] overflow-hidden">
+                          <img
+                            alt={forSaleArtworks[0]?.title ?? 'Untitled'}
+                            src={forSaleArtworks[0]?.image ?? 'https://via.placeholder.com/300'}
+                          />
+                          <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                        </div>
+                      </Card>
+                    </div>
+                  )}
                   {activeTab === "for-sale" && (
                     <div className="flex flex-col items-center justify-center py-20">
                       <div className="text-center">
@@ -329,14 +405,12 @@ export default function MePage() {
                       <div className="flex-1 pt-2">
                         {/* Artist Name */}
                         <h2 className="mb-3 font-pixel text-2xl font-bold text-foreground lg:text-3xl">
-                          Aria Solen
+                          {userInfo.artistName || userInfo.fullName || "Your Name"}
                         </h2>
 
                         {/* Artist Description */}
                         <p className="mb-4 text-sm leading-relaxed text-muted-foreground lg:text-base">
-                          I'm a digital illustrator exploring the
-                          <br />
-                          intersection of nature and imagination.
+                          {userInfo.description}
                         </p>
                       </div>
                     </div>
@@ -415,12 +489,24 @@ export default function MePage() {
                         </div>
                       </Card>
                     ))}
+                    {protectedArtworks.length === 0 && (
+                      <div className="flex flex-col items-center justify-center py-20">
+                        <div className="text-center">
+                          <h3 className="mb-2 text-xl font-semibold text-foreground">
+                            No artworks for Protected
+                          </h3>
+                          <p className="text-muted-foreground">
+                            Your artworks available for purchase will appear here
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {activeTab === "for-sale" && (
                   <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
-                    {forSaleArtworks.map((artwork) => (
+                    {forSaleArtworks.length > 0 && forSaleArtworks.map((artwork) => (
                       <Card
                         key={artwork.id}
                         className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
@@ -439,6 +525,18 @@ export default function MePage() {
                         </div>
                       </Card>
                     ))}
+                    {forSaleArtworks.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-20">
+                      <div className="text-center">
+                        <h3 className="mb-2 text-xl font-semibold text-foreground">
+                          No artworks for sale
+                        </h3>
+                        <p className="text-muted-foreground">
+                          Your artworks available for purchase will appear here
+                        </p>
+                      </div>
+                    </div>
+                    )}
                   </div>
                 )}
               </div>

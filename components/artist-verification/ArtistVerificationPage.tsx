@@ -13,7 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle } from "phosphor-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ArtistVerificationPage() {
   const router = useRouter();
@@ -25,6 +25,34 @@ export default function ArtistVerificationPage() {
     portfolioLink: "",
     file: null as File | null,
   });
+
+  useEffect(() => {
+    // Check if the user is already verified
+    const getUserInfo = async () => {
+      const me = await fetch("/api/me");
+      if (me.ok) {
+        const data = await me.json();
+        if (data.artist_verified) {
+          // If already verified, redirect to Me page
+          router.push("/me");
+        } else {
+          // If not verified, set initial form data
+          setFormData((prev) => ({
+            ...prev,
+            fullName: data.fullname || "",
+            artistName: data.artist_name || "",
+            description: data.description || "",
+            portfolioLink: data.portfolio_link || "",
+          }));
+        }
+      } else {
+        throw new Error("Failed to fetch user info");
+      }
+    };
+
+    getUserInfo();
+  }, []);
+
 
   const handleBack = () => {
     router.back();
@@ -47,9 +75,27 @@ export default function ArtistVerificationPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Handle form submission
     console.log("Form submitted:", formData);
+    try {
+      await fetch("/api/me/artist-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          artistName: formData.artistName,
+          description: formData.description,
+          portfolioLink: formData.portfolioLink,
+          file: formData.file ? formData.file.name : null,
+        }),
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+
     // Show success modal
     setIsSuccessModalOpen(true);
   };
