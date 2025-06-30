@@ -27,7 +27,19 @@ export async function GET(req: NextRequest) {
     // user.id = '76212565-6f9e-413e-abf7-59499196dfd8';
 
     const searchHistoryText = `
-      SELECT * FROM artworks
+      SELECT 
+        artworks.id AS id,
+        artworks.title AS title,
+        artworks.unit_price AS price,
+        artworks.image_url AS image,
+        artworks.year::TEXT AS year,
+        artworks.artist AS artist,
+        artworks.dimensions AS dimensions,
+        artworks.medium AS medium,
+        artworks.edition AS edition,
+        artworks.description AS description
+      FROM artworks
+
       WHERE user_id = $1
       ORDER BY created_at DESC
     `;
