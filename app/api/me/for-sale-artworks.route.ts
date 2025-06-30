@@ -43,7 +43,14 @@ export async function GET(req: NextRequest) {
         artworks.edition AS edition,
         artworks.description AS description,
         artworks.created_at AS created_at,
-        artworks.updated_at AS updated_at
+        artworks.updated_at AS updated_at,
+        artwork_license.ai_training_allowed AS artwork_license_ai_training_allowed,
+        artwork_license.commercial_use_allowed AS artwork_license_commercial_use_allowed,
+        artwork_license.resale_use_allowed AS artwork_license_resale_use_allowed,
+        artwork_license.derivatives_allowed AS artwork_license_derivatives_allowed,
+        artwork_license.description AS artwork_license_description,
+        artwork_license.created_at AS artwork_license_created_at,
+        artwork_license.version AS artwork_license_version
       FROM artworks AS artworks
       FULL OUTER JOIN
         artwork_license ON artworks.id = artwork_license.artwork_id 
@@ -54,12 +61,12 @@ export async function GET(req: NextRequest) {
       [user.id]
     );
 
-    const response = {
-      protectedArtworks: result.rows.filter(row => row.status === 'protected'),
-      forSaleArtworks: result.rows.filter(row => row.status === 'for_sale'),
+    if (result.rowCount === 0) {
+      return NextResponse.json([], { status: 404
+      });
     }
 
-    return NextResponse.json(response, { status: 200 });
+    return NextResponse.json(result.rows, { status: 200 });
 
   } catch (error) {
     console.error("API /api/me POST error:", error);

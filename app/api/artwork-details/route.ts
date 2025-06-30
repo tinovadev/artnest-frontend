@@ -1,4 +1,4 @@
-import { ArtworkDetails, artworkDetails } from '@/data/artwork-details';
+import { ArtworkDetails } from '@/data/artwork-details';
 import { query } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
@@ -12,6 +12,8 @@ export async function GET(req: NextRequest) {
   const data = await query(`
     SELECT
       artworks.id AS artwork_id,
+      artworks.title AS title,
+      artworks.unit_price AS price,
       artworks.year::TEXT,
       artworks.artist,
       artworks.dimensions,
@@ -80,6 +82,8 @@ export async function POST() {
 function toArtworkDetails(raw: any): ArtworkDetails {
   return {
     artworkId: raw.artwork_id,
+    title: raw.title || 'NO TITLE',
+    price: raw.price || '0.00',
     year: raw.year,
     artist: raw.artist,
     dimensions: raw.dimensions,

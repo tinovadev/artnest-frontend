@@ -1,5 +1,7 @@
 export interface ArtworkDetails {
   artworkId: string;
+  title: string;
+  price: string;
   year: string;
   artist: string;
   dimensions: string;
@@ -30,6 +32,8 @@ export interface ArtworkDetails {
 export const artworkDetails: ArtworkDetails[] = [
   {
     artworkId: '2', // Song of the Wind
+    title: 'string',
+    price: 'string',
     year: '2025',
     artist: 'Aria Solen',
     dimensions: '90 x 120 cm',
@@ -68,6 +72,8 @@ export const artworkDetails: ArtworkDetails[] = [
   {
     artworkId: '1', // Memories of Su...
     year: '2025',
+    title: 'string',
+    price: 'string',
     artist: 'Digital Artist',
     dimensions: '80 x 80 cm',
     medium: 'Digital painting',

@@ -8,9 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { forSaleArtworks } from "@/data/for-sale-artworks";
 import { forSaleArtworkDetails } from "@/data/for-sale-artwork-details";
+import { ArtworkDetails } from "@/data/artwork-details";
 
 interface ForSaleArtworkEditPageProps {
   artworkId: string;
@@ -50,6 +51,50 @@ export default function ForSaleArtworkEditPage({
         ) || false,
     },
   });
+  useEffect(() => {
+    const generateStaticParams = async () => {
+    const data = await fetch("/api/artwork-details?artworkId=" + artworkId);
+      if (!data.ok) {
+        console.error("Failed to fetch for sale artworks");
+        return;
+      }
+      const forSaleArtworksData = await data.json() as ArtworkDetails;
+      if (forSaleArtworksData == null) {
+        console.error("No for sale artworks found");
+        return;
+      }
+
+      console.log("For Sale Artwork Data:", forSaleArtworksData);
+
+      if (artwork && details) {
+        setFormData({
+          title: forSaleArtworksData.title,
+          price: Number(forSaleArtworksData.price),
+          year: forSaleArtworksData.year || "",
+          artist: forSaleArtworksData.artist || "Aria Solen",
+          dimensions: forSaleArtworksData.dimensions || "",
+          medium: forSaleArtworksData.medium || "",
+          edition: forSaleArtworksData.edition || "",
+          description: forSaleArtworksData.description || "",
+          artistBio: forSaleArtworksData.artistBio.title || "",
+          royaltyPerUse: forSaleArtworksData.royalty.pricePerUse || 0.08,
+          permissions: {
+            commercialTraining:
+              forSaleArtworksData.license.permissions.includes("Commercial training allowed") ||
+              false,
+            resaleNotPermitted:
+              forSaleArtworksData.license.restrictions.includes("Resale of image not permitted") ||
+              false,
+            derivativeGeneration:
+              forSaleArtworksData.license.permissions.includes("Derivative generation permitted") ||
+              false,
+          },
+        });
+      }
+    };
+
+    generateStaticParams();
+  }, [artwork, details]);
 
   const handleBack = () => {
     router.back();

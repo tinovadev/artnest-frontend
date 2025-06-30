@@ -71,6 +71,15 @@ export type ABC = {
   description: string;
   created_at: string;
   updated_at: string;
+  
+  // api/me/for-sale-artworks (forSaleArtworksData)
+  artwork_license_ai_training_allowed: boolean;
+  artwork_license_commercial_use_allowed: boolean;
+  artwork_license_resale_use_allowed: boolean;
+  artwork_license_derivatives_allowed: boolean;
+  artwork_license_description: string;
+  artwork_license_created_at: string;
+  artwork_license_version: number;
 };
 
 export type ProtectedSaleArtWorks = {
