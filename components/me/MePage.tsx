@@ -298,6 +298,7 @@ export default function MePage() {
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                       {protectedArtworks.map((protectedArtwork) => (
                       <Card
+                        key={protectedArtwork.id}
                         className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
                         onClick={() => handleProtectedArtworkClick(protectedArtwork.id)}
                       >
@@ -331,6 +332,7 @@ export default function MePage() {
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
                       {forSaleArtworks.map((forSaleArtwork) =>
                         <Card
+                          key={forSaleArtwork.id}
                           className="group cursor-pointer overflow-hidden rounded-2xl border-0 bg-secondary transition-transform duration-200 hover:scale-[1.02]"
                           onClick={() => handleForSaleArtworkClick(forSaleArtwork.id)}
                         >
