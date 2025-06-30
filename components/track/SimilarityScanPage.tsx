@@ -108,7 +108,7 @@ export default function SimilarityScanPage({
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">로딩 중입니다...</p>
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -116,7 +116,7 @@ export default function SimilarityScanPage({
   if (!imageSimilarity || !artworkHistory) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">데이터를 불러올 수 없습니다.</p>
+        <p className="text-muted-foreground">No data found</p>
       </div>
     );
   }

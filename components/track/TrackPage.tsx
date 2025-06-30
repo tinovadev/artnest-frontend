@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DetectionResult } from "@/data/detection-results";
 import { TrackingArtworkHistoryDto } from "@/lib/dto/tracking/get";
 import { TrackingArtworkStatus } from "@/lib/model/artwork-tracking-history.model";
 import { ApiArraySuccess, ApiSuccess } from "@/lib/types/global";
@@ -38,7 +39,6 @@ type Mode = "normal" | "delete" | "edit";
 
 export default function TrackPage() {
   const router = useRouter();
-  // const [artworks, setArtworks] = useState(trackingArtworks);
   const [artworksTrackingHistory, setArtworkTrackingHistory] = useState<
     TrackingArtwork[]
   >([]);
@@ -72,22 +72,51 @@ export default function TrackPage() {
     void handler();
   }, []);
 
-  const handleArtworkClick = (artworkId: string) => {
+  const handleArtworkClick = async (artworkId: string) => {
     if (mode !== "normal") return;
 
-    router.push(`/track/${artworkId}`);
+    const response = await fetch(`/api/tracking/${artworkId}`, {
+      method: "GET",
+    });
 
-    if (artworkId === "1") {
-      // Navigate to Sunny Garden detail page
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Tracking artworks upload failed");
+    }
+
+    const parsedResponse =
+      (await response.json()) as ApiSuccess<DetectionResult>;
+
+    if (parsedResponse.result.verifiedThefts > 0) {
+      router.push(`/track/${artworkId}`);
     } else {
-      // Show no theft history modal for other artworks
       setShowNoTheftModal(true);
     }
   };
 
-  const handleTrackNow = (artworkId: string, e: React.MouseEvent) => {
+  const handleTrackNow = async (
+    historyId: string,
+    artworkId: string,
+    e: React.MouseEvent,
+  ) => {
     e.stopPropagation();
-    setLoadingArtworkId(artworkId);
+    setLoadingArtworkId(historyId);
+
+    const response = await fetch("/api/tracking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        artworkId,
+        newStatus: TrackingArtworkStatus.Tracking,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Tracking artworks failed");
+    }
 
     // Simulate tracking logic with a timeout
     setTimeout(() => {
@@ -135,7 +164,6 @@ export default function TrackPage() {
 
     const parsedResponse =
       (await response.json()) as ApiSuccess<TrackingArtworkHistoryDto>;
-    console.log(parsedResponse);
 
     setArtworkTrackingHistory((prev) =>
       prev!.map((history) =>
@@ -338,7 +366,9 @@ export default function TrackPage() {
                       <div className="flex items-center gap-3">
                         {mode === "normal" && (
                           <Button
-                            onClick={(e) => handleTrackNow(history.id, e)}
+                            onClick={(e) =>
+                              handleTrackNow(history.id, history.artworkId, e)
+                            }
                             className="rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-white hover:bg-primary/90"
                             disabled={loadingArtworkId === history.id}
                           >
