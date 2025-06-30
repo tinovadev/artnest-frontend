@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     }
 
     const user = res.rows[0] as User;
-    // 쿼리 수정해야함
+
     const result = await query(
       `SELECT 
         artworks.id AS id,
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
         artworks.unit_price AS price,
         artworks.artist AS artist
       FROM artworks AS artworks
-      LEFT JOIN 
+      FULL OUTER JOIN
         artwork_license ON artworks.id = artwork_license.artwork_id 
       WHERE 
         artworks.deleted_at IS NULL AND 
