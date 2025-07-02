@@ -82,7 +82,7 @@ export default function StudioPage() {
             <div className="flex gap-2">
               <button
                 onClick={handleCartClick}
-                className="relative rounded-lg p-2 transition-colors hover:bg-muted"
+                className="relative rounded-xl p-2 transition-colors hover:bg-muted"
               >
                 <ShoppingCart size={24} className="text-foreground" />
                 {cart.length > 0 && (
