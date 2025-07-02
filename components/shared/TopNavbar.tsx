@@ -3,6 +3,7 @@
 import { House, Broadcast, CreditCard, User } from "phosphor-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import CoinButton from "../coin-withdrawal/CoinButton";
 
 export default function TopNavbar() {
   const pathname = usePathname();
@@ -74,6 +75,8 @@ export default function TopNavbar() {
                 </Link>
               );
             })}
+
+            <CoinButton />
           </div>
         </div>
       </div>

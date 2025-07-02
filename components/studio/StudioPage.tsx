@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, ShoppingCart } from "phosphor-react";
+import { Coin, Plus, ShoppingCart } from "phosphor-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -9,6 +9,7 @@ import TopNavbar from "@/components/shared/TopNavbar";
 import { studioArtworks } from "@/data/studio-artworks";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import CoinButton from "../coin-withdrawal/CoinButton";
 
 export default function StudioPage() {
   const router = useRouter();
@@ -39,19 +40,25 @@ export default function StudioPage() {
               Studio
             </h1>
 
-            <button
-              onClick={handleCartClick}
-              className="relative rounded-lg p-2 transition-colors hover:bg-muted"
-            >
-              <ShoppingCart size={24} className="text-foreground" />
-              {cart.length > 0 && (
-                <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary">
-                  <span className="text-xs font-bold text-white">
-                    {cart.length}
-                  </span>
-                </div>
-              )}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleCartClick}
+                className="relative rounded-lg p-2 transition-colors hover:bg-muted"
+              >
+                <ShoppingCart size={24} className="text-foreground" />
+                {cart.length > 0 && (
+                  <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary">
+                    <span className="text-xs font-bold text-white">
+                      {cart.length}
+                    </span>
+                  </div>
+                )}
+              </button>
+
+              <div className="lg:hidden">
+                <CoinButton />
+              </div>
+            </div>
           </div>
 
           <div className="mx-auto max-w-7xl px-6 lg:px-12">
