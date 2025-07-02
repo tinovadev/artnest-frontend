@@ -72,7 +72,7 @@ export default function ArtistVerificationPage() {
       <ScrollArea className="h-screen">
         <div className="pb-8">
           {/* Header */}
-          <div className="mx-auto flex max-w-7xl items-center gap-4 border-b border-gray-200 px-6 py-4 lg:mt-20 lg:px-12">
+          <div className="mx-auto flex max-w-7xl items-center gap-4 border-b border-gray-200 px-6 py-4 lg:px-12">
             <button onClick={handleBack} className="-ml-2 p-2">
               <ArrowLeft size={24} className="text-gray-900" />
             </button>
