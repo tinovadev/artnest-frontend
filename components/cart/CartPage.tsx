@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { ArrowLeft, Trash } from 'phosphor-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
+import { studioArtworks } from "@/data/studio-artworks";
+import CoinButton from "../coin-withdrawal/CoinButton";
 
 interface CartItem {
   id: string;
@@ -79,6 +81,21 @@ export default function CartPage() {
       setIsEnough(balanceBN.gte(totalAmount));
     };
 
+    // FIXEM: sampleItem, setCartItems 는 봐야함
+    // Load cart items from localStorage or state management
+    // For demo purposes, we'll show "Song of the Wind" as an example
+    const sampleItem = studioArtworks.find((artwork) => artwork.id === "2");
+    if (sampleItem) {
+      setCartItems([
+        {
+          id: sampleItem.id,
+          title: sampleItem.title,
+          price: sampleItem.price,
+          image: sampleItem.image,
+          artist: "Aria Solen",
+        },
+      ]);
+    }
     calcTotalAndCheckBalance();
   }, [cartItems, walletAddress.balance]);
 
@@ -155,58 +172,67 @@ export default function CartPage() {
       <ScrollArea className="h-screen">
         <div className="pb-32 lg:pb-8">
           {/* Header */}
-          <div className="flex items-center gap-4 px-6 lg:px-12 py-4 border-b border-gray-200 max-w-7xl mx-auto">
-            <button onClick={handleBack} className="p-2 -ml-2">
+          <div className="mx-auto flex max-w-7xl items-center gap-4 border-b border-gray-200 px-6 py-4 lg:px-12">
+            <button onClick={handleBack} className="-ml-2 p-2">
               <ArrowLeft size={24} className="text-gray-900" />
             </button>
             <h1 className="text-xl font-semibold text-gray-900">Cart</h1>
+
+            <div className="flex w-full justify-end">
+              <CoinButton />
+            </div>
           </div>
 
-          <div className="px-6 lg:px-12 py-6 max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl px-6 py-6 lg:px-12">
             {cartItems.length === 0 ? (
               /* Empty Cart State */
               <div className="flex flex-col items-center justify-center py-20">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
                   <Trash size={24} className="text-gray-400" />
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
-                <p className="text-gray-500 text-center">
+                <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                  Your cart is empty
+                </h2>
+                <p className="text-center text-gray-500">
                   Browse our studio to find amazing artworks
                 </p>
               </div>
             ) : (
               /* Responsive Layout for Cart Items */
-              <div className="lg:flex lg:gap-12 lg:items-start">
+              <div className="lg:flex lg:items-start lg:gap-12">
                 {/* Cart Items - Left Side on Desktop */}
-                <div className="lg:flex-1 space-y-6 mb-8 lg:mb-0">
+                <div className="mb-8 space-y-6 lg:mb-0 lg:flex-1">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 p-4 lg:p-6 bg-gray-50 lg:bg-white rounded-2xl lg:border lg:border-gray-200">
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-4 rounded-2xl bg-gray-50 p-4 lg:border lg:border-gray-200 lg:bg-white lg:p-6"
+                    >
                       {/* Artwork Thumbnail */}
-                      <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
-                        <img 
+                      <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl bg-gray-100 lg:h-24 lg:w-24">
+                        <img
                           src={item.image}
                           alt={item.title}
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
 
                       {/* Item Details */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg lg:text-xl font-semibold text-gray-900 mb-1">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="mb-1 text-lg font-semibold text-gray-900 lg:text-xl">
                           {item.title}
                         </h3>
-                        <p className="text-lg lg:text-2xl font-bold text-primary mb-1">
-                          $ {item.price}
+                        <p className="mb-1 text-lg font-bold text-primary lg:text-2xl">
+                          ${item.price}
                         </p>
-                        <p className="text-sm lg:text-base text-gray-500">
+                        <p className="text-sm text-gray-500 lg:text-base">
                           {item.artist}
                         </p>
                       </div>
 
                       {/* Remove Button */}
-                      <button 
+                      <button
                         onClick={() => handleRemoveItem(item.id)}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="rounded-lg p-2 transition-colors hover:bg-gray-100"
                       >
                         <Trash size={20} className="text-gray-400" />
                       </button>
@@ -245,32 +271,32 @@ export default function CartPage() {
                     <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
                     
                     {/* Items List */}
-                    <div className="space-y-4 mb-6">
+                    <div className="mb-6 space-y-4">
                       {cartItems.map((item) => (
-                        <div key={item.id} className="flex justify-between items-center">
-                          <span className="text-gray-600 truncate pr-2">{item.title}</span>
-                          <span className="font-semibold text-gray-900">$ {item.price}</span>
+                        <div key={item.id} className="flex items-center justify-between">
+                          <span className="truncate pr-2 text-gray-600">{item.title}</span>
+                          <span className="font-semibold text-gray-900">${item.price}</span>
                         </div>
                       ))}
                     </div>
 
                     {/* Divider */}
-                    <div className="border-t border-gray-200 my-6"></div>
+                    <div className="my-6 border-t border-gray-200"></div>
 
                     {/* Total */}
-                    <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Total</h3>
-                      <p className="text-xl lg:text-2xl font-bold text-gray-900">$ {total}</p>
+                    <div className="mb-8 flex items-center justify-between">
+                      <h3 className="text-xl font-bold text-gray-900 lg:text-2xl">Total</h3>
+                      <p className="text-xl font-bold text-gray-900 lg:text-2xl">${total}</p>
                     </div>
 
                     {/* Checkout Button - Desktop */}
                     <div className="hidden lg:block">
-                      <Button 
+                      <Button
                         onClick={handleCheckout}
                         disabled={!isEnough}
                         className={`w-full text-white font-semibold py-4 rounded-2xl text-lg ${
                           isEnough
-                            ? 'bg-primary hover:bg-primary/90 text-white'
+                            ? 'bg-primary hover:bg-primary/90'
                             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
                       >
@@ -286,19 +312,21 @@ export default function CartPage() {
       </ScrollArea>
 
       {/* Fixed Checkout Button - Mobile Only */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:hidden">
-        <Button 
-          onClick={handleCheckout}
-          disabled={!isEnough}
-          className={`w-full font-semibold py-4 rounded-2xl text-lg ${
-            isEnough
-              ? 'bg-primary hover:bg-primary/90 text-white'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          }`}
-        >
-          {isEnough ? 'Checkout' : 'Insufficient Balance'}
-        </Button>
-      </div>
+      {cartItems.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 lg:hidden">
+          <Button 
+            onClick={handleCheckout}
+            disabled={!isEnough}
+            className={`w-full font-semibold py-4 rounded-2xl text-lg ${
+              isEnough
+                ? 'bg-primary hover:bg-primary/90 text-white'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            {isEnough ? 'Checkout' : 'Insufficient Balance'}
+          </Button>
+        </div>
+        )}
     </div>
   );
 }

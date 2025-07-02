@@ -75,7 +75,7 @@ export default function ProtectedArtworkDetailPage({
       <ScrollArea className="h-screen">
         <div className="pb-48 lg:pb-8">
           {/* Header */}
-          <div className="mx-auto flex max-w-7xl items-center justify-between border-b border-border px-6 py-4 lg:mt-20 lg:px-12">
+          <div className="mx-auto flex max-w-7xl items-center justify-between border-b border-border px-6 py-4 lg:px-12">
             <div className="flex items-center gap-4">
               <button onClick={handleBack} className="-ml-2 p-2">
                 <ArrowLeft size={24} className="text-foreground" />
