@@ -1,0 +1,33 @@
+"use client";
+
+import Link from "next/link";
+import { CoinVertical, Plus } from "phosphor-react";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import BuyCoinsModal from "./BuyCoinsModal";
+
+export default function CoinButton() {
+  const [isBuyCoinsModalOpen, setIsBuyCoinsModalOpen] = useState(false);
+
+  return (
+    <div className="flex items-center space-x-2 rounded-2xl bg-gray-800 p-2 transition-colors hover:bg-gray-700">
+      {/* Coin Balance - Clickable to go to withdrawal */}
+      <Link href="/coin-withdrawal" className="flex items-center space-x-1">
+        <CoinVertical size={16} className="text-[#FF5722]" />
+        <span className="text-sm">10.0</span>
+      </Link>
+      {/* Plus Button - Opens charge modal */}
+      <Button
+        onClick={() => setIsBuyCoinsModalOpen(true)}
+        className="flex h-6 w-6 items-center justify-center rounded-full bg-[#FF5722] p-0 hover:bg-[#E64A19]"
+      >
+        <Plus size={14} weight="bold" className="text-black" />
+      </Button>
+
+      <BuyCoinsModal
+        isOpen={isBuyCoinsModalOpen}
+        onClose={() => setIsBuyCoinsModalOpen(false)}
+      />
+    </div>
+  );
+}
